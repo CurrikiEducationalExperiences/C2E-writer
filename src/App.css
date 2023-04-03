@@ -1,0 +1,200 @@
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+.ts-particles {
+  position: fixed;
+  z-index: -1;
+}
+
+.reader-c2e {
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.reader-c2e .header-logo {
+  width: 80px;
+  margin: 30px;
+}
+
+.reader-c2e .img-box {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.reader-c2e .uploadBox {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.reader-c2e .uploadBox .box {
+  border: 1px solid #ccc;
+  max-width: 500px;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 1px 1px 10px 2px #efefef;
+}
+.reader-c2e .uploadBox h1 {
+  font-size: 32px;
+}
+
+.reader-c2e .uploadBox .iconbox {
+  border: 6px solid #ccc;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin: 50px auto 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.reader-c2e .uploadBox .iconbox img {
+  width: 40px;
+}
+.reader-c2e .reader-main {
+  display: flex;
+  align-items: center;
+  height: calc(100% - 150px);
+  width: 100%;
+  flex-wrap: wrap-reverse;
+  padding: 20px;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+@media (max-width:850px) {
+  .reader-c2e .reader-main {
+    height: 100%
+  }
+}
+
+.reader-c2e .uploadBox button {
+  background-color: #084892;
+  border: none;
+  padding: 10px 30px;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.reader-c2e .footer-all {
+  text-align: center;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.reader-c2e .footer-all a {
+
+  color: #000;
+}
+
+.reader-c2e .playlist-informtion {
+  margin: 20px 30px;
+  background: #fff;
+  box-shadow: 1px 1px 10px 2px #efefef;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+@media (max-width:480px) {
+  .reader-c2e .playlist-informtion {
+  margin:0;
+  padding-top: 0;
+  bordeR:none;
+  box-shadow: 0px 0px 0px 0px
+  }
+}
+.reader-c2e .playlist-informtion button {
+  background-color: #084892;
+  border: none;
+  padding: 5px 30px;
+  color: #fff;
+  border-radius: 5px;
+  float: right;
+  margin-bottom: 20px;
+}
+.reader-c2e .second-view {
+  display: flex;
+  clear: both;
+  display: flex;
+  gap:10px
+ }
+
+@media (max-width:991px) {
+  .reader-c2e .second-view {
+   flex-direction: column-reverse;
+   clear: both;
+   display: flex;
+   gap:10px
+  }
+}
+.reader-c2e .second-view .info {
+  flex: 1;
+  border-right: 1px solid #ccc;
+  padding-right: 20px;
+}
+
+.reader-c2e .second-view .accordian-c2e {
+  flex: 4;
+}
+
+.reader-c2e button.accordion-button {
+  background-color: #eca41d;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  margin: 0;
+  float: none;
+}
+.reader-c2e .accordion-item {
+
+  max-height: 530px;
+  overflow-y: auto;
+}
+
+.reader-c2e .accordion-item .accordion-body {
+  padding: 5px 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+
+.reader-c2e .accordion-body:hover {
+  background-color: #ccc;
+}
+
+.reader-c2e .activity-detail {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.reader-c2e .activity-detail img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
