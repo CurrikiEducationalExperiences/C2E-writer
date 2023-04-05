@@ -2,17 +2,15 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 
 function UploadFile() {
-  const [selectedFile, setSelectedFile] = useState(null);
+
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  const handleFileSelect = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
+
 
   const fileinput = useRef();
-  const handleUpload = async () => {
+  const handleUpload = async (event) => {
     const formData = new FormData();
-    formData.append('uploadFile', selectedFile);
+    formData.append('uploadFile', event.target.files[0]);
 
     try {
       const response = await axios.post(
@@ -41,9 +39,9 @@ function UploadFile() {
     <div>
       <input
         style={{ display: 'none' }}
-        onChange={(e) => {
-          handleFileSelect(e);
-          handleUpload();
+        onChange={(event) => {
+
+          handleUpload(event);
         }}
         ref={fileinput}
         type="file"
