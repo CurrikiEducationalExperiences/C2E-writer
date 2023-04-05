@@ -12,11 +12,11 @@ function UploadFile() {
   const fileinput = useRef();
   const handleUpload = async () => {
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append('uploadFile', selectedFile);
 
     try {
       const response = await axios.post(
-        'https://dev.currikistudio.org:5000/upload',
+        'https://writer-dev.curriki.org/upload',
         formData,
         {
           headers: {
