@@ -16,7 +16,7 @@ function UploadFile() {
 
     try {
       const response = await axios.post(
-        'http://dev.currikistudio.org:5000/upload',
+        'https://dev.currikistudio.org:5000/upload',
         formData,
         {
           headers: {
