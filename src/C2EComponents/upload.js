@@ -2,14 +2,12 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 
 function UploadFile() {
-
   const [uploadProgress, setUploadProgress] = useState(0);
-
-
 
   const fileinput = useRef();
   const handleUpload = async (event) => {
     const formData = new FormData();
+    console.log(event.target.files[0])
     formData.append('uploadFile', event.target.files[0]);
 
     try {
@@ -28,8 +26,13 @@ function UploadFile() {
           },
         }
       );
-
-      console.log(response.data);
+      // Download the file in the response
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${event.target.files[0].name.split('.')[0]}.c2e`);
+      document.body.appendChild(link);
+      link.click();
     } catch (error) {
       console.error(error);
     }
@@ -40,7 +43,6 @@ function UploadFile() {
       <input
         style={{ display: 'none' }}
         onChange={(event) => {
-
           handleUpload(event);
         }}
         ref={fileinput}
