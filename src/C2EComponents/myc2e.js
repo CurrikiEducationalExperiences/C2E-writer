@@ -3,13 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Web3Auth } from '@web3auth/modal';
 import { ADAPTER_EVENTS } from '@web3auth/base';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
-// import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import ProgressBar from 'react-bootstrap/ProgressBar';
+import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 import upload from '../assets/images/upload (1).svg';
-import Myc2eOverview from './myc2eoverview';
 import Header from './header';
-
 import UploadFile from './upload';
 
 const Myc2e = () => {
@@ -72,7 +70,7 @@ const Myc2e = () => {
         {/*<div className="img-box">
             <img src={c2e} alt="logo" />
            </div>*/}
-
+        ;
         {walletConnection ? (
           <div className="login-text text-detail">
             <h3>How does it work?</h3>
@@ -96,16 +94,16 @@ const Myc2e = () => {
             </p>
           </div>
         )}
-
         <div className="uploadBox">
           <div className="box">
             <h1>Curriki Educational Experiences Writer</h1>
             {walletConnection && (
               <>
                 <div className="iconbox">
-                  <img src={upload} alt="doge" />
+                  <CircularProgressbarWithChildren value={uploadProgress}>
+                    <img src={upload} alt="" />
+                  </CircularProgressbarWithChildren>
                 </div>
-                <ProgressBar now={uploadProgress} label={`${uploadProgress}%`} visuallyHidden />
               </>
             )}
 
@@ -122,10 +120,7 @@ const Myc2e = () => {
           </div>
         </div>
       </div>
-      {/* <div className="iconbox">
-        <img src={upload} alt="logo" />
-      </div>
-            {uploadProgress > 0 && <div>Progress: {uploadProgress}%</div>}*/}
+
       {/*<footer class="footer-all">
         <a
           rel="noreferrer"
