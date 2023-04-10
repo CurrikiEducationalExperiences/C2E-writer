@@ -9,6 +9,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import upload from '../assets/images/upload (1).svg';
 import Header from './header';
 import UploadFile from './upload';
+import FileUploadDownload from './upload2'
 
 const Myc2e = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -38,7 +39,10 @@ const Myc2e = () => {
 
         const user = await web3auth.getUserInfo();
         setWalletConneciton(user);
-        console.log('🚀 ~ file: signup-web3auth.js:46 ~ getUserInfo ~ user:', user);
+        console.log(
+          '🚀 ~ file: signup-web3auth.js:46 ~ getUserInfo ~ user:',
+          user
+        );
 
         // web3auth.provider will be available here after user is connected
       });
@@ -75,22 +79,23 @@ const Myc2e = () => {
           <div className="login-text text-detail">
             <h3>How does it work?</h3>
             <p>
-              After you have licensed a C2E from a digital marketplace, you will receive an email
-              with instructions on how to download it.
-              <br /> After the C2E is in your hand, you can open it in a C2E reader, like this one.
+              After you have licensed a C2E from a digital marketplace, you will
+              receive an email with instructions on how to download it.
+              <br /> After the C2E is in your hand, you can open it in a C2E
+              reader, like this one.
             </p>
           </div>
         ) : (
           <div className="text-detail">
             <h5>Imagine a world…</h5>
             <p>
-              … where access to high quality learning resources is equitable, affordable, and widely
-              available. <br />
-              <br /> … where digital content creators have access to resources and incentives to
-              build quality interactive learning experiences, and marketplaces where they can get
-              paid fairly for their efforts.
-              <br /> <br /> … where the quality and appropriateness of digital educational content
-              can be vetted before it enters a marketplace.
+              … where access to high quality learning resources is equitable,
+              affordable, and widely available. <br />
+              <br /> … where digital content creators have access to resources
+              and incentives to build quality interactive learning experiences,
+              and marketplaces where they can get paid fairly for their efforts.
+              <br /> <br /> … where the quality and appropriateness of digital
+              educational content can be vetted before it enters a marketplace.
             </p>
           </div>
         )}
@@ -101,7 +106,11 @@ const Myc2e = () => {
               <>
                 <div className="iconbox">
                   <CircularProgressbarWithChildren value={uploadProgress}>
-                    <img src={upload} alt="" />
+                    {!!uploadProgress ? (
+                      uploadProgress + '%'
+                    ) : (
+                      <img src={upload} alt="" />
+                    )}
                   </CircularProgressbarWithChildren>
                 </div>
               </>
@@ -113,7 +122,17 @@ const Myc2e = () => {
               <p className="text text-space">Log In and Experience C2Es NOW</p>
             )}
             {walletConnection ? (
-              <UploadFile setUploadProgress={setUploadProgress} />
+               <UploadFile setUploadProgress={setUploadProgress} />
+              // <form
+              //   action="https://writer-dev.curriki.org/upload"
+              //   method="post"
+              //   enctype="multipart/form-data"
+              // >
+              //   File to be uploaded:{' '}
+              //   <input type="file" name="uploadFile" id="" />
+              //   <button type="submit">Upload</button>
+              // </form>
+              // <FileUploadDownload />
             ) : (
               <button onClick={() => login()}>LET’s GET STARTED!</button>
             )}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Upload with Progress</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+  <h1>File Upload with Progress</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+  </form>
+  <div id="progressContainer" style="display:none;">
+    <progress id="progressBar" value="0" max="100"></progress>
+    <span id="progressPercentage">0%</span>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#uploadForm').on('submit', function(event) {
+        event.preventDefault();
+        var formData = new FormData($(this)[0]);
+        $('#progressContainer').show();
+        $.ajax({
+          url: 'upload.php', // Replace with your server-side file upload endpoint
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          xhr: function() {
+            var xhr = new window.XMLHttpRequest();
+            xhr.upload.addEventListener('progress', function(evt) {
+              if (evt.lengthComputable) {
+                var progress = Math.round((evt.loaded / evt.total) * 100);
+                $('#progressBar').val(progress);
+                $('#progressPercentage').text(progress + '%');
+              }
+            }, false);
+            return xhr;
+          },
+          success: function(response) {
+            // Handle success
+            alert('File uploaded successfully!');
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            // Handle error
+            alert('File upload failed: ' + textStatus + ' - ' + errorThrown);
+          },
+          complete: function() {
+            $('#progressContainer').hide();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
