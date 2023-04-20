@@ -260,3 +260,37 @@
     font-size: 14px;
   }
 }
+.big-loader {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #050505;
+  height: 100%;
+  width: 100%;
+  opacity: 0.9;
+  color: #fff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.big-loader h4 {
+  font-size: 32px;
+}
+
+.big-loader p {
+  font-size: 20px;
+}
+
+.big-loader img {
+  width: 50px;
+  margin-top: 10px;
+}
+
+.big-loader .flex {
+  display: flex;
+  gap:10px
+}
+
