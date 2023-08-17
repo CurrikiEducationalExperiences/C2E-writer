@@ -98,8 +98,11 @@ const Myc2e = () => {
             <p>
               After you have licensed a C2E from a digital marketplace, you will
               receive an email with instructions on how to download it.
-              <br /> After the C2E is in your hand, you can open it in a C2E
-              reader, like this one.
+              <br />
+              Once a copy is downloaded , please navigate to{' '}
+              <a href="https://c2e-reader.curriki.org" target="_blank">
+                C2E READER.
+              </a>
             </p>
           </div>
         ) : (
@@ -134,12 +137,15 @@ const Myc2e = () => {
             )}
 
             {walletConnection ? (
-              <p className="text">Upload C2E from your local device</p>
+              <p className="text">Upload a file from your local device</p>
             ) : (
               <p className="text text-space">Log In and Experience C2Es NOW</p>
             )}
             {walletConnection ? (
-              <UploadFile setUploadProgress={setUploadProgress} getData={getData} />
+              <UploadFile
+                setUploadProgress={setUploadProgress}
+                getData={getData}
+              />
             ) : (
               // <form
               //   action="https://writer-dev.curriki.org/upload"
@@ -156,65 +162,69 @@ const Myc2e = () => {
           </div>
         </div>
       </div>
-      <Tabs
-        defaultActiveKey="profile"
-        id="uncontrolled-tab-example"
-        className="mb-3"
-      >
-        <Tab eventKey="profile" title="Epub C2E's">
-          <Accordion defaultActiveKey="0">
-            {allData
-              ?.filter((data) => data.type === 'epub' && data.parentId === null)
-              ?.map((value, counter) => {
-                return (
-                  <Accordion.Item eventKey={String(counter)}>
-                    <Accordion.Header>{value.title}</Accordion.Header>
-                    <Accordion.Body>
-                      {allData
-                        ?.filter(
-                          (data1) =>
-                            data1.type === 'epub' && data1.parentId === value.id
-                        )
-                        ?.map((value1, counter1) => {
-                          return (
-                            <div
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                padding: '10px 0px',
-                                alignItems: 'center',
-                                borderBottom:'1px solid #ccc'
-                              }}
-                            >
-                              <div>{value1.title}</div>
-                              <button
-                                onClick={() => {
-                                  setShow(true);
-                                  setActivEpub(value1);
+      {walletConnection && (
+        <Tabs
+          defaultActiveKey="profile"
+          id="uncontrolled-tab-example"
+          className="mb-3"
+        >
+          <Tab eventKey="profile" title="Epub File">
+            <Accordion defaultActiveKey="0">
+              {allData
+                ?.filter(
+                  (data) => data.type === 'epub' && data.parentId === null
+                )
+                ?.map((value, counter) => {
+                  return (
+                    <Accordion.Item eventKey={String(counter)}>
+                      <Accordion.Header>{value.title}</Accordion.Header>
+                      <Accordion.Body>
+                        {allData
+                          ?.filter(
+                            (data1) =>
+                              data1.type === 'epub' &&
+                              data1.parentId === value.id
+                          )
+                          ?.map((value1, counter1) => {
+                            return (
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  padding: '10px 0px',
+                                  alignItems: 'center',
+                                  borderBottom: '1px solid #ccc',
                                 }}
-                                class="btn btn-primary"
-                                style={{background:"#084892"}}
                               >
-                                GET C2E
-                              </button>
-
-                            </div>
-                          );
-                        })}
-                    </Accordion.Body>
-                  </Accordion.Item>
-                );
+                                <div>{value1.title}</div>
+                                <button
+                                  onClick={() => {
+                                    setShow(true);
+                                    setActivEpub(value1);
+                                  }}
+                                  class="btn btn-primary"
+                                  style={{ background: '#084892' }}
+                                >
+                                  Create C2E
+                                </button>
+                              </div>
+                            );
+                          })}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  );
+                })}
+            </Accordion>
+          </Tab>
+          <Tab eventKey="contact" title="CurrikiStudio File">
+            {allData
+              ?.filter((data) => data.type !== 'epub')
+              ?.map((value) => {
+                return <div>{value.title}</div>;
               })}
-          </Accordion>
-        </Tab>
-        <Tab eventKey="contact" title="H5p C2E's">
-          {allData
-            ?.filter((data) => data.type !== 'epub')
-            ?.map((value) => {
-              return <div>{value.title}</div>;
-            })}
-        </Tab>
-      </Tabs>
+          </Tab>
+        </Tabs>
+      )}
       <Modal
         show={show}
         onHide={() => {
@@ -223,11 +233,13 @@ const Myc2e = () => {
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        backdrop="static"
+        keyboard={false}
       >
         <Modal.Body>
           <Formik
             initialValues={{
-              // title: '',
+              title: allData?.filter(data=>data.id===activEpub?.parentId)?.[0]?.title,
               // description: '',
               name: '',
               email: '',
@@ -235,9 +247,9 @@ const Myc2e = () => {
             }}
             validate={(values) => {
               const errors = {};
-              // if (!values.title) {
-              //   errors.title = 'Required';
-              // }
+              if (!values.title) {
+                errors.title = 'Required';
+              }
               // if (!values.description) {
               //   errors.description = 'Required';
               // }
@@ -282,31 +294,22 @@ const Myc2e = () => {
               /* and other goodies */
             }) => (
               <form onSubmit={handleSubmit} className="c2e-lisence">
-                {/* <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input
-                      name="title"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.title}
-                    />
-                    {errors.title && touched.title && errors.title}
-                  </div>
-                  <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea
-                      name="description"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.description}
-                    ></textarea>
-                    {errors.description &&
-                      touched.description &&
-                      errors.description}
-                  </div> */}
+
+
                 <h2>{activEpub?.title}</h2>
                 <h3>C2E Licensee Information</h3>
-
+                <div class="form-group">
+                  <label for="title">Title:</label>
+                  <input
+                    name="title"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.title}
+                    display
+                    readOnly
+                  />
+                  {errors.title && touched.title && errors.title}
+                </div>
                 <div class="form-group">
                   <label for="licensee_name">Name:</label>
                   <input
@@ -346,9 +349,13 @@ const Myc2e = () => {
                 >
                   {activeEpubUrl}
                 </a>
+                <button onClick={()=>setShow(false)} type="button" class="btn btn-secondary">
+                  Close
+                </button> &nbsp;
                 <button type="submit" class="btn btn-primary">
-                 {isSubmitting ? "Generating ...." :'Make C2E'}
+                  {isSubmitting ? 'Generating ....' : 'Create C2E'}
                 </button>
+
               </form>
             )}
           </Formik>
