@@ -1,50 +1,55 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+
 import fileDownload from 'js-file-download';
 import h5p from '../assets/images/assig2.png';
 import epub from '../assets/images/assig1.png';
 import Modal from 'react-bootstrap/Modal';
 import { Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
-function UploadFile({ setUploadProgress }) {
+function UploadFile({ setUploadProgress,getData }) {
   const fileinput = useRef();
   const [startConversion, setStartConversion] = useState(false);
   const [show, setShow] = useState(false);
   const [epubmeta, setEpubData] = useState();
+  const url = 'https://c2e-provider-api.curriki.org';
   const handleUpload = async (event) => {
     const formData = new FormData();
 
-    formData.append('uploadFile', event.target.files[0]);
+    formData.append('ebook', event.target.files[0]);
     if (epubmeta) {
+      setShow(false);
+      const response = await axios.post(
+        url + '/c2e-media/create-epubs',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(percentCompleted);
+            console.log(percentCompleted);
+            if (percentCompleted === 100) {
+              setStartConversion(true);
+            }
+          },
+          //  responseType: 'blob',
+        }
+      );
 
-        const response = await axios.post(
-          'https://c2e-provider-api.curriki.org/c2e-media/upload',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            onUploadProgress: (progressEvent) => {
-              const percentCompleted = Math.round(
-                (progressEvent.loaded * 100) / progressEvent.total
-              );
-              setUploadProgress(percentCompleted);
-              console.log(percentCompleted);
-              if (percentCompleted === 100) {
-                setStartConversion(true);
-              }
-            },
-            responseType: 'blob',
-          }
-
-        );
-        setStartConversion(false);
-        // Download the file in the response
-        //fileDownload(response.data,`${event.target.files[0].name.split('.')[0]}.zip`)
-        // fileDownload(
-        //   response.data,
-        //   event.target.files[0].name.replace('.zip', '.c2e')
-        // );
+      setStartConversion(false);
+      if(getData) {
+        getData()
+      }
+      // // Download the file in the response
+      // //fileDownload(response.data,`${event.target.files[0].name.split('.')[0]}.zip`)
+      // fileDownload(
+      //   response.data,
+      //   event.target.files[0].name.replace('.epub', '.c2e')
+      // );
     } else {
       try {
         const response = await axios.post(
@@ -90,6 +95,7 @@ function UploadFile({ setUploadProgress }) {
       fileinput.current.click();
     } else {
       setEpubData(true);
+      fileinput.current.click();
     }
   };
   return (
@@ -123,6 +129,7 @@ function UploadFile({ setUploadProgress }) {
           </div>
         </div>
       )}
+
       <Modal
         show={show}
         onHide={() => {
@@ -133,7 +140,7 @@ function UploadFile({ setUploadProgress }) {
         centered
       >
         <Modal.Body>
-          {epubmeta ? (
+          {false ? (
             <Formik
               initialValues={{
                 title: '',
@@ -164,7 +171,6 @@ function UploadFile({ setUploadProgress }) {
               }}
               onSubmit={(values, { setSubmitting }) => {
                 fileinput.current.click();
-
               }}
             >
               {({

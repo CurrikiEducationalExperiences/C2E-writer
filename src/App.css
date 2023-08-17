@@ -83,7 +83,7 @@
 .reader-c2e .reader-main {
   display: flex;
   align-items: center;
-  min-height: calc(100% - 150px);
+
   width: 100%;
   padding: 20px clamp(24px, 7vw, 120px);
   gap: 36px;
@@ -174,7 +174,7 @@
 }
 
 .reader-c2e button.accordion-button {
-  background-color: #eca41d;
+  background-color: #084892;
   color: #fff;
   border: none;
   padding: 10px;
@@ -192,9 +192,9 @@
   cursor: pointer;
 }
 
-.reader-c2e .accordion-body:hover {
+/* .reader-c2e .accordion-body:hover {
   background-color: #ccc;
-}
+} */
 
 .reader-c2e .activity-detail {
   display: flex;
@@ -319,4 +319,44 @@
   width: 100px;
 
 }
+
+.c2e-lisence h2 {
+  font-size: 22px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.c2e-lisence h3 {
+  font-size: 18px;
+
+}
+
+.c2e-lisence .form-group {
+   display: flex;
+   flex-direction: column;
+}
+
+.c2e-lisence input {
+  border-radius: 5px;
+  height: 40px;
+  border-color: #ccc;
+  outline: none;
+}
+
+.c2e-lisence label {
+  font-size: 16px;
+  padding-bottom: 5px;
+}
+
+
+.c2e-lisence a {
+  padding-top: 20px;
+  display: block;
+}
+
+.c2e-lisence button {
+margin-top: 20px;
+}
+
+
 

@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
-
+import Accordion from 'react-bootstrap/Accordion';
 import { Web3Auth } from '@web3auth/modal';
 import { ADAPTER_EVENTS } from '@web3auth/base';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-
+import Modal from 'react-bootstrap/Modal';
 import upload from '../assets/images/upload (1).svg';
 import Header from './header';
 import UploadFile from './upload';
-import FileUploadDownload from './upload2'
-
+import Tab from 'react-bootstrap/Tab';
+import axios from 'axios';
+import Tabs from 'react-bootstrap/Tabs';
+import { Formik } from 'formik';
 const Myc2e = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [web3auth, setWeb3auth] = useState(null);
   const [walletConnection, setWalletConneciton] = useState(null);
-
+  const [show, setShow] = useState();
+  const [activEpub, setActivEpub] = useState();
+  const [activeEpubUrl, setActiveEpubUrl] = useState();
   const login = async () => {
     if (!web3auth) {
       console.log('web3auth not initialized yet');
@@ -23,6 +27,19 @@ const Myc2e = () => {
     }
     await web3auth.connect();
   };
+  const [allData, setAllData] = useState();
+  const url = 'https://c2e-provider-api.curriki.org';
+  const getData = () => {
+    fetch(url + '/c2e-media').then((data) =>
+      data.json().then((value) => {
+        setAllData(value);
+      })
+    );
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -122,7 +139,8 @@ const Myc2e = () => {
               <p className="text text-space">Log In and Experience C2Es NOW</p>
             )}
             {walletConnection ? (
-               <UploadFile setUploadProgress={setUploadProgress} />
+              <UploadFile setUploadProgress={setUploadProgress} getData={getData} />
+            ) : (
               // <form
               //   action="https://writer-dev.curriki.org/upload"
               //   method="post"
@@ -133,12 +151,209 @@ const Myc2e = () => {
               //   <button type="submit">Upload</button>
               // </form>
               // <FileUploadDownload />
-            ) : (
               <button onClick={() => login()}>LET’s GET STARTED!</button>
             )}
           </div>
         </div>
       </div>
+      <Tabs
+        defaultActiveKey="profile"
+        id="uncontrolled-tab-example"
+        className="mb-3"
+      >
+        <Tab eventKey="profile" title="Epub C2E's">
+          <Accordion defaultActiveKey="0">
+            {allData
+              ?.filter((data) => data.type === 'epub' && data.parentId === null)
+              ?.map((value, counter) => {
+                return (
+                  <Accordion.Item eventKey={String(counter)}>
+                    <Accordion.Header>{value.title}</Accordion.Header>
+                    <Accordion.Body>
+                      {allData
+                        ?.filter(
+                          (data1) =>
+                            data1.type === 'epub' && data1.parentId === value.id
+                        )
+                        ?.map((value1, counter1) => {
+                          return (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                padding: '10px 0px',
+                                alignItems: 'center',
+                                borderBottom:'1px solid #ccc'
+                              }}
+                            >
+                              <div>{value1.title}</div>
+                              <button
+                                onClick={() => {
+                                  setShow(true);
+                                  setActivEpub(value1);
+                                }}
+                                class="btn btn-primary"
+                                style={{background:"#084892"}}
+                              >
+                                GET C2E
+                              </button>
+
+                            </div>
+                          );
+                        })}
+                    </Accordion.Body>
+                  </Accordion.Item>
+                );
+              })}
+          </Accordion>
+        </Tab>
+        <Tab eventKey="contact" title="H5p C2E's">
+          {allData
+            ?.filter((data) => data.type !== 'epub')
+            ?.map((value) => {
+              return <div>{value.title}</div>;
+            })}
+        </Tab>
+      </Tabs>
+      <Modal
+        show={show}
+        onHide={() => {
+          setShow(false);
+        }}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Body>
+          <Formik
+            initialValues={{
+              // title: '',
+              // description: '',
+              name: '',
+              email: '',
+              url: 'https://twitter.com',
+            }}
+            validate={(values) => {
+              const errors = {};
+              // if (!values.title) {
+              //   errors.title = 'Required';
+              // }
+              // if (!values.description) {
+              //   errors.description = 'Required';
+              // }
+              if (!values.name) {
+                errors.name = 'Required';
+              }
+              if (!values.email) {
+                errors.email = 'Required';
+              } else if (
+                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+              ) {
+                errors.email = 'Invalid email address';
+              }
+              return errors;
+            }}
+            onSubmit={async (values, { setSubmitting }) => {
+              const response = await axios.post(
+                url + '/c2e/cee-media',
+                { ...values, ceeMediaId: activEpub?.id },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+
+                  //  responseType: 'blob',
+                }
+              );
+              if (response) {
+                console.log(response);
+                setActiveEpubUrl(response.data?.id);
+              }
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              /* and other goodies */
+            }) => (
+              <form onSubmit={handleSubmit} className="c2e-lisence">
+                {/* <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input
+                      name="title"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.title}
+                    />
+                    {errors.title && touched.title && errors.title}
+                  </div>
+                  <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea
+                      name="description"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.description}
+                    ></textarea>
+                    {errors.description &&
+                      touched.description &&
+                      errors.description}
+                  </div> */}
+                <h2>{activEpub?.title}</h2>
+                <h3>C2E Licensee Information</h3>
+
+                <div class="form-group">
+                  <label for="licensee_name">Name:</label>
+                  <input
+                    name="name"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.name}
+                    type="text"
+                  />
+                  {errors.name && touched.name && errors.name}
+                </div>
+                <div class="form-group">
+                  <label for="licensee_email">Email:</label>
+                  <input
+                    name="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    type="email"
+                  />
+                  {errors.email && touched.email && errors.email}
+                </div>
+                <div class="form-group">
+                  <label for="licensee_url">URL:</label>
+                  <input
+                    name="url"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.url}
+                    type="url"
+                  />
+                </div>
+                <a
+                  href={url + '/c2e-storage/c2eid-' + activeEpubUrl + '.c2e'}
+                  download
+                  title=""
+                >
+                  {activeEpubUrl}
+                </a>
+                <button type="submit" class="btn btn-primary">
+                 {isSubmitting ? "Generating ...." :'Make C2E'}
+                </button>
+              </form>
+            )}
+          </Formik>
+        </Modal.Body>
+      </Modal>
 
       {/*<footer class="footer-all">
         <a
