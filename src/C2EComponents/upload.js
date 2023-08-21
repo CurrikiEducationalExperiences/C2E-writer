@@ -121,7 +121,7 @@ function UploadFile({ setUploadProgress,getData }) {
       {startConversion && (
         <div className="big-loader">
           <h4>Converting Your Upload Into C2E</h4>
-          <p>please wait, it might took some time ...</p>
+          <p>please wait, it will take some time ...</p>
           <div className="flex">
             <Spinner animation="grow" variant="light" />
             <Spinner animation="grow" variant="light" />

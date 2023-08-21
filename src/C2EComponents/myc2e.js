@@ -239,10 +239,13 @@ const Myc2e = () => {
         <Modal.Body>
           <Formik
             initialValues={{
-              title: allData?.filter(data=>data.id===activEpub?.parentId)?.[0]?.title,
+              title: allData?.filter(
+                (data) => data.id === activEpub?.parentId
+              )?.[0]?.title,
               // description: '',
               name: '',
               email: '',
+              isbn: '',
               url: 'https://twitter.com',
             }}
             validate={(values) => {
@@ -256,6 +259,10 @@ const Myc2e = () => {
               if (!values.name) {
                 errors.name = 'Required';
               }
+              if (!values.isbn) {
+                errors.isbn = 'Required';
+              }
+
               if (!values.email) {
                 errors.email = 'Required';
               } else if (
@@ -266,6 +273,7 @@ const Myc2e = () => {
               return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
+              setActiveEpubUrl()
               const response = await axios.post(
                 url + '/c2e/cee-media',
                 { ...values, ceeMediaId: activEpub?.id },
@@ -278,7 +286,7 @@ const Myc2e = () => {
                 }
               );
               if (response) {
-                console.log(response);
+
                 setActiveEpubUrl(response.data?.id);
               }
             }}
@@ -294,8 +302,6 @@ const Myc2e = () => {
               /* and other goodies */
             }) => (
               <form onSubmit={handleSubmit} className="c2e-lisence">
-
-
                 <h2>{activEpub?.title}</h2>
                 <h3>C2E Licensee Information</h3>
                 <div class="form-group">
@@ -308,7 +314,9 @@ const Myc2e = () => {
                     display
                     readOnly
                   />
-                  {errors.title && touched.title && errors.title}
+                  <div className="error">
+                    {errors.title && touched.title && errors.title}
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="licensee_name">Name:</label>
@@ -319,7 +327,9 @@ const Myc2e = () => {
                     value={values.name}
                     type="text"
                   />
-                  {errors.name && touched.name && errors.name}
+                  <div className="error">
+                    {errors.name && touched.name && errors.name}
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="licensee_email">Email:</label>
@@ -330,7 +340,22 @@ const Myc2e = () => {
                     value={values.email}
                     type="email"
                   />
-                  {errors.email && touched.email && errors.email}
+                  <div className="error">
+                    {errors.email && touched.email && errors.email}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="licensee_email">ISBN:</label>
+                  <input
+                    name="isbn"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.isbn}
+                    type="text"
+                  />
+                  <div className="error">
+                    {errors.isbn && touched.isbn && errors.isbn}
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="licensee_url">URL:</label>
@@ -349,13 +374,17 @@ const Myc2e = () => {
                 >
                   {activeEpubUrl}
                 </a>
-                <button onClick={()=>setShow(false)} type="button" class="btn btn-secondary">
+                <button
+                  onClick={() => setShow(false)}
+                  type="button"
+                  class="btn btn-secondary"
+                >
                   Close
-                </button> &nbsp;
+                </button>{' '}
+                &nbsp;
                 <button type="submit" class="btn btn-primary">
                   {isSubmitting ? 'Generating ....' : 'Create C2E'}
                 </button>
-
               </form>
             )}
           </Formik>

@@ -334,6 +334,7 @@
 .c2e-lisence .form-group {
    display: flex;
    flex-direction: column;
+   padding-bottom: 10px;
 }
 
 .c2e-lisence input {
@@ -341,6 +342,7 @@
   height: 40px;
   border-color: #ccc;
   outline: none;
+  padding-left: 10px;
 }
 
 .c2e-lisence label {
@@ -358,5 +360,10 @@
 margin-top: 20px;
 }
 
+
+.c2e-lisence .error {
+  color:red;
+  font-size: 12px;
+}
 
 
