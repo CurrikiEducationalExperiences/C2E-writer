@@ -139,7 +139,7 @@ const Myc2e = () => {
             {walletConnection ? (
               <p className="text">Upload a file from your local device</p>
             ) : (
-              <p className="text text-space">Log In and Experience C2Es NOW</p>
+              <p className="text text-space">Log In and Experience C2Es Now</p>
             )}
             {walletConnection ? (
               <UploadFile
