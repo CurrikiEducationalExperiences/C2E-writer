@@ -245,7 +245,7 @@ const Myc2e = () => {
               // description: '',
               name: '',
               email: '',
-              isbn: '',
+
               url: 'https://twitter.com',
             }}
             validate={(values) => {
@@ -258,9 +258,6 @@ const Myc2e = () => {
               // }
               if (!values.name) {
                 errors.name = 'Required';
-              }
-              if (!values.isbn) {
-                errors.isbn = 'Required';
               }
 
               if (!values.email) {
@@ -344,19 +341,7 @@ const Myc2e = () => {
                     {errors.email && touched.email && errors.email}
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="licensee_email">ISBN:</label>
-                  <input
-                    name="isbn"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.isbn}
-                    type="text"
-                  />
-                  <div className="error">
-                    {errors.isbn && touched.isbn && errors.isbn}
-                  </div>
-                </div>
+
                 <div class="form-group">
                   <label for="licensee_url">URL:</label>
                   <input
