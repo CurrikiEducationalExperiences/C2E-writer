@@ -368,7 +368,7 @@ const Myc2e = () => {
               title: allData?.filter(
                 (data) => data.id === activEpub?.parentId,
               )?.[0]?.title,
-              
+
               name: "",
               email: "",
 
@@ -379,7 +379,7 @@ const Myc2e = () => {
               if (!values.title) {
                 errors.title = "Required";
               }
-            
+
               if (!values.name) {
                 errors.name = "Required";
               }
@@ -403,7 +403,7 @@ const Myc2e = () => {
                     "Content-Type": "application/json",
                   },
 
-                  
+
                 },
               );
               if (response) {
@@ -419,7 +419,7 @@ const Myc2e = () => {
               handleBlur,
               handleSubmit,
               isSubmitting,
-              
+
             }) => (
               <form onSubmit={handleSubmit} className="c2e-lisence">
                 <h2>{activEpub?.title}</h2>
@@ -684,78 +684,10 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                   /* and other goodies */
                 }) => (
                   <form onSubmit={handleSubmit} className="formik-box">
-                    <div className="stor-flex-box">
-                      <h5>Owner Information</h5>
-
-                      <div className="input-box">
-                        <label>
-                          <img src={TitleIcon} alt="title" /> Title
-                        </label>
-                        <input
-                          type="text"
-                          name="title"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.title}
-                        />
-                        <p className="error">
-                          {errors.title && touched.title && errors.title}
-                        </p>
-                      </div>
-
-                      <div className="input-box">
-                        <label>
-                          <img src={NameIcon} alt="neme" /> Name
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.name}
-                        />
-                        <p className="error">
-                          {errors.name && touched.name && errors.name}
-                        </p>
-                      </div>
-
-                      <div className="input-box">
-                        <label>
-                          <img src={EmailIcon} alt="email" /> Email
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.email}
-                        />
-                        <p className="error">
-                          {errors.email && touched.email && errors.email}
-                        </p>
-                      </div>
-
-                      <div className="input-box">
-                        <label>
-                          <img src={UrlIcon} alt="pub" /> Publisher URL
-                        </label>
-                        <input
-                          type="text"
-                          name="url"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.url}
-                        />
-                        <p className="error">
-                          {errors.url && touched.url && errors.url}
-                        </p>
-                      </div>
-                    </div>
-                    {/*
-                     */}
-                    <div className="stor-flex-box">
+                      <div className="stor-flex-box">
                       <h5>Store Information</h5>
-
+                      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                      <br />
                       <div className="input-box">
                         <label>
                           <img src={SKUIcon} alt="aku" /> SKU
@@ -789,7 +721,7 @@ const LinstingModule = ({ showListing, setShowListing }) => {
 
                       <div className="input-box">
                         <label>
-                          <img src={PrceIcon} alt="" /> Price *
+                          <img src={PrceIcon} alt="" /> Price ($USD) *
                         </label>
                         <input
                           type="number"
@@ -818,12 +750,25 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                       </div>
                       {/* second */}
 
-                      <div className="input-box">
+                      {/* <div className="input-box">
                         <label>
                           <img src={LinkIcon} alt="LinkIcon" /> C2E link
                         </label>
                         <input
                           type="text"
+                          name="C2Elink"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.C2Elink}
+                        />
+                      </div> */}
+
+                      <div className="input-box">
+                        <label>
+                          <img src={LinkIcon} alt="LinkIcon" /> Uplaod images
+                        </label>
+                        <input
+                          type="file"
                           name="C2Elink"
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -896,6 +841,79 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                         />
                       </div>
                     </div>
+
+
+                    <div className="stor-flex-box">
+                      <h5>Owner Information</h5>
+                      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                      <br />
+                                            <div className="input-box">
+                        <label>
+                          <img src={TitleIcon} alt="title" /> Title
+                        </label>
+                        <input
+                          type="text"
+                          name="title"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.title}
+                        />
+                        <p className="error">
+                          {errors.title && touched.title && errors.title}
+                        </p>
+                      </div>
+
+                      <div className="input-box">
+                        <label>
+                          <img src={NameIcon} alt="neme" /> Name
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.name}
+                        />
+                        <p className="error">
+                          {errors.name && touched.name && errors.name}
+                        </p>
+                      </div>
+
+                      <div className="input-box">
+                        <label>
+                          <img src={EmailIcon} alt="email" /> Email
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.email}
+                        />
+                        <p className="error">
+                          {errors.email && touched.email && errors.email}
+                        </p>
+                      </div>
+
+                      <div className="input-box">
+                        <label>
+                          <img src={UrlIcon} alt="pub" /> Publisher URL
+                        </label>
+                        <input
+                          type="text"
+                          name="url"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.url}
+                        />
+                        <p className="error">
+                          {errors.url && touched.url && errors.url}
+                        </p>
+                      </div>
+                    </div>
+                    {/*
+                     */}
+
                     {steps === 2 && (
                       <div className="form-btn">
                         <button
