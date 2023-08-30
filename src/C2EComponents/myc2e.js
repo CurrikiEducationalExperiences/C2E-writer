@@ -20,8 +20,8 @@ import ListingIcon from "../assets/images/listing.svg";
 import AddIcon from "../assets/images/add.svg";
 import ListingWhite from "../assets/images/listing-white.svg";
 import AddWhite from "../assets/images/add-white.svg";
-import h5p from "../assets/images/studio_new_logo.png";
-import epub from "../assets/images/assig1.png";
+import h5p from "../assets/images/woo.png";
+import epub from "../assets/images/amazon.png";
 
 const Myc2e = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -239,21 +239,21 @@ const Myc2e = () => {
                                     }}
                                     class="btn btn-primary sec-btn"
                                   >
-                                    <img
-                                      src={AddIcon}
+                                   <img
+                                      src={ListingIcon}
                                       alt="file"
-                                      width={14}
-                                      height={14}
-                                      className="blue-add-icon"
+                                      width={20}
+                                      height={20}
+                                      className="blue-listing-icon"
                                     />
                                     <img
-                                      src={AddWhite}
+                                      src={ListingWhite}
                                       alt="file"
-                                      width={14}
-                                      height={14}
-                                      className="white-add-icon"
+                                      width={20}
+                                      height={20}
+                                      className="white-listing-icon"
                                     />
-                                    Create C2E
+                                    Show Listing
                                   </button>
                                   <button
                                     onClick={() => {
@@ -276,7 +276,30 @@ const Myc2e = () => {
                                       height={20}
                                       className="white-listing-icon"
                                     />
-                                    Listing
+                                    Create Listing
+                                  </button>
+                                   <button
+                                    onClick={() => {
+                                      setShow(true);
+                                      setActivEpub(value1);
+                                    }}
+                                    class="btn btn-primary sec-btn"
+                                  >
+                                    <img
+                                      src={AddIcon}
+                                      alt="file"
+                                      width={14}
+                                      height={14}
+                                      className="blue-add-icon"
+                                    />
+                                    <img
+                                      src={AddWhite}
+                                      alt="file"
+                                      width={14}
+                                      height={14}
+                                      className="white-add-icon"
+                                    />
+                                    Create C2E
                                   </button>
                                 </div>
                               </div>
@@ -518,7 +541,7 @@ const LinstingModule = ({ showListing, setShowListing }) => {
             <h5 className="">Select</h5>
           </div>
           <div className={`step ${steps === 1 && "disable"}`}>
-            <h5 className="">Discribe</h5>
+            <h5 className="">Describe</h5>
           </div>
           <div
             className={`step ${steps === 1 || steps === 2 ? "disable" : ""}`}
@@ -610,7 +633,7 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                   /* and other goodies */
                 }) => (
                   <form onSubmit={handleSubmit} className="formik-box">
-                    <h5>Licensee Information</h5>
+                    <h5>Owner Information</h5>
                     <div className="input-flex-box">
                       <div className="input-box">
                         <label>Title</label>
@@ -657,7 +680,7 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                       </div>
 
                       <div className="input-box">
-                        <label>URL</label>
+                        <label>Publisher URL</label>
                         <input
                           type="text"
                           name="url"
@@ -735,7 +758,7 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                       </div>
                     </div>
                     <div className="input-box">
-                      <label>Product Discription</label>
+                      <label>Product Description</label>
                       <textarea
                         type="text"
                         name="productDiscription"
