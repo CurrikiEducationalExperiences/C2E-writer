@@ -466,7 +466,7 @@
 }
 
 .right-aligned-modal .modal-content {
-  max-width: 1000px;
+  max-width: 1250px;
   min-height: 100vh;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
@@ -518,7 +518,7 @@
   display: flex;
   align-items: flex-start;
   width: 100%;
-  gap: 62px;
+  gap: 32px;
 }
 
 .formik-box .stor-flex-box {
@@ -602,4 +602,192 @@ textarea {
   font-weight: 700;
   line-height: 28px;
   margin-bottom: 32px;
+}
+
+/* upload */
+.curriki-image-update-util {
+  width: 100%;
+  background-color: #000;
+  border-radius: 8px;
+}
+.curriki-image-update-util .box-section {
+  width: 100%;
+  height: 220px;
+  background: #f7faff;
+  position: relative;
+  border: 1px dashed #084892;
+  border-radius: 8px;
+}
+
+.curriki-image-update-util .thumbnail {
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.curriki-image-update-util .overlay {
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #084892;
+  position: absolute;
+  top: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.curriki-image-update-util .overlay input {
+  max-width: fit-content;
+  padding: 0 !important;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.img-button {
+  position: relative;
+  width: fit-content;
+  height: auto;
+}
+
+.curriki-image-update-util .overlay .overlay-drag-image {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+}
+.curriki-image-update-util .overlay .overlay-drag-image-title {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.curriki-image-update-util .overlay .overlay-drag-image-or {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 12px;
+  position: relative;
+}
+.curriki-image-update-util .overlay .overlay-drag-image-or::before {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 25px;
+  width: 68px;
+  height: 0.5px;
+  background-color: #fff;
+}
+.curriki-image-update-util .overlay .overlay-drag-image-or::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 25px;
+  width: 68px;
+  height: 0.5px;
+  background-color: #fff;
+}
+.curriki-image-update-util .overlay .overlay-drag-brows-btn {
+  padding: 8px 16px;
+  min-width: 120px;
+  min-height: 32px;
+  background: #fff;
+  border: 1px solid #fff;
+  box-shadow: 0px 2px 8px 1px rgba(81, 81, 81, 0.16);
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #084892;
+}
+
+.stor-flex-box .check-box {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 22px;
+}
+.stor-flex-box .check-box .check {
+  display: flex;
+  align-items: center;
+}
+.stor-flex-box .check-box .check input {
+  width: 18px;
+  height: 18px;
+}
+.stor-flex-box .check-box .check label {
+  color: #515151;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 14px;
+  margin-left: 8px;
+}
+
+/* card */
+
+.license-card-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.uploaded-image {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.lic-cards {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 47.5%;
+}
+.lic-cards .c2e-linc-card {
+  flex: 1 0 158px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 16px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+.lic-cards .c2e-linc-card p {
+  color: #515151;
+  font-family: Open Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  margin: 0;
+}
+.lic-cards .c2e-linc-card .lic-bg-image {
+  height: 112px;
+  width: 100%;
+  align-self: stretch;
+  border-radius: 8px;
+  background: lightgray;
+  overflow: hidden;
+}
+.lic-cards .c2e-linc-card h4 {
+  color: #000;
+  font-family: Open Sans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0;
 }

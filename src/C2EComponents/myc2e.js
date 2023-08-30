@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import { Web3Auth } from "@web3auth/modal";
 import { ADAPTER_EVENTS } from "@web3auth/base";
@@ -33,13 +33,11 @@ import DescriptionIcon from "../assets/images/icons/form/Description.svg";
 import LinkIcon from "../assets/images/icons/form/Link.svg";
 import PrceIcon from "../assets/images/icons/form/Price.svg";
 import AuthorIcon from "../assets/images/icons/form/Author.svg";
-import LisenceIcon from "../assets/images/icons/form/License.svg";
-import PublicationsIcon from "../assets/images/icons/form/Publications.svg";
 import EmailIcon from "../assets/images/icons/form/Email.svg";
 import UrlIcon from "../assets/images/icons/form/Url.svg";
-import DomainIcon from "../assets/images/icons/form/Domain.svg";
 import ContentIcon from "../assets/images/icons/form/Content.svg";
 import TitleIcon from "../assets/images/icons/form/title.svg";
+import dragImage from "../assets/images/img-upload.png";
 
 const Myc2e = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -49,6 +47,7 @@ const Myc2e = () => {
   const [showListing, setShowListing] = useState();
   const [activEpub, setActivEpub] = useState();
   const [activeEpubUrl, setActiveEpubUrl] = useState();
+
   const login = async () => {
     if (!web3auth) {
       console.log("web3auth not initialized yet");
@@ -537,7 +536,19 @@ export default Myc2e;
 
 const LinstingModule = ({ showListing, setShowListing }) => {
   const [steps, setSteps] = useState(1);
+  const inputFileRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   return (
     <Modal
       show={showListing}
@@ -628,9 +639,10 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                   C2Elink: "",
                   C2EAuthor: "",
                   C2EContentType: "",
-                  C2EDomain: "",
-                  C2Epublication: "",
-                  lisenceType: "",
+                  copyrightTitle: "",
+                  copyrightDiscription: "",
+                  copyrightYear: "",
+                  toppings: [],
                 }}
                 validate={(values) => {
                   const errors = {};
@@ -684,10 +696,14 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                   /* and other goodies */
                 }) => (
                   <form onSubmit={handleSubmit} className="formik-box">
-                      <div className="stor-flex-box">
+                    <div className="stor-flex-box">
                       <h5>Store Information</h5>
-                      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                      <p>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry.
+                      </p>
                       <br />
+
                       <div className="input-box">
                         <label>
                           <img src={SKUIcon} alt="aku" /> SKU
@@ -767,13 +783,53 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                         <label>
                           <img src={LinkIcon} alt="LinkIcon" /> Uplaod images
                         </label>
-                        <input
-                          type="file"
-                          name="C2Elink"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.C2Elink}
-                        />
+
+                        <div className="curriki-image-update-util">
+                          <div className="box-section">
+                            <div className="overlay">
+                              <img
+                                className="overlay-drag-image"
+                                src={dragImage}
+                                alt="drag"
+                              />
+                              <div className="img-button">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  ref={inputFileRef}
+                                  style={{ display: "none" }}
+                                  onChange={handleImageUpload}
+                                />
+                                <buttun
+                                  type="button"
+                                  className="overlay-drag-brows-btn"
+                                  onClick={() => inputFileRef.current.click()}
+                                >
+                                  Upload Image
+                                </buttun>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="">
+                          {selectedImage && (
+                            <div>
+                              <p>Uploaded Image</p>
+                              <div className="uploaded-image">
+                                <img
+                                  src={selectedImage}
+                                  alt="Uploaded"
+                                  style={{
+                                    maxWidth: "47.5%",
+                                    height: "150px",
+                                    objectFit: "contain",
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <div className="input-box">
                         <label>
@@ -790,33 +846,6 @@ const LinstingModule = ({ showListing, setShowListing }) => {
 
                       <div className="input-box">
                         <label>
-                          <img src={LisenceIcon} alt="lisen" /> Lisence Type
-                        </label>
-                        <input
-                          type="text"
-                          name="lisenceType"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.lisenceType}
-                        />
-                      </div>
-
-                      <div className="input-box">
-                        <label>
-                          <img src={PublicationsIcon} alt="pub" /> C2E
-                          publication
-                        </label>
-                        <input
-                          type="text"
-                          name="C2Epublication"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.C2Epublication}
-                        />
-                      </div>
-
-                      <div className="input-box">
-                        <label>
                           <img src={ContentIcon} alt="cntent" /> C2E Content
                           Type
                         </label>
@@ -828,26 +857,152 @@ const LinstingModule = ({ showListing, setShowListing }) => {
                           value={values.C2EContentType}
                         />
                       </div>
+                    </div>
+
+                    <div className="stor-flex-box">
+                      <h5>C2E License Details</h5>
+                      <p>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry.
+                      </p>
+                      <br />
+
+                      <div className="input-box">
+                        <label>Set Usage Type</label>
+                      </div>
+
+                      <div className="d-flex check-box">
+                        <div className="check">
+                          <input
+                            type="checkbox"
+                            name="toppings"
+                            value="Purchased"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.toppings.includes("Purchased")}
+                          />
+                          <label className="ml-2">Purchased</label>
+                        </div>
+                        <div className="check">
+                          <input
+                            type="checkbox"
+                            name="toppings"
+                            value="Subscription"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.toppings.includes("Subscription")}
+                          />
+                          <label className="ml-2">Subscription</label>
+                        </div>
+                        <div className="check">
+                          <input
+                            type="checkbox"
+                            name="toppings"
+                            value="Open"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.toppings.includes("Open")}
+                          />
+                          <label className="ml-2">Open</label>
+                        </div>
+                      </div>
                       <div className="input-box">
                         <label>
-                          <img src={DomainIcon} alt="domain" /> C2E Domain
+                          <img src={TitleIcon} alt="title" /> Copyright Title
                         </label>
                         <input
                           type="text"
-                          name="C2EDomain"
+                          name="copyrightTitle"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.C2EDomain}
+                          value={values.title}
                         />
+                        <p className="error">
+                          {errors.copyrightTitle &&
+                            touched.copyrightTitle &&
+                            errors.copyrightTitle}
+                        </p>
+                      </div>
+
+                      <div className="input-box">
+                        <label>
+                          <img src={DescriptionIcon} alt="DescriptionIcon" />
+                          Copyright Description
+                        </label>
+                        <textarea
+                          type="text"
+                          name="copyrightDiscription"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.copyrightDiscription}
+                        />
+                        <p className="error">
+                          {errors.copyrightDiscription &&
+                            touched.copyrightDiscription &&
+                            errors.copyrightDiscription}
+                        </p>
+                      </div>
+
+                      <div className="input-box">
+                        <label>
+                          <img src={TitleIcon} alt="title" /> Copyright Year
+                        </label>
+                        <input
+                          type="text"
+                          name="copyrightYear"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.title}
+                        />
+                        <p className="error">
+                          {errors.copyrightYear &&
+                            touched.copyrightYear &&
+                            errors.copyrightYear}
+                        </p>
+                      </div>
+
+                      <div className="license-card-box">
+                        <div className="lic-cards">
+                          <div className="c2e-linc-card">
+                            <p>Financial Year 2023 Chart</p>
+                            <div
+                              className="lic-bg-image"
+                              style={{
+                                backgroundImage: `url(${""})`,
+                                backgroundRepeat: "no-repeat",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                              }}
+                            />
+                            <h4>Terms $10/year Unlimited </h4>
+                          </div>
+                        </div>
+                        <div className="lic-cards">
+                          <div className="c2e-linc-card">
+                            <p>Financial Year 2023 Chart</p>
+                            <div
+                              className="lic-bg-image"
+                              style={{
+                                backgroundImage: `url(${""})`,
+                                backgroundRepeat: "no-repeat",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                              }}
+                            />
+                            <h4>Terms $10/year Unlimited </h4>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-
                     <div className="stor-flex-box">
                       <h5>Owner Information</h5>
-                      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                      <p>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry.
+                      </p>
                       <br />
-                                            <div className="input-box">
+                      <div className="input-box">
                         <label>
                           <img src={TitleIcon} alt="title" /> Title
                         </label>
