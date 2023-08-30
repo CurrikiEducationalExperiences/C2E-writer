@@ -306,15 +306,28 @@
   gap: 10px;
 }
 
+.e-commerce-stor {
+  /* width: 500px; */
+  padding: 60px 0 0 40px;
+}
+.e-commerce-stor .selection-stor-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 24px;
+}
 .selection-box {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   gap: 50px;
   padding-top: 20px;
 }
 
-.selection-box .box {
+.selection-box .box,
+.selection-stor-box .box {
   width: 200px;
   height: 140px;
   display: flex;
@@ -325,7 +338,13 @@
   cursor: pointer;
   box-shadow: 0px 0px 4px 1px #eeeded;
 }
-
+.selection-stor-box .box:hover {
+  /* box-shadow: 0px 0px 0px 0px #eeeded; */
+  border-bottom: 4px solid #f8af2c;
+}
+.selection-stor-box img {
+  width: 120px;
+}
 .selection-box img {
   width: 100px;
 }
@@ -422,9 +441,9 @@
   background-color: #0c63e4 !important;
 }
 
-/* .right-aligned-modal {
+.right-aligned-modal {
   max-width: 100% !important;
-  height: 100% !important;
+  min-height: 100% !important;
   display: flex !important;
   justify-content: flex-end;
   align-items: flex-start;
@@ -448,10 +467,14 @@
 
 .right-aligned-modal .modal-content {
   max-width: 1000px;
-  height: 100%;
+  min-height: 100vh;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-} */
+}
+
+.right-aligned-modal .modal-content .modal-body {
+  padding: 32px 42px;
+}
 
 .list-steps {
   width: 100%;
@@ -493,16 +516,45 @@
 
 .formik-box {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: flex-start;
+  width: 100%;
+  gap: 62px;
 }
+
+.formik-box .stor-flex-box {
+  text-align: left;
+  width: 50%;
+}
+
+.formik-box .stor-flex-box h5 {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  color: #084892;
+  margin-bottom: 24px;
+}
+
 .formik-box .input-box {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 6px;
   width: 100%;
+  margin-bottom: 16px;
 }
 
+.input-box label {
+  color: #515151;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.input-box label img {
+  width: auto;
+}
 .formik-box .input-flex-box {
   width: 100%;
   display: flex;
@@ -512,18 +564,22 @@
 }
 .formik-box .input-box input,
 textarea {
-  border: 1px solid #959595;
-
-  border-radius: 6px;
+  width: 100%;
+  height: 40px;
+  outline: none;
+  border: 1px solid #515151;
+  border-radius: 4px;
+  text-indent: 10px;
   padding: 8px;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
-  color: #222121;
+  color: #515151;
+}
+
+.formik-box textarea {
+  min-height: 84px;
 }
 .formik-box .input-box .error {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   line-height: normal;
   color: red;
   margin: 0;
