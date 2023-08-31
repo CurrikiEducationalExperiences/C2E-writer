@@ -1127,11 +1127,9 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           name="name"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.name}
+                          value={'Curriki'}
                         />
-                        <p className="error">
-                          {errors.name && touched.name && errors.name}
-                        </p>
+
                       </div>
 
                       <div className="input-box">
@@ -1143,11 +1141,9 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           name="email"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.email}
+                          value={'publisher@curriki.org'}
                         />
-                        <p className="error">
-                          {errors.email && touched.email && errors.email}
-                        </p>
+
                       </div>
 
                       <div className="input-box">
@@ -1159,11 +1155,9 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           name="url"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.url}
+                          value={'https://curriki.org'}
                         />
-                        <p className="error">
-                          {errors.url && touched.url && errors.url}
-                        </p>
+
                       </div>
                     </div>
                     </div>
