@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Rubik:wght@300;400;500;600;700;800;900&display=swap");
 
 body {
-  font-family: "Rubik", sans-serif;
+  font-family: "Rubik", sans-serif !important;
 }
 
 /* width */
@@ -806,31 +806,28 @@ textarea {
   margin: 32px 0 42px 0;
 }
 
-.modal-title-heading h2 {
-  font-weight: 500;
-  font-size: 22px;
-  line-height: normal;
-  color: #000;
-  margin-bottom: 8px;
-}
-
-.modal-title-heading .h-name {
-  min-width: 40px;
-}
-
-.modal-title-heading h2 .span,
-.modal-title-heading h3 .span,
-.modal-title-heading p .span {
-  /* color: #084892; */
+.modal-title-heading h1 {
+  font-style: normal;
   font-weight: 400;
-  font-size: 18px;
-  color: #515151;
+  font-size: 16px;
+  line-height: 24px;
+  color: #084892;
+  margin-bottom: 2px;
 }
-
-.modal-title-heading h3 {
+.modal-title-heading h2 {
+  font-style: normal;
   font-weight: 500;
-  font-size: 22px;
-  line-height: normal;
+  font-size: 24px;
+  line-height: 28px;
+  color: #084892;
+  margin-bottom: 4px;
+}
+.modal-title-heading h3 {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #515151;
   margin-bottom: 8px;
 }
 
@@ -840,6 +837,9 @@ textarea {
   line-height: normal;
 }
 
-.modal-title-heading p .span {
+.modal-title-heading p span {
+  font-weight: 400;
+  font-size: 16px;
   color: #515151;
+  margin-left: 4px;
 }
