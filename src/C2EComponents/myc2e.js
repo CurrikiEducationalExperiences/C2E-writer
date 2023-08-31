@@ -195,9 +195,7 @@ const Myc2e = () => {
           </div>
         </div>
       </div>
-      <div className="">
-        <button onClick={() => setShowHide(true)}>open </button>
-      </div>
+
       {walletConnection && (
         <Tabs
           defaultActiveKey="profile"
@@ -724,8 +722,6 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                     <div className="stor-flex-box">
                       <h5>Store Information</h5>
 
-
-
                       {/* <div className="input-box">
                         <label>
                           <img src={SKUIcon} alt="aku" /> SKU
@@ -885,8 +881,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           value={values.C2EContentType}
                         />
                       </div> */}
-                         <h5>C2E License Details</h5>
-                         <div className="input-box">
+                      <h5>C2E License Details</h5>
+                      <div className="input-box">
                         <label>Set Usage Type</label>
                       </div>
 
@@ -979,12 +975,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                             errors.copyrightYear}
                         </p>
                       </div>
-                      <div className="input-box">
-                         Show Royalities
-                      </div>
-
+                      <div className="input-box">Show Royalities</div>
                     </div>
-
 
                     {/* <div className="stor-flex-box">
                       <h5>C2E License Details</h5>
@@ -1083,7 +1075,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
 
                       <div className="input-box">
                         <label>
-                          <img src={UrlIcon} alt="pub" />  URL
+                          <img src={UrlIcon} alt="pub" /> URL
                         </label>
                         <input
                           type="text"
@@ -1098,9 +1090,9 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                       </div>
 
                       <div className="stor-flex-box">
-                      <h5>Publisher Information</h5>
+                        <h5>Publisher Information</h5>
 
-                      {/* <br />
+                        {/* <br />
                       <div className="input-box">
                         <label>
                           <img src={TitleIcon} alt="title" /> Title
@@ -1117,54 +1109,54 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                         </p>
                       </div> */}
 
-                      <div className="input-box">
-                        <label>
-                          <img src={NameIcon} alt="neme" /> Name
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.name}
-                        />
-                        <p className="error">
-                          {errors.name && touched.name && errors.name}
-                        </p>
-                      </div>
+                        <div className="input-box">
+                          <label>
+                            <img src={NameIcon} alt="neme" /> Name
+                          </label>
+                          <input
+                            type="text"
+                            name="name"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.name}
+                          />
+                          <p className="error">
+                            {errors.name && touched.name && errors.name}
+                          </p>
+                        </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={EmailIcon} alt="email" /> Email
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.email}
-                        />
-                        <p className="error">
-                          {errors.email && touched.email && errors.email}
-                        </p>
-                      </div>
+                        <div className="input-box">
+                          <label>
+                            <img src={EmailIcon} alt="email" /> Email
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.email}
+                          />
+                          <p className="error">
+                            {errors.email && touched.email && errors.email}
+                          </p>
+                        </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={UrlIcon} alt="pub" />  URL
-                        </label>
-                        <input
-                          type="text"
-                          name="url"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.url}
-                        />
-                        <p className="error">
-                          {errors.url && touched.url && errors.url}
-                        </p>
+                        <div className="input-box">
+                          <label>
+                            <img src={UrlIcon} alt="pub" /> URL
+                          </label>
+                          <input
+                            type="text"
+                            name="url"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.url}
+                          />
+                          <p className="error">
+                            {errors.url && touched.url && errors.url}
+                          </p>
+                        </div>
                       </div>
-                    </div>
                     </div>
 
                     {/*
