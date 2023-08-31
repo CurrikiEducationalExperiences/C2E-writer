@@ -620,10 +620,7 @@ const ListingModule = ({
                   ?.title
               }
             </h3>
-            <p>
-              ISBN:
-              <span>{activEpub?.identifier}</span>
-            </p>
+
           </div>
 
           {steps === 1 ? (
@@ -648,8 +645,8 @@ const ListingModule = ({
             <div>
               <Formik
                 initialValues={{
-                  productName: "",
-                  sku: "",
+                  productName: activEpub?.title,
+                  sku: activEpub?.identifier,
                   price: "",
                   productDiscription: "",
                   title: "",
@@ -664,6 +661,7 @@ const ListingModule = ({
                   copyrightYear: "",
                   toppings: [],
                 }}
+                enableReinitialize
                 validate={(values) => {
                   const errors = {};
                   if (!values.productName) {
@@ -719,9 +717,9 @@ const ListingModule = ({
                     <div className="stor-flex-box">
                       <h5>C2E Details</h5>
 
-                      {/* <div className="input-box">
+                      <div className="input-box">
                         <label>
-                          <img src={SKUIcon} alt="aku" /> SKU
+                          <img src={SKUIcon} alt="aku" /> ISBN
                         </label>
                         <input
                           type="text"
@@ -730,11 +728,11 @@ const ListingModule = ({
                           onBlur={handleBlur}
                           value={values.sku}
                         />
-                      </div> */}
+                      </div>
 
-                      {/* <div className="input-box">
+                      <div className="input-box">
                         <label>
-                          <img src={NameIcon} alt="name" /> Name *
+                          <img src={NameIcon} alt="name" /> C2E Title *
                         </label>
                         <input
                           type="text"
@@ -748,28 +746,14 @@ const ListingModule = ({
                             touched.productName &&
                             errors.productName}
                         </p>
-                      </div> */}
-
-                      <div className="input-box">
-                        <label>
-                          <img src={PrceIcon} alt="" /> Price ($USD) *
-                        </label>
-                        <input
-                          type="number"
-                          name="price"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.price}
-                        />
-                        <p className="error">
-                          {errors.price && touched.price && errors.price}
-                        </p>
                       </div>
+
+
 
                       <div className="input-box">
                         <label>
                           <img src={DescriptionIcon} alt="DescriptionIcon" />
-                          Description
+                          C2E Description
                         </label>
                         <textarea
                           type="text"
@@ -888,7 +872,7 @@ const ListingModule = ({
                           <input
                             type="checkbox"
                             name="toppings"
-                            value="Purchased"
+                            value="Purchase"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             checked={values.toppings.includes("Purchased")}
@@ -918,7 +902,7 @@ const ListingModule = ({
                           <label className="ml-2">Open</label>
                         </div>
                       </div>
-                      <div className="input-box">
+                      {/* <div className="input-box">
                         <label>
                           <img src={TitleIcon} alt="title" /> Copyright Title
                         </label>
@@ -934,9 +918,9 @@ const ListingModule = ({
                             touched.copyrightTitle &&
                             errors.copyrightTitle}
                         </p>
-                      </div>
+                      </div> */}
 
-                      <div className="input-box">
+                      {/* <div className="input-box">
                         <label>
                           <img src={DescriptionIcon} alt="DescriptionIcon" />
                           Copyright Description
@@ -953,11 +937,27 @@ const ListingModule = ({
                             touched.copyrightDiscription &&
                             errors.copyrightDiscription}
                         </p>
-                      </div>
+                      </div> */}
+
 
                       <div className="input-box">
                         <label>
-                          <img src={TitleIcon} alt="title" /> Copyright Year
+                          <img src={PrceIcon} alt="" /> Price ($USD) *
+                        </label>
+                        <input
+                          type="number"
+                          name="price"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.price}
+                        />
+                        <p className="error">
+                          {errors.price && touched.price && errors.price}
+                        </p>
+                      </div>
+                      <div className="input-box">
+                        <label>
+                          <img src={TitleIcon} alt="title" /> License Terms
                         </label>
                         <input
                           type="text"
@@ -972,7 +972,10 @@ const ListingModule = ({
                             errors.copyrightYear}
                         </p>
                       </div>
-                      <div className="input-box">Show Royalities</div>
+                      <div style={{display:'flex', gap:'10px'}}>
+                      <button className="input-box"> Royalty Information </button>
+                      <button className="input-box"> Additional Information </button>
+                      </div>
                     </div>
 
                     {/* <div className="stor-flex-box">
