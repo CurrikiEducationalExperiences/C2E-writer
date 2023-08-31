@@ -504,9 +504,11 @@ const Myc2e = () => {
       <ListingModule
         showListing={showListing}
         setShowListing={setShowListing}
+        activEpub={activEpub}
+        allData={allData}
       />
 
-      <HiddenModule showListing={showHide} setShowListing={setShowHide} />
+      {/* <HiddenModule showListing={showHide} setShowListing={setShowHide} /> */}
 
       {/*<footer class="footer-all">
         <a
@@ -540,11 +542,11 @@ const Myc2e = () => {
 
 export default Myc2e;
 
-const ListingModule = ({ showListing, setShowListing }) => {
+const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
   const [steps, setSteps] = useState(1);
   const inputFileRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
-
+  console.log(activEpub);
   const handleImageChange = (event) => {
     const files = event.target.files;
     const updatedImages = [...selectedImages];
@@ -580,23 +582,37 @@ const ListingModule = ({ showListing, setShowListing }) => {
       backdrop="static"
       keyboard={false}
     >
-      <Modal.Header closeButton>
-        <div className="list-steps">
-          <div className="step">
-            <h5 className="">Select</h5>
-          </div>
-          <div className={`step ${steps === 1 && "disable"}`}>
-            <h5 className="">Describe</h5>
-          </div>
-          <div
-            className={`step ${steps === 1 || steps === 2 ? "disable" : ""}`}
-          >
-            <h5 className="">Finish</h5>
-          </div>
-        </div>
-      </Modal.Header>
       <Modal.Body>
         <div className="uploadBox modial-iner-box">
+          <div className="list-steps">
+            <div className="step">
+              <h5 className="">Select</h5>
+            </div>
+            <div className={`step ${steps === 1 && "disable"}`}>
+              <h5 className="">Describe</h5>
+            </div>
+            <div
+              className={`step ${steps === 1 || steps === 2 ? "disable" : ""}`}
+            >
+              <h5 className="">Finish</h5>
+            </div>
+          </div>
+          <br />
+          <div className="modal-title-heading">
+            <h2>{activEpub.title}</h2>
+            <h3>
+              Book:{" "}
+              <span>
+                {
+                  allData?.filter(
+                    (data) => data.id === activEpub?.parentId,
+                  )?.[0]?.title
+                }
+              </span>
+            </h3>
+            <p>ISBN: {activEpub.identifier}</p>
+          </div>
+
           {steps === 1 ? (
             <div className="e-commerce-stor">
               <div className="selection-stor-box mb-5">
@@ -1148,610 +1164,626 @@ const ListingModule = ({ showListing, setShowListing }) => {
   );
 };
 
-const HiddenModule = ({ showListing, setShowListing }) => {
-  const [steps, setSteps] = useState(1);
-  const inputFileRef = useRef(null);
-  const [selectedImages, setSelectedImages] = useState([]);
+// const HiddenModule = ({ showListing, setShowListing }) => {
+//   const [steps, setSteps] = useState(1);
+//   const inputFileRef = useRef(null);
+//   const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleImageChange = (event) => {
-    const files = event.target.files;
-    const updatedImages = [...selectedImages];
+//   const handleImageChange = (event) => {
+//     const files = event.target.files;
+//     const updatedImages = [...selectedImages];
 
-    for (let i = 0; i < files.length; i++) {
-      updatedImages.push(files[i]);
-    }
+//     for (let i = 0; i < files.length; i++) {
+//       updatedImages.push(files[i]);
+//     }
 
-    setSelectedImages(updatedImages);
-  };
+//     setSelectedImages(updatedImages);
+//   };
 
-  const handleUpload = () => {
-    inputFileRef.current.click();
-    // setSelectedImages([]);
-  };
+//   const handleUpload = () => {
+//     inputFileRef.current.click();
+//     // setSelectedImages([]);
+//   };
 
-  const handleImageDelete = (index) => {
-    const newImages = [...selectedImages];
-    newImages.splice(index, 1);
-    setSelectedImages(newImages);
-  };
+//   const handleImageDelete = (index) => {
+//     const newImages = [...selectedImages];
+//     newImages.splice(index, 1);
+//     setSelectedImages(newImages);
+//   };
 
-  return (
-    <Modal
-      show={showListing}
-      onHide={() => {
-        setShowListing(false);
-      }}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      dialogClassName="right-aligned-modal"
-      centered
-      backdrop="static"
-      keyboard={false}
-    >
-      <Modal.Header closeButton>
-        <div className="list-steps">
-          <div className="step">
-            <h5 className="">Select</h5>
-          </div>
-          <div className={`step ${steps === 1 && "disable"}`}>
-            <h5 className="">Describe</h5>
-          </div>
-          <div
-            className={`step ${steps === 1 || steps === 2 ? "disable" : ""}`}
-          >
-            <h5 className="">Finish</h5>
-          </div>
-        </div>
-      </Modal.Header>
-      <Modal.Body>
-        <div className="uploadBox modial-iner-box">
-          {steps === 1 ? (
-            <div className="e-commerce-stor">
-              <div className="selection-stor-box mb-5">
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Amazon} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Wiley} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={WooCommerce} alt="" />
-                </div>
-              </div>
-            </div>
-          ) : steps === 2 ? (
-            <div>
-              <Formik
-                initialValues={{
-                  productName: "",
-                  sku: "",
-                  price: "",
-                  productDiscription: "",
-                  title: "",
-                  name: "",
-                  email: "",
-                  url: "",
-                  C2Elink: "",
-                  C2EAuthor: "",
-                  C2EContentType: "",
-                  copyrightTitle: "",
-                  copyrightDiscription: "",
-                  copyrightYear: "",
-                  toppings: [],
-                }}
-                validate={(values) => {
-                  const errors = {};
-                  if (!values.productName) {
-                    errors.productName = "Required";
-                  }
-                  if (!values.price) {
-                    errors.price = "Required";
-                  }
-                  if (!values.productDiscription) {
-                    errors.productDiscription = "Required";
-                  }
-                  if (!values.url) {
-                    errors.url = "Required";
-                  }
+//   return (
+//     <Modal
+//       show={showListing}
+//       onHide={() => {
+//         setShowListing(false);
+//       }}
+//       size="lg"
+//       aria-labelledby="contained-modal-title-vcenter"
+//       dialogClassName="right-aligned-modal"
+//       centered
+//       backdrop="static"
+//       keyboard={false}
+//     >
+//       <Modal.Header closeButton>
+//         <div className="list-steps">
+//           <div className="step">
+//             <h5 className="">Select</h5>
+//           </div>
+//           <div className={`step ${steps === 1 && "disable"}`}>
+//             <h5 className="">Describe</h5>
+//           </div>
+//           <div
+//             className={`step ${steps === 1 || steps === 2 ? "disable" : ""}`}
+//           >
+//             <h5 className="">Finish</h5>
+//           </div>
+//         </div>
+//       </Modal.Header>
+//       <Modal.Body>
+//         <div className="uploadBox modial-iner-box">
+//           {steps === 1 ? (
+//             <div className="e-commerce-stor">
+//               <div className="selection-stor-box mb-5">
+//                 <div
+//                   className="box"
+//                   onClick={() => {
+//                     setSteps(2);
+//                   }}
+//                 >
+//                   <img src={AliBaba} alt="" />
+//                 </div>
+//                 <div
+//                   className="box"
+//                   onClick={() => {
+//                     setSteps(2);
+//                   }}
+//                 >
+//                   <img src={Amazon} alt="" />
+//                 </div>
+//                 <div
+//                   className="box"
+//                   onClick={() => {
+//                     setSteps(2);
+//                   }}
+//                 >
+//                   <img src={Daraz} alt="" />
+//                 </div>
+//                 <div
+//                   className="box"
+//                   onClick={() => {
+//                     setSteps(2);
+//                   }}
+//                 >
+//                   <img src={Ebay} alt="" />
+//                 </div>
+//                 <div
+//                   className="box"
+//                   onClick={() => {
+//                     setSteps(2);
+//                   }}
+//                 >
+//                   <img src={WooCommerce} alt="" />
+//                 </div>
+//               </div>
+//             </div>
+//           ) : steps === 2 ? (
+//             <div>
+//               <Formik
+//                 initialValues={{
+//                   productName: "",
+//                   sku: "",
+//                   price: "",
+//                   productDiscription: "",
+//                   title: "",
+//                   name: "",
+//                   email: "",
+//                   url: "",
+//                   C2Elink: "",
+//                   C2EAuthor: "",
+//                   C2EContentType: "",
+//                   copyrightTitle: "",
+//                   copyrightDiscription: "",
+//                   copyrightYear: "",
+//                   toppings: [],
+//                 }}
+//                 validate={(values) => {
+//                   const errors = {};
+//                   if (!values.productName) {
+//                     errors.productName = "Required";
+//                   }
+//                   if (!values.price) {
+//                     errors.price = "Required";
+//                   }
+//                   if (!values.productDiscription) {
+//                     errors.productDiscription = "Required";
+//                   }
+//                   if (!values.url) {
+//                     errors.url = "Required";
+//                   }
 
-                  if (!values.title) {
-                    errors.title = "Required";
-                  }
+//                   if (!values.title) {
+//                     errors.title = "Required";
+//                   }
 
-                  if (!values.name) {
-                    errors.name = "Required";
-                  }
-                  if (!values.email) {
-                    errors.email = "Required";
-                  } else if (
-                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                      values.email,
-                    )
-                  ) {
-                    errors.email = "Invalid email address";
-                  }
-                  return errors;
-                }}
-                onSubmit={(values, { setSubmitting }) => {
-                  setTimeout(() => {
-                    console.log("login", values);
-                    alert(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                  }, 400);
-                }}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                  /* and other goodies */
-                }) => (
-                  <form onSubmit={handleSubmit} className="formik-box">
-                    <div className="stor-flex-box">
-                      <h5>Store Information</h5>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
-                      <br />
+//                   if (!values.name) {
+//                     errors.name = "Required";
+//                   }
+//                   if (!values.email) {
+//                     errors.email = "Required";
+//                   } else if (
+//                     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+//                       values.email,
+//                     )
+//                   ) {
+//                     errors.email = "Invalid email address";
+//                   }
+//                   return errors;
+//                 }}
+//                 onSubmit={(values, { setSubmitting }) => {
+//                   setTimeout(() => {
+//                     console.log("login", values);
+//                     alert(JSON.stringify(values, null, 2));
+//                     setSubmitting(false);
+//                   }, 400);
+//                 }}
+//               >
+//                 {({
+//                   values,
+//                   errors,
+//                   touched,
+//                   handleChange,
+//                   handleBlur,
+//                   handleSubmit,
+//                   isSubmitting,
+//                   /* and other goodies */
+//                 }) => (
+//                   <form onSubmit={handleSubmit} className="formik-box">
+//                     <div className="stor-flex-box">
+//                       <h5>Store Information</h5>
+//                       <p>
+//                         Lorem Ipsum is simply dummy text of the printing and
+//                         typesetting industry.
+//                       </p>
+//                       <br />
 
-                      <div className="input-box">
-                        <label>
-                          <img src={SKUIcon} alt="aku" /> SKU
-                        </label>
-                        <input
-                          type="text"
-                          name="sku"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.sku}
-                        />
-                      </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={SKUIcon} alt="aku" /> SKU
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="sku"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.sku}
+//                         />
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={NameIcon} alt="name" /> Name *
-                        </label>
-                        <input
-                          type="text"
-                          name="productName"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.productName}
-                        />
-                        <p className="error">
-                          {errors.productName &&
-                            touched.productName &&
-                            errors.productName}
-                        </p>
-                      </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={NameIcon} alt="name" /> Name *
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="productName"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.productName}
+//                         />
+//                         <p className="error">
+//                           {errors.productName &&
+//                             touched.productName &&
+//                             errors.productName}
+//                         </p>
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={PrceIcon} alt="" /> Price ($USD) *
-                        </label>
-                        <input
-                          type="number"
-                          name="price"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.price}
-                        />
-                        <p className="error">
-                          {errors.price && touched.price && errors.price}
-                        </p>
-                      </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={PrceIcon} alt="" /> Price ($USD) *
+//                         </label>
+//                         <input
+//                           type="number"
+//                           name="price"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.price}
+//                         />
+//                         <p className="error">
+//                           {errors.price && touched.price && errors.price}
+//                         </p>
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={DescriptionIcon} alt="DescriptionIcon" />
-                          Description
-                        </label>
-                        <textarea
-                          type="text"
-                          name="productDiscription"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.productDiscription}
-                        />
-                      </div>
-                      {/* second */}
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={DescriptionIcon} alt="DescriptionIcon" />
+//                           Description
+//                         </label>
+//                         <textarea
+//                           type="text"
+//                           name="productDiscription"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.productDiscription}
+//                         />
+//                       </div>
+//                       {/* second */}
 
-                      {/* <div className="input-box">
-                        <label>
-                          <img src={LinkIcon} alt="LinkIcon" /> C2E link
-                        </label>
-                        <input
-                          type="text"
-                          name="C2Elink"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.C2Elink}
-                        />
-                      </div> */}
+//                       {/* <div className="input-box">
+//                         <label>
+//                           <img src={LinkIcon} alt="LinkIcon" /> C2E link
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="C2Elink"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.C2Elink}
+//                         />
+//                       </div> */}
 
-                      <div className="input-box">
-                        <label>
-                          <img src={LinkIcon} alt="LinkIcon" /> Uplaod images
-                        </label>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={LinkIcon} alt="LinkIcon" /> Uplaod images
+//                         </label>
 
-                        <div className="curriki-image-update-util">
-                          <div className="box-section">
-                            <div className="overlay">
-                              <img
-                                className="overlay-drag-image"
-                                src={dragImage}
-                                alt="drag"
-                              />
-                              <div className="img-button">
-                                <input
-                                  type="file"
-                                  multiple
-                                  accept="image/*"
-                                  ref={inputFileRef}
-                                  style={{ display: "none" }}
-                                  onChange={handleImageChange}
-                                />
-                                <buttun
-                                  type="button"
-                                  className="overlay-drag-brows-btn"
-                                  onClick={handleUpload}
-                                >
-                                  Upload Images
-                                </buttun>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+//                         <div className="curriki-image-update-util">
+//                           <div className="box-section">
+//                             <div className="overlay">
+//                               <img
+//                                 className="overlay-drag-image"
+//                                 src={dragImage}
+//                                 alt="drag"
+//                               />
+//                               <div className="img-button">
+//                                 <input
+//                                   type="file"
+//                                   multiple
+//                                   accept="image/*"
+//                                   ref={inputFileRef}
+//                                   style={{ display: "none" }}
+//                                   onChange={handleImageChange}
+//                                 />
+//                                 <buttun
+//                                   type="button"
+//                                   className="overlay-drag-brows-btn"
+//                                   onClick={handleUpload}
+//                                 >
+//                                   Upload Images
+//                                 </buttun>
+//                               </div>
+//                             </div>
+//                           </div>
+//                         </div>
 
-                        <div className="">
-                          {selectedImages && (
-                            <div>
-                              <p>Uploaded Images</p>
-                              <div className="uploaded-image">
-                                {selectedImages.map((image, index) => (
-                                  <img
-                                    key={index}
-                                    src={URL.createObjectURL(image)}
-                                    alt={`Image ${index}`}
-                                    onClick={() => handleImageDelete(index)}
-                                    style={{
-                                      maxWidth: "100px",
-                                      width: "100%",
-                                      height: "100px",
-                                      objectFit: "cover",
-                                    }}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="input-box">
-                        <label>
-                          <img src={AuthorIcon} alt="author" /> C2E author
-                        </label>
-                        <input
-                          type="text"
-                          name="C2EAuthor"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.C2EAuthor}
-                        />
-                      </div>
+//                         <div className="">
+//                           {selectedImages && (
+//                             <div>
+//                               <p>Uploaded Images</p>
+//                               <div className="uploaded-image">
+//                                 {selectedImages.map((image, index) => (
+//                                   <img
+//                                     key={index}
+//                                     src={URL.createObjectURL(image)}
+//                                     alt={`Image ${index}`}
+//                                     onClick={() => handleImageDelete(index)}
+//                                     style={{
+//                                       maxWidth: "100px",
+//                                       width: "100%",
+//                                       height: "100px",
+//                                       objectFit: "cover",
+//                                     }}
+//                                   />
+//                                 ))}
+//                               </div>
+//                             </div>
+//                           )}
+//                         </div>
+//                       </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={AuthorIcon} alt="author" /> C2E author
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="C2EAuthor"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.C2EAuthor}
+//                         />
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={ContentIcon} alt="cntent" /> C2E Content
-                          Type
-                        </label>
-                        <input
-                          type="text"
-                          name="C2EContentType"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.C2EContentType}
-                        />
-                      </div>
-                    </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={ContentIcon} alt="cntent" /> C2E Content
+//                           Type
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="C2EContentType"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.C2EContentType}
+//                         />
+//                       </div>
+//                     </div>
 
-                    <div className="stor-flex-box">
-                      <h5>C2E License Details</h5>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
-                      <br />
+//                     <div className="stor-flex-box">
+//                       <h5>C2E License Details</h5>
+//                       <p>
+//                         Lorem Ipsum is simply dummy text of the printing and
+//                         typesetting industry.
+//                       </p>
+//                       <br />
 
-                      <div className="input-box">
-                        <label>Set Usage Type</label>
-                      </div>
+//                       <div className="input-box">
+//                         <label>Set Usage Type</label>
+//                       </div>
 
-                      <div className="d-flex check-box">
-                        <div className="check">
-                          <input
-                            type="checkbox"
-                            name="toppings"
-                            value="Purchased"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            checked={values.toppings.includes("Purchased")}
-                          />
-                          <label className="ml-2">Purchased</label>
-                        </div>
-                        <div className="check">
-                          <input
-                            type="checkbox"
-                            name="toppings"
-                            value="Subscription"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            checked={values.toppings.includes("Subscription")}
-                          />
-                          <label className="ml-2">Subscription</label>
-                        </div>
-                        <div className="check">
-                          <input
-                            type="checkbox"
-                            name="toppings"
-                            value="Open"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            checked={values.toppings.includes("Open")}
-                          />
-                          <label className="ml-2">Open</label>
-                        </div>
-                      </div>
-                      <div className="input-box">
-                        <label>
-                          <img src={TitleIcon} alt="title" /> Copyright Title
-                        </label>
-                        <input
-                          type="text"
-                          name="copyrightTitle"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.title}
-                        />
-                        <p className="error">
-                          {errors.copyrightTitle &&
-                            touched.copyrightTitle &&
-                            errors.copyrightTitle}
-                        </p>
-                      </div>
+//                       <div className="d-flex check-box">
+//                         <div className="check">
+//                           <input
+//                             type="checkbox"
+//                             name="toppings"
+//                             value="Purchased"
+//                             onChange={handleChange}
+//                             onBlur={handleBlur}
+//                             checked={values.toppings.includes("Purchased")}
+//                           />
+//                           <label className="ml-2">Purchased</label>
+//                         </div>
+//                         <div className="check">
+//                           <input
+//                             type="checkbox"
+//                             name="toppings"
+//                             value="Subscription"
+//                             onChange={handleChange}
+//                             onBlur={handleBlur}
+//                             checked={values.toppings.includes("Subscription")}
+//                           />
+//                           <label className="ml-2">Subscription</label>
+//                         </div>
+//                         <div className="check">
+//                           <input
+//                             type="checkbox"
+//                             name="toppings"
+//                             value="Open"
+//                             onChange={handleChange}
+//                             onBlur={handleBlur}
+//                             checked={values.toppings.includes("Open")}
+//                           />
+//                           <label className="ml-2">Open</label>
+//                         </div>
+//                       </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={TitleIcon} alt="title" /> Copyright Title
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="copyrightTitle"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.title}
+//                         />
+//                         <p className="error">
+//                           {errors.copyrightTitle &&
+//                             touched.copyrightTitle &&
+//                             errors.copyrightTitle}
+//                         </p>
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={DescriptionIcon} alt="DescriptionIcon" />
-                          Copyright Description
-                        </label>
-                        <textarea
-                          type="text"
-                          name="copyrightDiscription"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.copyrightDiscription}
-                        />
-                        <p className="error">
-                          {errors.copyrightDiscription &&
-                            touched.copyrightDiscription &&
-                            errors.copyrightDiscription}
-                        </p>
-                      </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={DescriptionIcon} alt="DescriptionIcon" />
+//                           Copyright Description
+//                         </label>
+//                         <textarea
+//                           type="text"
+//                           name="copyrightDiscription"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.copyrightDiscription}
+//                         />
+//                         <p className="error">
+//                           {errors.copyrightDiscription &&
+//                             touched.copyrightDiscription &&
+//                             errors.copyrightDiscription}
+//                         </p>
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={TitleIcon} alt="title" /> Copyright Year
-                        </label>
-                        <input
-                          type="text"
-                          name="copyrightYear"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.title}
-                        />
-                        <p className="error">
-                          {errors.copyrightYear &&
-                            touched.copyrightYear &&
-                            errors.copyrightYear}
-                        </p>
-                      </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={TitleIcon} alt="title" /> Copyright Year
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="copyrightYear"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.title}
+//                         />
+//                         <p className="error">
+//                           {errors.copyrightYear &&
+//                             touched.copyrightYear &&
+//                             errors.copyrightYear}
+//                         </p>
+//                       </div>
 
-                      <div className="license-card-box">
-                        <div className="lic-cards">
-                          <div className="c2e-linc-card">
-                            <p>Financial Year 2023 Chart</p>
-                            <div
-                              className="lic-bg-image"
-                              style={{
-                                backgroundImage: `url(${""})`,
-                                backgroundRepeat: "no-repeat",
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                              }}
-                            />
-                            <h4>Terms $10/year Unlimited </h4>
-                          </div>
-                        </div>
-                        <div className="lic-cards">
-                          <div className="c2e-linc-card">
-                            <p>Financial Year 2023 Chart</p>
-                            <div
-                              className="lic-bg-image"
-                              style={{
-                                backgroundImage: `url(${""})`,
-                                backgroundRepeat: "no-repeat",
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                              }}
-                            />
-                            <h4>Terms $10/year Unlimited </h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+//                       <div className="license-card-box">
+//                         <div className="lic-cards">
+//                           <div className="c2e-linc-card">
+//                             <p>Financial Year 2023 Chart</p>
+//                             <div
+//                               className="lic-bg-image"
+//                               style={{
+//                                 backgroundImage: `url(${""})`,
+//                                 backgroundRepeat: "no-repeat",
+//                                 backgroundSize: "cover",
+//                                 backgroundPosition: "center",
+//                               }}
+//                             />
+//                             <h4>Terms $10/year Unlimited </h4>
+//                           </div>
+//                         </div>
+//                         <div className="lic-cards">
+//                           <div className="c2e-linc-card">
+//                             <p>Financial Year 2023 Chart</p>
+//                             <div
+//                               className="lic-bg-image"
+//                               style={{
+//                                 backgroundImage: `url(${""})`,
+//                                 backgroundRepeat: "no-repeat",
+//                                 backgroundSize: "cover",
+//                                 backgroundPosition: "center",
+//                               }}
+//                             />
+//                             <h4>Terms $10/year Unlimited </h4>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
 
-                    <div className="stor-flex-box">
-                      <h5>Owner Information</h5>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
-                      <br />
-                      <div className="input-box">
-                        <label>
-                          <img src={TitleIcon} alt="title" /> Title
-                        </label>
-                        <input
-                          type="text"
-                          name="title"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.title}
-                        />
-                        <p className="error">
-                          {errors.title && touched.title && errors.title}
-                        </p>
-                      </div>
+//                     <div className="stor-flex-box">
+//                       <h5>Owner Information</h5>
+//                       <p>
+//                         Lorem Ipsum is simply dummy text of the printing and
+//                         typesetting industry.
+//                       </p>
+//                       <br />
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={TitleIcon} alt="title" /> Title
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="title"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.title}
+//                         />
+//                         <p className="error">
+//                           {errors.title && touched.title && errors.title}
+//                         </p>
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={NameIcon} alt="neme" /> Name
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.name}
-                        />
-                        <p className="error">
-                          {errors.name && touched.name && errors.name}
-                        </p>
-                      </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={NameIcon} alt="neme" /> Name
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="name"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.name}
+//                         />
+//                         <p className="error">
+//                           {errors.name && touched.name && errors.name}
+//                         </p>
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={EmailIcon} alt="email" /> Email
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.email}
-                        />
-                        <p className="error">
-                          {errors.email && touched.email && errors.email}
-                        </p>
-                      </div>
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={EmailIcon} alt="email" /> Email
+//                         </label>
+//                         <input
+//                           type="email"
+//                           name="email"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.email}
+//                         />
+//                         <p className="error">
+//                           {errors.email && touched.email && errors.email}
+//                         </p>
+//                       </div>
 
-                      <div className="input-box">
-                        <label>
-                          <img src={UrlIcon} alt="pub" /> Publisher URL
-                        </label>
-                        <input
-                          type="text"
-                          name="url"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.url}
-                        />
-                        <p className="error">
-                          {errors.url && touched.url && errors.url}
-                        </p>
-                      </div>
-                    </div>
-                    {/*
-                     */}
+//                       <div className="input-box">
+//                         <label>
+//                           <img src={UrlIcon} alt="pub" /> Publisher URL
+//                         </label>
+//                         <input
+//                           type="text"
+//                           name="url"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           value={values.url}
+//                         />
+//                         <p className="error">
+//                           {errors.url && touched.url && errors.url}
+//                         </p>
+//                       </div>
+//                     </div>
+//                     {/*
+//                      */}
 
-                    {steps === 2 && (
-                      <div className="form-btn">
-                        <button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="btn btn-primary "
-                          onClick={() => {
-                            if (
-                              values.productName !== "" ||
-                              values.price !== "" ||
-                              values.title !== "" ||
-                              values.name !== "" ||
-                              values.email !== ""
-                            ) {
-                              setSteps(3);
-                            }
-                          }}
-                        >
-                          Submit
-                        </button>
-                      </div>
-                    )}
-                  </form>
-                )}
-              </Formik>
-            </div>
-          ) : (
-            steps === 3 && (
-              <div className="w-100 ">
-                <h3 className="product-heading text-center mt-5">
-                  Thank You For Submition
-                </h3>
-              </div>
-            )
-          )}
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        {steps !== 1 && (
-          <button
-            onClick={() => {
-              if (steps === 1) {
-                setSteps(2);
-              } else if (steps === 2) {
-                setSteps(1);
-              } else if (steps === 3) {
-                setSteps(2);
-              }
-            }}
-            type="button"
-            className="btn btn-primary"
-          >
-            Back
-          </button>
-        )}
-        {steps === 3 && (
-          <button
-            onClick={() => {
-              setShowListing(false);
-            }}
-            type="button"
-            className="btn btn-secondary"
-          >
-            Close
-          </button>
-        )}
-      </Modal.Footer>
-    </Modal>
-  );
-};
+//                     {steps === 2 && (
+//                       <div className="form-btn">
+//                         <button
+//                           type="submit"
+//                           disabled={isSubmitting}
+//                           className="btn btn-primary "
+//                           onClick={() => {
+//                             if (
+//                               values.productName !== "" ||
+//                               values.price !== "" ||
+//                               values.title !== "" ||
+//                               values.name !== "" ||
+//                               values.email !== ""
+//                             ) {
+//                               setSteps(3);
+//                             }
+//                           }}
+//                         >
+//                           Submit
+//                         </button>
+//                       </div>
+//                     )}
+//                   </form>
+//                 )}
+//               </Formik>
+//             </div>
+//           ) : (
+//             steps === 3 && (
+//               <div className="w-100 ">
+//                 <h3 className="product-heading text-center mt-5">
+//                   Thank You For Submition
+//                 </h3>
+//               </div>
+//             )
+//           )}
+//         </div>
+//       </Modal.Body>
+//       <Modal.Footer>
+//         {steps !== 1 && (
+//           <button
+//             onClick={() => {
+//               if (steps === 1) {
+//                 setSteps(2);
+//               } else if (steps === 2) {
+//                 setSteps(1);
+//               } else if (steps === 3) {
+//                 setSteps(2);
+//               }
+//             }}
+//             type="button"
+//             className="btn btn-primary"
+//           >
+//             Back
+//           </button>
+//         )}
+//         {steps === 3 && (
+//           <button
+//             onClick={() => {
+//               setShowListing(false);
+//             }}
+//             type="button"
+//             className="btn btn-secondary"
+//           >
+//             Close
+//           </button>
+//         )}
+//       </Modal.Footer>
+//     </Modal>
+//   );
+// };

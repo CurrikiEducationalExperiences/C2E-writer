@@ -792,3 +792,9 @@ textarea {
   line-height: 20px;
   margin: 0;
 }
+
+.modal-title-heading {
+  width: 100%;
+  text-align: left;
+  margin: 28px 0 32px 0;
+}
