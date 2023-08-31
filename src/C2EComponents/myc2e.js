@@ -612,27 +612,17 @@ const ListingModule = ({
           </div>
           <br />
           <div className="modal-title-heading">
-            <h2>
-
-              <span> {selectedStore?.name} </span>
-            </h2>
-            <h2>
-
-              <span> {activEpub?.title} </span>
-            </h2>
+            <h1>{selectedStore?.name}</h1>
+            <h2>{activEpub?.title}</h2>
             <h3>
-
-              <span className="span">
-                {
-                  allData?.filter(
-                    (data) => data.id === activEpub?.parentId,
-                  )?.[0]?.title
-                }
-              </span>
+              {
+                allData?.filter((data) => data.id === activEpub?.parentId)?.[0]
+                  ?.title
+              }
             </h3>
             <p>
-              <span className="h-name">ISBN:</span>
-              <span className="span"> {activEpub?.identifier}</span>
+              ISBN:
+              <span>{activEpub?.identifier}</span>
             </p>
           </div>
 
