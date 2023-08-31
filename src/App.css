@@ -810,7 +810,7 @@ textarea {
   font-weight: 500;
   font-size: 22px;
   line-height: normal;
-  color: #515151;
+  color: #000;
   margin-bottom: 8px;
 }
 
@@ -824,13 +824,13 @@ textarea {
   /* color: #084892; */
   font-weight: 400;
   font-size: 18px;
+  color: #515151;
 }
 
 .modal-title-heading h3 {
   font-weight: 500;
   font-size: 22px;
   line-height: normal;
-  color: #515151;
   margin-bottom: 8px;
 }
 
@@ -838,5 +838,8 @@ textarea {
   font-weight: 500;
   font-size: 18px;
   line-height: normal;
+}
+
+.modal-title-heading p .span {
   color: #515151;
 }

@@ -38,7 +38,23 @@ import UrlIcon from "../assets/images/icons/form/Url.svg";
 import ContentIcon from "../assets/images/icons/form/Content.svg";
 import TitleIcon from "../assets/images/icons/form/title.svg";
 import dragImage from "../assets/images/img-upload.png";
-
+const allStores = [
+  {
+    id: 1,
+    name: "Wiley",
+    img: Wiley,
+  },
+  {
+    id: 2,
+    name: "Amazon",
+    img: Amazon,
+  },
+  {
+    id: 3,
+    name: "Woo commerce",
+    img: WooCommerce,
+  },
+];
 const Myc2e = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [web3auth, setWeb3auth] = useState(null);
@@ -85,10 +101,6 @@ const Myc2e = () => {
 
         const user = await web3auth.getUserInfo();
         setWalletConneciton(user);
-        console.log(
-          "🚀 ~ file: signup-web3auth.js:46 ~ getUserInfo ~ user:",
-          user,
-        );
 
         // web3auth.provider will be available here after user is connected
       });
@@ -504,6 +516,7 @@ const Myc2e = () => {
         setShowListing={setShowListing}
         activEpub={activEpub}
         allData={allData}
+        user={walletConnection}
       />
 
       {/* <HiddenModule showListing={showHide} setShowListing={setShowHide} /> */}
@@ -540,11 +553,18 @@ const Myc2e = () => {
 
 export default Myc2e;
 
-const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
+const ListingModule = ({
+  showListing,
+  setShowListing,
+  activEpub,
+  allData,
+  user,
+}) => {
   const [steps, setSteps] = useState(1);
   const inputFileRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
-  console.log(activEpub);
+  const [selectedStore, setSelectedStore] = useState();
+  console.log(user);
   const handleImageChange = (event) => {
     const files = event.target.files;
     const updatedImages = [...selectedImages];
@@ -589,21 +609,16 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
             <div className={`step ${steps === 1 && "disable"}`}>
               <h5 className="">Describe</h5>
             </div>
-            <div
-              className={`step ${steps === 1 || steps === 2 ? "disable" : ""}`}
-            >
-              <h5 className="">Finish</h5>
-            </div>
           </div>
           <br />
           <div className="modal-title-heading">
             <h2>
-              <span className="h-name"> Store: </span>
-              <span className="span"> {activEpub.title} </span>
+              <span className="h-name">Store Name:</span>
+              <span> {selectedStore?.name} </span>
             </h2>
             <h2>
-              <span className="h-name">C2E:</span>
-              <span className="span"> {activEpub.title} </span>
+              <span className="h-name">Title:</span>
+              <span> {activEpub?.title} </span>
             </h2>
             <h3>
               <span className="h-name">Book:</span>
@@ -616,38 +631,27 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
               </span>
             </h3>
             <p>
-              <span className="h-name"> ISBN:</span>
-              <span className="span"> {activEpub.identifier}</span>
+              <span className="h-name">ISBN:</span>
+              <span className="span"> {activEpub?.identifier}</span>
             </p>
           </div>
 
           {steps === 1 ? (
             <div className="e-commerce-stor">
               <div className="selection-stor-box mb-5">
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Amazon} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Wiley} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={WooCommerce} alt="" />
-                </div>
+                {allStores?.map((data) => {
+                  return (
+                    <div
+                      className="box"
+                      onClick={() => {
+                        setSteps(2);
+                        setSelectedStore(data);
+                      }}
+                    >
+                      <img src={data.img} alt="" />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ) : steps === 2 ? (
@@ -723,7 +727,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                 }) => (
                   <form onSubmit={handleSubmit} className="formik-box">
                     <div className="stor-flex-box">
-                      <h5>Store Information</h5>
+                      <h5>C2E Details</h5>
 
                       {/* <div className="input-box">
                         <label>
@@ -1025,7 +1029,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                     </div> */}
 
                     <div className="stor-flex-box">
-                      <h5>Owner Information</h5>
+                      <h5>Copyright Owner Details</h5>
 
                       {/* <br />
                       <div className="input-box">
@@ -1053,7 +1057,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           name="name"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.name}
+                          value={user?.name}
+                          readOnly
                         />
                         <p className="error">
                           {errors.name && touched.name && errors.name}
@@ -1069,7 +1074,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           name="email"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.email}
+                          value={user?.email}
+                          readOnly
                         />
                         <p className="error">
                           {errors.email && touched.email && errors.email}
@@ -1092,10 +1098,9 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                         </p>
                       </div>
 
-                      <div className="stor-flex-box">
-                        <h5>Publisher Information</h5>
+                      <h5>Publisher Details</h5>
 
-                        {/* <br />
+                      {/* <br />
                       <div className="input-box">
                         <label>
                           <img src={TitleIcon} alt="title" /> Title
@@ -1112,53 +1117,46 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                         </p>
                       </div> */}
 
-                        <div className="input-box">
-                          <label>
-                            <img src={NameIcon} alt="neme" /> Name
-                          </label>
-                          <input
-                            type="text"
-                            name="name"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.name}
-                          />
-                          <p className="error">
-                            {errors.name && touched.name && errors.name}
-                          </p>
-                        </div>
+                      <div className="input-box">
+                        <label>
+                          <img src={NameIcon} alt="neme" /> Name
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={"Curriki"}
+                          readOnly
+                        />
+                      </div>
 
-                        <div className="input-box">
-                          <label>
-                            <img src={EmailIcon} alt="email" /> Email
-                          </label>
-                          <input
-                            type="email"
-                            name="email"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.email}
-                          />
-                          <p className="error">
-                            {errors.email && touched.email && errors.email}
-                          </p>
-                        </div>
+                      <div className="input-box">
+                        <label>
+                          <img src={EmailIcon} alt="email" /> Email
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={"publisher@curriki.org"}
+                          readOnly
+                        />
+                      </div>
 
-                        <div className="input-box">
-                          <label>
-                            <img src={UrlIcon} alt="pub" /> URL
-                          </label>
-                          <input
-                            type="text"
-                            name="url"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.url}
-                          />
-                          <p className="error">
-                            {errors.url && touched.url && errors.url}
-                          </p>
-                        </div>
+                      <div className="input-box">
+                        <label>
+                          <img src={UrlIcon} alt="pub" /> URL
+                        </label>
+                        <input
+                          type="text"
+                          name="url"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={"https://curriki.org"}
+                          readOnly
+                        />
                       </div>
                     </div>
 
