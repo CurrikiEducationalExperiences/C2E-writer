@@ -725,7 +725,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                     <div className="stor-flex-box">
                       <h5>Store Information</h5>
 
-                      <br />
+
 
                       {/* <div className="input-box">
                         <label>
@@ -740,7 +740,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                         />
                       </div> */}
 
-                      <div className="input-box">
+                      {/* <div className="input-box">
                         <label>
                           <img src={NameIcon} alt="name" /> Name *
                         </label>
@@ -756,7 +756,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                             touched.productName &&
                             errors.productName}
                         </p>
-                      </div>
+                      </div> */}
 
                       <div className="input-box">
                         <label>
@@ -802,7 +802,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                         />
                       </div> */}
 
-                      <div className="input-box">
+                      {/* <div className="input-box">
                         <label>
                           <img src={LinkIcon} alt="LinkIcon" /> Uplaod images
                         </label>
@@ -859,8 +859,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                             </div>
                           )}
                         </div>
-                      </div>
-                      <div className="input-box">
+                      </div> */}
+                      {/* <div className="input-box">
                         <label>
                           <img src={AuthorIcon} alt="author" /> C2E author
                         </label>
@@ -885,18 +885,9 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           onBlur={handleBlur}
                           value={values.C2EContentType}
                         />
-                      </div>
-                    </div>
-
-                    <div className="stor-flex-box">
-                      <h5>C2E License Details</h5>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
-                      <br />
-
-                      <div className="input-box">
+                      </div> */}
+                         <h5>C2E License Details</h5>
+                         <div className="input-box">
                         <label>Set Usage Type</label>
                       </div>
 
@@ -989,6 +980,21 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                             errors.copyrightYear}
                         </p>
                       </div>
+                      <div className="input-box">
+                         Show Royalities
+                      </div>
+
+                    </div>
+
+
+                    {/* <div className="stor-flex-box">
+                      <h5>C2E License Details</h5>
+                      <p>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry.
+                      </p>
+                      <br />
+
 
                       <div className="license-card-box">
                         <div className="lic-cards">
@@ -1022,15 +1028,12 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="stor-flex-box">
                       <h5>Owner Information</h5>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
-                      <br />
+
+                      {/* <br />
                       <div className="input-box">
                         <label>
                           <img src={TitleIcon} alt="title" /> Title
@@ -1045,7 +1048,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                         <p className="error">
                           {errors.title && touched.title && errors.title}
                         </p>
-                      </div>
+                      </div> */}
 
                       <div className="input-box">
                         <label>
@@ -1081,7 +1084,75 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
 
                       <div className="input-box">
                         <label>
-                          <img src={UrlIcon} alt="pub" /> Publisher URL
+                          <img src={UrlIcon} alt="pub" />  URL
+                        </label>
+                        <input
+                          type="text"
+                          name="url"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.url}
+                        />
+                        <p className="error">
+                          {errors.url && touched.url && errors.url}
+                        </p>
+                      </div>
+
+                      <div className="stor-flex-box">
+                      <h5>Publisher Information</h5>
+
+                      {/* <br />
+                      <div className="input-box">
+                        <label>
+                          <img src={TitleIcon} alt="title" /> Title
+                        </label>
+                        <input
+                          type="text"
+                          name="title"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.title}
+                        />
+                        <p className="error">
+                          {errors.title && touched.title && errors.title}
+                        </p>
+                      </div> */}
+
+                      <div className="input-box">
+                        <label>
+                          <img src={NameIcon} alt="neme" /> Name
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.name}
+                        />
+                        <p className="error">
+                          {errors.name && touched.name && errors.name}
+                        </p>
+                      </div>
+
+                      <div className="input-box">
+                        <label>
+                          <img src={EmailIcon} alt="email" /> Email
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.email}
+                        />
+                        <p className="error">
+                          {errors.email && touched.email && errors.email}
+                        </p>
+                      </div>
+
+                      <div className="input-box">
+                        <label>
+                          <img src={UrlIcon} alt="pub" />  URL
                         </label>
                         <input
                           type="text"
@@ -1095,6 +1166,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                         </p>
                       </div>
                     </div>
+                    </div>
+
                     {/*
                      */}
 
