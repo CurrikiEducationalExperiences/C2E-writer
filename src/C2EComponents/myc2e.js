@@ -599,9 +599,14 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
           </div>
           <br />
           <div className="modal-title-heading">
-            <h2>{activEpub.title}</h2>
+            <h2>
+              Store: <span> {activEpub.title} </span>
+            </h2>
+            <h2>
+              C2E: <span> {activEpub.title} </span>
+            </h2>
             <h3>
-              Book:{" "}
+              Book:
               <span>
                 {
                   allData?.filter(
@@ -610,7 +615,9 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                 }
               </span>
             </h3>
-            <p>ISBN: {activEpub.identifier}</p>
+            <p>
+              ISBN: <span> {activEpub.identifier}</span>
+            </p>
           </div>
 
           {steps === 1 ? (
@@ -716,13 +723,10 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                   <form onSubmit={handleSubmit} className="formik-box">
                     <div className="stor-flex-box">
                       <h5>Store Information</h5>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
+
                       <br />
 
-                      <div className="input-box">
+                      {/* <div className="input-box">
                         <label>
                           <img src={SKUIcon} alt="aku" /> SKU
                         </label>
@@ -733,7 +737,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           onBlur={handleBlur}
                           value={values.sku}
                         />
-                      </div>
+                      </div> */}
 
                       <div className="input-box">
                         <label>
