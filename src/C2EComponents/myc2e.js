@@ -613,15 +613,15 @@ const ListingModule = ({
           <br />
           <div className="modal-title-heading">
             <h2>
-              <span className="h-name">Store Name:</span>
+
               <span> {selectedStore?.name} </span>
             </h2>
             <h2>
-              <span className="h-name">Title:</span>
+
               <span> {activEpub?.title} </span>
             </h2>
             <h3>
-              <span className="h-name">Book:</span>
+
               <span className="span">
                 {
                   allData?.filter(
