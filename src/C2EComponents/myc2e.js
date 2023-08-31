@@ -13,6 +13,7 @@ import Tab from "react-bootstrap/Tab";
 import axios from "axios";
 import Tabs from "react-bootstrap/Tabs";
 import { Formik } from "formik";
+import RoyaltyInformationModal from "./royaltyInformation";
 
 import FileIcon from "../assets/images/file.svg";
 import FileIconBlack from "../assets/images/file-black.svg";
@@ -67,6 +68,7 @@ const Myc2e = () => {
   const [activEpub, setActivEpub] = useState();
   const [activeEpubUrl, setActiveEpubUrl] = useState();
   const [showHide, setShowHide] = useState();
+  const [royaltyModal, setRoyaltyModal] = useState();
 
   const login = async () => {
     if (!web3auth) {
@@ -132,10 +134,6 @@ const Myc2e = () => {
       <Header web3auth={web3auth} walletConnection={walletConnection} />
 
       <div className="reader-main">
-        {/*<div className="img-box">
-            <img src={c2e} alt="logo" />
-           </div>*/}
-
         {walletConnection ? (
           <div className="login-text text-detail">
             <h3>How does it work?</h3>
@@ -266,29 +264,6 @@ const Myc2e = () => {
                                     gap: "12px",
                                   }}
                                 >
-                                  {/* <button
-                                    onClick={() => {
-                                      setShow(true);
-                                      setActivEpub(value1);
-                                    }}
-                                    class="btn btn-primary sec-btn"
-                                  >
-                                    <img
-                                      src={ListingIcon}
-                                      alt="file"
-                                      width={20}
-                                      height={20}
-                                      className="blue-listing-icon"
-                                    />
-                                    <img
-                                      src={ListingWhite}
-                                      alt="file"
-                                      width={20}
-                                      height={20}
-                                      className="white-listing-icon"
-                                    />
-                                    Show Listing
-                                  </button> */}
                                   <button
                                     onClick={() => {
                                       setShowListing(true);
@@ -367,152 +342,6 @@ const Myc2e = () => {
           </Tab>
         </Tabs>
       )}
-      {/* <Modal
-        show={show}
-        onHide={() => {
-          setShow(false);
-        }}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Body>
-          <Formik
-            initialValues={{
-              title: allData?.filter(
-                (data) => data.id === activEpub?.parentId,
-              )?.[0]?.title,
-
-              name: "",
-              email: "",
-
-              url: "https://twitter.com",
-            }}
-            validate={(values) => {
-              const errors = {};
-              if (!values.title) {
-                errors.title = "Required";
-              }
-
-              if (!values.name) {
-                errors.name = "Required";
-              }
-
-              if (!values.email) {
-                errors.email = "Required";
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = "Invalid email address";
-              }
-              return errors;
-            }}
-            onSubmit={async (values, { setSubmitting }) => {
-              setActiveEpubUrl();
-              const response = await axios.post(
-                url + "/c2e/cee-media",
-                { ...values, ceeMediaId: activEpub?.id },
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-
-
-                },
-              );
-              if (response) {
-                setActiveEpubUrl(response.data?.id);
-              }
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting,
-
-            }) => (
-              <form onSubmit={handleSubmit} className="c2e-lisence">
-                <h2>{activEpub?.title}</h2>
-                <h3>C2E Licensee Information</h3>
-                <div class="form-group">
-                  <label for="title">Title:</label>
-                  <input
-                    name="title"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.title}
-                    display
-                    readOnly
-                  />
-                  <div className="error">
-                    {errors.title && touched.title && errors.title}
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="licensee_name">Name:</label>
-                  <input
-                    name="name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.name}
-                    type="text"
-                  />
-                  <div className="error">
-                    {errors.name && touched.name && errors.name}
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="licensee_email">Email:</label>
-                  <input
-                    name="email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.email}
-                    type="email"
-                  />
-                  <div className="error">
-                    {errors.email && touched.email && errors.email}
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="licensee_url">URL:</label>
-                  <input
-                    name="url"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.url}
-                    type="url"
-                  />
-                </div>
-                <a
-                  href={url + "/c2e-storage/c2eid-" + activeEpubUrl + ".c2e"}
-                  download
-                  title=""
-                >
-                  {activeEpubUrl}
-                </a>
-                <button
-                  onClick={() => setShow(false)}
-                  type="button"
-                  class="btn btn-secondary"
-                >
-                  Close
-                </button>{" "}
-                &nbsp;
-                <button type="submit" class="btn btn-primary">
-                  {isSubmitting ? "Generating ...." : "Create C2E"}
-                </button>
-              </form>
-            )}
-          </Formik>
-        </Modal.Body>
-      </Modal> */}
 
       <ListingModule
         showListing={showListing}
@@ -520,36 +349,12 @@ const Myc2e = () => {
         activEpub={activEpub}
         allData={allData}
         user={walletConnection}
+        setRoyaltyModal={setRoyaltyModal}
       />
 
-      {/* <HiddenModule showListing={showHide} setShowListing={setShowHide} /> */}
+      <RoyaltyInformationModal show={royaltyModal} setShow={setRoyaltyModal} />
 
-      {/*<footer class="footer-all">
-        <a
-          rel="noreferrer"
-          class="footer-link"
-          href="https://www.curriki.org/terms-of-service/"
-          target="_blank"
-        >
-          Terms of Use
-        </a>
-        <a
-          rel="noreferrer"
-          class="footer-link"
-          href="https://www.curriki.org/privacy-policy/"
-          target="_blank"
-        >
-          Privacy Policy
-        </a>
-        <a
-          rel="noreferrer"
-          class="footer-link"
-          href="https://www.currikistudio.org/help/"
-          target="_blank"
-        >
-          Help Center
-        </a>
-          </footer>*/}
+      {/* <HiddenModule showListing={showHide} setShowListing={setShowHide} /> */}
     </div>
   );
 };
@@ -559,36 +364,14 @@ export default Myc2e;
 const ListingModule = ({
   showListing,
   setShowListing,
+  setRoyaltyModal,
   activEpub,
   allData,
   user,
 }) => {
   const [steps, setSteps] = useState(1);
-  const inputFileRef = useRef(null);
-  const [selectedImages, setSelectedImages] = useState([]);
   const [selectedStore, setSelectedStore] = useState();
   console.log(user);
-  const handleImageChange = (event) => {
-    const files = event.target.files;
-    const updatedImages = [...selectedImages];
-
-    for (let i = 0; i < files.length; i++) {
-      updatedImages.push(files[i]);
-    }
-
-    setSelectedImages(updatedImages);
-  };
-
-  const handleUpload = () => {
-    inputFileRef.current.click();
-    // setSelectedImages([]);
-  };
-
-  const handleImageDelete = (index) => {
-    const newImages = [...selectedImages];
-    newImages.splice(index, 1);
-    setSelectedImages(newImages);
-  };
 
   return (
     <Modal
@@ -605,9 +388,13 @@ const ListingModule = ({
     >
       <Modal.Body>
         <div className="uploadBox modial-iner-box">
-          <div className="">
+          <button
+            type="button"
+            onClick={() => setShowListing(false)}
+            className="close-btn"
+          >
             <img src={CloseIcon} alt="close" />
-          </div>
+          </button>
           <div className="list-steps">
             <div className="step">
               <h5 className="">Select</h5>
@@ -629,10 +416,6 @@ const ListingModule = ({
                   ?.title
               }
             </h3>
-            <p>
-              ISBN:
-              <span>{activEpub?.identifier}</span>
-            </p>
           </div>
 
           {steps === 1 ? (
@@ -657,61 +440,49 @@ const ListingModule = ({
             <div>
               <Formik
                 initialValues={{
-                  productName: "",
-                  sku: "",
+                  c2eTitle: activEpub?.title,
+                  sku: activEpub?.identifier,
                   price: "",
-                  productDiscription: "",
-                  title: "",
-                  name: "",
-                  email: "",
+                  c2eDiscription: "",
+                  ownerName: user?.name,
+                  ownerEmail: user?.email,
+                  ownerLicense: "",
                   url: "",
-                  C2Elink: "",
-                  C2EAuthor: "",
-                  C2EContentType: "",
+                  publisherName: "Curriki",
+                  publisherEmail: "publisher@curriki.org",
+                  publisherUrl: "https://curriki.org",
                   copyrightTitle: "",
                   copyrightDiscription: "",
                   copyrightYear: "",
-                  toppings: [],
+                  usageType: ["Purchased"],
                 }}
+                enableReinitialize
                 validate={(values) => {
                   const errors = {};
-                  if (!values.productName) {
-                    errors.productName = "Required";
-                  }
                   if (!values.price) {
                     errors.price = "Required";
-                  }
-                  if (!values.productDiscription) {
-                    errors.productDiscription = "Required";
                   }
                   if (!values.url) {
                     errors.url = "Required";
                   }
 
-                  if (!values.title) {
-                    errors.title = "Required";
+                  if (!values.copyrightTitle) {
+                    errors.copyrightTitle = "Required";
                   }
 
-                  if (!values.name) {
-                    errors.name = "Required";
-                  }
-                  if (!values.email) {
-                    errors.email = "Required";
-                  } else if (
-                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                      values.email,
-                    )
-                  ) {
-                    errors.email = "Invalid email address";
-                  }
                   return errors;
                 }}
-                onSubmit={(values, { setSubmitting }) => {
-                  setTimeout(() => {
-                    console.log("login", values);
-                    alert(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                  }, 400);
+                onSubmit={(values) => {
+                  // try {
+                  //   const response = await axios.post(
+                  //     "https://c2e-reader.curriki.org/c2e/list/media",
+                  //     values,
+                  //   );
+                  //   console.log(response.data);
+                  // } catch (error) {
+                  //   console.error(error);
+                  // }
+                  console.log("values", values);
                 }}
               >
                 {({
@@ -728,185 +499,54 @@ const ListingModule = ({
                     <div className="formik-box">
                       <div className="stor-flex-box">
                         <h5>C2E Details</h5>
-                        {/* <div className="input-box">
-                        <label>
-                          <img src={SKUIcon} alt="aku" /> SKU
-                        </label>
-                        <input
-                          type="text"
-                          name="sku"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.sku}
-                        />
-                      </div> */}
-
-                        {/* <div className="input-box">
-                        <label>
-                          <img src={NameIcon} alt="name" /> Name *
-                        </label>
-                        <input
-                          type="text"
-                          name="productName"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.productName}
-                        />
-                        <p className="error">
-                          {errors.productName &&
-                            touched.productName &&
-                            errors.productName}
-                        </p>
-                      </div> */}
 
                         <div className="input-box">
                           <label>
-                            <img src={PrceIcon} alt="" /> Price ($USD) *
+                            <img src={SKUIcon} alt="aku" /> ISBN
                           </label>
                           <input
-                            type="number"
-                            name="price"
+                            type="text"
+                            name="sku"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.price}
+                            value={values.sku}
+                          />
+                        </div>
+
+                        <div className="input-box">
+                          <label>
+                            <img src={NameIcon} alt="name" /> C2E Title *
+                          </label>
+                          <input
+                            type="text"
+                            name="c2eTitle"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.c2eTitle}
                           />
                           <p className="error">
-                            {errors.price && touched.price && errors.price}
+                            {errors.c2eTitle &&
+                              touched.c2eTitle &&
+                              errors.c2eTitle}
                           </p>
                         </div>
 
                         <div className="input-box">
                           <label>
                             <img src={DescriptionIcon} alt="DescriptionIcon" />
-                            Description
+                            C2E Description
                           </label>
                           <textarea
                             type="text"
-                            name="productDiscription"
+                            name="c2eDiscription"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.productDiscription}
+                            value={values.c2eDiscription}
                           />
                         </div>
-                        {/* second */}
-
-                        {/* <div className="input-box">
-                        <label>
-                          <img src={LinkIcon} alt="LinkIcon" /> C2E link
-                        </label>
-                        <input
-                          type="text"
-                          name="C2Elink"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.C2Elink}
-                        />
-                      </div> */}
-
-                        {/* <div className="input-box">
-                        <label>
-                          <img src={LinkIcon} alt="LinkIcon" /> Uplaod images
-                        </label>
-
-                        <div className="curriki-image-update-util">
-                          <div className="box-section">
-                            <div className="overlay">
-                              <img
-                                className="overlay-drag-image"
-                                src={dragImage}
-                                alt="drag"
-                              />
-                              <div className="img-button">
-                                <input
-                                  type="file"
-                                  multiple
-                                  accept="image/*"
-                                  ref={inputFileRef}
-                                  style={{ display: "none" }}
-                                  onChange={handleImageChange}
-                                />
-                                <buttun
-                                  type="button"
-                                  className="overlay-drag-brows-btn"
-                                  onClick={handleUpload}
-                                >
-                                  Upload Images
-                                </buttun>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="">
-                          {selectedImages && (
-                            <div>
-                              <p>Uploaded Images</p>
-                              <div className="uploaded-image">
-                                {selectedImages.map((image, index) => (
-                                  <img
-                                    key={index}
-                                    src={URL.createObjectURL(image)}
-                                    alt={`Image ${index}`}
-                                    onClick={() => handleImageDelete(index)}
-                                    style={{
-                                      maxWidth: "100px",
-                                      width: "100%",
-                                      height: "100px",
-                                      objectFit: "cover",
-                                    }}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div> */}
-                        {/* <div className="input-box">
-                        <label>
-                          <img src={AuthorIcon} alt="author" /> C2E author
-                        </label>
-                        <input
-                          type="text"
-                          name="C2EAuthor"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.C2EAuthor}
-                        />
-                      </div>
-
-                      <div className="input-box">
-                        <label>
-                          <img src={ContentIcon} alt="cntent" /> C2E Content
-                          Type
-                        </label>
-                        <input
-                          type="text"
-                          name="C2EContentType"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.C2EContentType}
-                        />
-                      </div> */}
                       </div>
                       <div className="stor-flex-box">
                         <h5>Copyright Owner Details</h5>
-
-                        {/* <br />
-<div className="input-box">
-  <label>
-    <img src={TitleIcon} alt="title" /> Title
-  </label>
-  <input
-    type="text"
-    name="title"
-    onChange={handleChange}
-    onBlur={handleBlur}
-    value={values.title}
-  />
-  <p className="error">
-    {errors.title && touched.title && errors.title}
-  </p>
-</div> */}
 
                         <div className="input-box">
                           <label>
@@ -914,15 +554,12 @@ const ListingModule = ({
                           </label>
                           <input
                             type="text"
-                            name="name"
+                            name="ownerName"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={user?.name}
+                            value={values.ownerName}
                             readOnly
                           />
-                          {/* <p className="error">
-                            {errors.name && touched.name && errors.name}
-                          </p> */}
                         </div>
 
                         <div className="input-box">
@@ -931,15 +568,12 @@ const ListingModule = ({
                           </label>
                           <input
                             type="email"
-                            name="email"
+                            name="ownerEmail"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={user?.email}
+                            value={values.ownerEmail}
                             readOnly
                           />
-                          {/* <p className="error">
-                            {errors.email && touched.email && errors.email}
-                          </p> */}
                         </div>
 
                         <div className="input-box">
@@ -957,6 +591,34 @@ const ListingModule = ({
                             {errors.url && touched.url && errors.url}
                           </p>
                         </div>
+
+                        <div className="input-box">
+                          <label>
+                            <img src={PrceIcon} alt="" /> Price ($USD) *
+                          </label>
+                          <input
+                            type="number"
+                            name="price"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.price}
+                          />
+                          <p className="error">
+                            {errors.price && touched.price && errors.price}
+                          </p>
+                        </div>
+                        <div className="input-box">
+                          <label>
+                            <img src={TitleIcon} alt="title" /> License Terms
+                          </label>
+                          <input
+                            type="text"
+                            name="ownerLicense"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.ownerLicense}
+                          />
+                        </div>
                       </div>
                     </div>
 
@@ -970,34 +632,36 @@ const ListingModule = ({
                         <div className="d-flex check-box">
                           <div className="check">
                             <input
-                              type="checkbox"
-                              name="toppings"
+                              type="radio"
+                              name="usageType"
                               value="Purchased"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              checked={values.toppings.includes("Purchased")}
+                              checked={values.usageType.includes("Purchased")}
                             />
                             <label className="ml-2">Purchased</label>
                           </div>
                           <div className="check">
                             <input
-                              type="checkbox"
-                              name="toppings"
+                              type="radio"
+                              name="usageType"
                               value="Subscription"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              checked={values.toppings.includes("Subscription")}
+                              checked={values.usageType.includes(
+                                "Subscription",
+                              )}
                             />
                             <label className="ml-2">Subscription</label>
                           </div>
                           <div className="check">
                             <input
-                              type="checkbox"
-                              name="toppings"
+                              type="radio"
+                              name="usageType"
                               value="Open"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              checked={values.toppings.includes("Open")}
+                              checked={values.usageType.includes("Open")}
                             />
                             <label className="ml-2">Open</label>
                           </div>
@@ -1011,7 +675,7 @@ const ListingModule = ({
                             name="copyrightTitle"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.title}
+                            value={values.copyrightTitle}
                           />
                           <p className="error">
                             {errors.copyrightTitle &&
@@ -1032,11 +696,6 @@ const ListingModule = ({
                             onBlur={handleBlur}
                             value={values.copyrightDiscription}
                           />
-                          <p className="error">
-                            {errors.copyrightDiscription &&
-                              touched.copyrightDiscription &&
-                              errors.copyrightDiscription}
-                          </p>
                         </div>
 
                         <div className="input-box">
@@ -1048,78 +707,34 @@ const ListingModule = ({
                             name="copyrightYear"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.title}
+                            value={values.copyrightYear}
                           />
-                          <p className="error">
-                            {errors.copyrightYear &&
-                              touched.copyrightYear &&
-                              errors.copyrightYear}
-                          </p>
                         </div>
-                        <div className="input-box">Show Royalities</div>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "10px",
+                            marginTop: "32px",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setRoyaltyModal(true)}
+                            className="btn btn-primary sec-btn"
+                          >
+                            Royalty Information
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-primary sec-btn"
+                          >
+                            Additional Information
+                          </button>
+                        </div>
                       </div>
 
-                      {/* <div className="stor-flex-box">
-                     <h5>C2E License Details</h5>
-                     <p>
-                       Lorem Ipsum is simply dummy text of the printing and
-                       typesetting industry.
-                     </p>
-                     <br />
-
-
-                     <div className="license-card-box">
-                       <div className="lic-cards">
-                         <div className="c2e-linc-card">
-                           <p>Financial Year 2023 Chart</p>
-                           <div
-                             className="lic-bg-image"
-                             style={{
-                               backgroundImage: `url(${""})`,
-                               backgroundRepeat: "no-repeat",
-                               backgroundSize: "cover",
-                               backgroundPosition: "center",
-                             }}
-                           />
-                           <h4>Terms $10/year Unlimited </h4>
-                         </div>
-                       </div>
-                       <div className="lic-cards">
-                         <div className="c2e-linc-card">
-                           <p>Financial Year 2023 Chart</p>
-                           <div
-                             className="lic-bg-image"
-                             style={{
-                               backgroundImage: `url(${""})`,
-                               backgroundRepeat: "no-repeat",
-                               backgroundSize: "cover",
-                               backgroundPosition: "center",
-                             }}
-                           />
-                           <h4>Terms $10/year Unlimited </h4>
-                         </div>
-                       </div>
-                     </div>
-                   </div> */}
                       <div className="stor-flex-box">
                         <h5>Publisher Details</h5>
-
-                        {/* <br />
-                      <div className="input-box">
-                        <label>
-                          <img src={TitleIcon} alt="title" /> Title
-                        </label>
-                        <input
-                          type="text"
-                          name="title"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.title}
-                        />
-                        <p className="error">
-                          {errors.title && touched.title && errors.title}
-                        </p>
-                      </div> */}
 
                         <div className="input-box">
                           <label>
@@ -1127,10 +742,10 @@ const ListingModule = ({
                           </label>
                           <input
                             type="text"
-                            name="name"
+                            name="publisherName"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={"Curriki"}
+                            value={values.publisherName}
                             readOnly
                           />
                         </div>
@@ -1141,10 +756,10 @@ const ListingModule = ({
                           </label>
                           <input
                             type="email"
-                            name="email"
+                            name="publisherEmail"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={"publisher@curriki.org"}
+                            value={values.publisherEmail}
                             readOnly
                           />
                         </div>
@@ -1155,18 +770,15 @@ const ListingModule = ({
                           </label>
                           <input
                             type="text"
-                            name="url"
+                            name="publisherUrl"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={"https://curriki.org"}
+                            value={values.publisherUrl}
                             readOnly
                           />
                         </div>
                       </div>
                     </div>
-
-                    {/*
-                     */}
 
                     {steps === 2 && (
                       <div className="form-btn">
@@ -1174,17 +786,16 @@ const ListingModule = ({
                           type="submit"
                           disabled={isSubmitting}
                           className="btn btn-primary "
-                          onClick={() => {
-                            if (
-                              values.productName !== "" ||
-                              values.price !== "" ||
-                              values.title !== "" ||
-                              values.name !== "" ||
-                              values.email !== ""
-                            ) {
-                              setSteps(3);
-                            }
-                          }}
+                          // onClick={() => {
+                          //   if (
+
+                          //     values.price !== "" &&
+                          //     values.url !== "" &&
+                          //     values.copyrightTitle !== ""
+                          //   ) {
+                          //     setSteps(3);
+                          //   }
+                          // }}
                         >
                           Submit
                         </button>

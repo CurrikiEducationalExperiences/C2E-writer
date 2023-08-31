@@ -314,7 +314,7 @@ body {
 
 .e-commerce-stor {
   /* width: 500px; */
-  padding: 60px 0 0 40px;
+  padding: 10px 0 0 0px;
 }
 .e-commerce-stor .selection-stor-box {
   display: flex;
@@ -538,6 +538,9 @@ body {
   line-height: 24px;
   color: #084892;
   margin-bottom: 24px;
+  border-bottom: 2px solid #f8af2c;
+  width: fit-content;
+  padding-bottom: 2px;
 }
 
 .formik-box .input-box {
@@ -743,7 +746,7 @@ textarea {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
@@ -760,7 +763,7 @@ textarea {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 16px;
-  width: 47.5%;
+  width: 30%;
 }
 .lic-cards .c2e-linc-card {
   flex: 1 0 158px;
@@ -816,13 +819,17 @@ textarea {
   display: flex;
   align-items: flex-start;
 }
-.modal-title-heading h2 {
+.modal-title-heading h2,
+.royalty-heading {
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
   line-height: 28px;
   color: #084892;
   margin-bottom: 4px;
+}
+.royalty-heading {
+  margin-bottom: 32px;
 }
 .modal-title-heading h3 {
   font-style: normal;
@@ -853,4 +860,27 @@ textarea {
   font-size: 16px;
   color: #515151;
   margin-left: 4px;
+}
+
+.close-btn {
+  border: none !important;
+  outline: none;
+  background: transparent;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
+/*  */
+
+.royalty-modal .fade.modal.show {
+  background: #000;
+}
+
+[aria-label="royalty-modal"] {
+  background: rgba(22, 22, 22, 0.301) !important;
+}
+
+.royalty-modal-content .modal-body {
+  padding: 24px 24px 36px 24px;
 }
