@@ -22,11 +22,11 @@ import ListingWhite from "../assets/images/listing-white.svg";
 import AddWhite from "../assets/images/add-white.svg";
 
 //
-import AliBaba from "../assets/images/icons/ali-baba.png";
+
 import Amazon from "../assets/images/icons/amazon.png";
-import Daraz from "../assets/images/icons/daraz.png";
-import Ebay from "../assets/images/icons/ebay.png";
+import Wiley from "../assets/images/wiley.png";
 import WooCommerce from "../assets/images/icons/woo-commerce.png";
+
 import SKUIcon from "../assets/images/icons/form/sKU.svg";
 import NameIcon from "../assets/images/icons/form/Name.svg";
 import DescriptionIcon from "../assets/images/icons/form/Description.svg";
@@ -606,14 +606,6 @@ const ListingModule = ({ showListing, setShowListing }) => {
                     setSteps(2);
                   }}
                 >
-                  <img src={AliBaba} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
                   <img src={Amazon} alt="" />
                 </div>
                 <div
@@ -622,15 +614,7 @@ const ListingModule = ({ showListing, setShowListing }) => {
                     setSteps(2);
                   }}
                 >
-                  <img src={Daraz} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Ebay} alt="" />
+                  <img src={Wiley} alt="" />
                 </div>
                 <div
                   className="box"
@@ -1230,14 +1214,6 @@ const HiddenModule = ({ showListing, setShowListing }) => {
                     setSteps(2);
                   }}
                 >
-                  <img src={AliBaba} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
                   <img src={Amazon} alt="" />
                 </div>
                 <div
@@ -1246,15 +1222,7 @@ const HiddenModule = ({ showListing, setShowListing }) => {
                     setSteps(2);
                   }}
                 >
-                  <img src={Daraz} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Ebay} alt="" />
+                  <img src={Wiley} alt="" />
                 </div>
                 <div
                   className="box"
