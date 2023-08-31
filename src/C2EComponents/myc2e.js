@@ -598,7 +598,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
             </div>
           </div>
           <br />
-          <h2>{activEpub.title}</h2>
+          <h2>Store: {activEpub.title}</h2>
+          <h2>C2E: {activEpub.title}</h2>
           <h3>Book: {allData?.filter(
                 (data) => data.id === activEpub?.parentId,
               )?.[0]?.title} </h3>
@@ -723,13 +724,10 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                   <form onSubmit={handleSubmit} className="formik-box">
                     <div className="stor-flex-box">
                       <h5>Store Information</h5>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
+
                       <br />
 
-                      <div className="input-box">
+                      {/* <div className="input-box">
                         <label>
                           <img src={SKUIcon} alt="aku" /> SKU
                         </label>
@@ -740,7 +738,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           onBlur={handleBlur}
                           value={values.sku}
                         />
-                      </div>
+                      </div> */}
 
                       <div className="input-box">
                         <label>
