@@ -22,11 +22,11 @@ import ListingWhite from '../assets/images/listing-white.svg';
 import AddWhite from '../assets/images/add-white.svg';
 
 //
-import AliBaba from '../assets/images/icons/ali-baba.png';
+
 import Amazon from '../assets/images/icons/amazon.png';
-import Daraz from '../assets/images/icons/daraz.png';
-import Ebay from '../assets/images/icons/ebay.png';
+import Wiley from '../assets/images/wiley.png';
 import WooCommerce from '../assets/images/icons/woo-commerce.png';
+
 import SKUIcon from '../assets/images/icons/form/sKU.svg';
 import NameIcon from '../assets/images/icons/form/Name.svg';
 import DescriptionIcon from '../assets/images/icons/form/Description.svg';
@@ -38,7 +38,23 @@ import UrlIcon from '../assets/images/icons/form/Url.svg';
 import ContentIcon from '../assets/images/icons/form/Content.svg';
 import TitleIcon from '../assets/images/icons/form/title.svg';
 import dragImage from '../assets/images/img-upload.png';
+const allStores = [{
+  id:1,
+  name:'Wiley',
+  img:Wiley
+},
+{
+  id:2,
+  name:'Amazon',
+  img:Amazon
+},
+{
+  id:3,
+  name:'Woo commerce',
+  img:WooCommerce
+}
 
+]
 const Myc2e = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [web3auth, setWeb3auth] = useState(null);
@@ -48,6 +64,7 @@ const Myc2e = () => {
   const [activEpub, setActivEpub] = useState();
   const [activeEpubUrl, setActiveEpubUrl] = useState();
   const [showHide, setShowHide] = useState();
+
 
   const login = async () => {
     if (!web3auth) {
@@ -85,10 +102,7 @@ const Myc2e = () => {
 
         const user = await web3auth.getUserInfo();
         setWalletConneciton(user);
-        console.log(
-          '🚀 ~ file: signup-web3auth.js:46 ~ getUserInfo ~ user:',
-          user
-        );
+
 
         // web3auth.provider will be available here after user is connected
       });
@@ -195,9 +209,7 @@ const Myc2e = () => {
           </div>
         </div>
       </div>
-      <div className="">
-        <button onClick={() => setShowHide(true)}>open </button>
-      </div>
+
       {walletConnection && (
         <Tabs
           defaultActiveKey="profile"
@@ -506,6 +518,7 @@ const Myc2e = () => {
         setShowListing={setShowListing}
         activEpub={activEpub}
         allData={allData}
+        user={walletConnection}
       />
 
       {/* <HiddenModule showListing={showHide} setShowListing={setShowHide} /> */}
@@ -542,11 +555,12 @@ const Myc2e = () => {
 
 export default Myc2e;
 
-const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
+const ListingModule = ({ showListing, setShowListing, activEpub, allData, user }) => {
   const [steps, setSteps] = useState(1);
   const inputFileRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
-  console.log(activEpub);
+  const [selectedStore, setSelectedStore] = useState()
+  console.log(user);
   const handleImageChange = (event) => {
     const files = event.target.files;
     const updatedImages = [...selectedImages];
@@ -591,63 +605,47 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
             <div className={`step ${steps === 1 && 'disable'}`}>
               <h5 className="">Describe</h5>
             </div>
-            <div
-              className={`step ${steps === 1 || steps === 2 ? 'disable' : ''}`}
-            >
-              <h5 className="">Finish</h5>
-            </div>
           </div>
           <br />
-          <h2>Store: {activEpub.title}</h2>
-          <h2>C2E: {activEpub.title}</h2>
-          <h3>Book: {allData?.filter(
-                (data) => data.id === activEpub?.parentId,
-              )?.[0]?.title} </h3>
-              <p>ISBN: {activEpub.identifier}</p>
+          <div className="modal-title-heading">
+            <h2>
+              <span> {selectedStore?.name} </span>
+            </h2>
+            <h2>
+               <span> {activEpub?.title} </span>
+            </h2>
+            <h3>
+              Book:
+              <span>
+                {
+                  allData?.filter(
+                    (data) => data.id === activEpub?.parentId
+                  )?.[0]?.title
+                }
+              </span>
+            </h3>
+            <p>
+              ISBN: <span> {activEpub?.identifier}</span>
+            </p>
+          </div>
 
           {steps === 1 ? (
             <div className="e-commerce-stor">
               <div className="selection-stor-box mb-5">
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={AliBaba} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Amazon} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Daraz} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={Ebay} alt="" />
-                </div>
-                <div
-                  className="box"
-                  onClick={() => {
-                    setSteps(2);
-                  }}
-                >
-                  <img src={WooCommerce} alt="" />
-                </div>
+                {allStores?.map(data=>{
+                  return (
+                    <div
+                    className="box"
+                    onClick={() => {
+                      setSteps(2);
+                      setSelectedStore(data)
+                    }}
+                  >
+                    <img src={data.img} alt="" />
+                  </div>
+                  )
+                })}
+
               </div>
             </div>
           ) : steps === 2 ? (
@@ -723,9 +721,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                 }) => (
                   <form onSubmit={handleSubmit} className="formik-box">
                     <div className="stor-flex-box">
-                      <h5>Store Information</h5>
-
-
+                      <h5>C2E Details</h5>
 
                       {/* <div className="input-box">
                         <label>
@@ -821,7 +817,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                                   multiple
                                   accept="image/*"
                                   ref={inputFileRef}
-                                  style={{ display: 'none' }}
+                                  style={{ display: "none" }}
                                   onChange={handleImageChange}
                                 />
                                 <buttun
@@ -848,10 +844,10 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                                     alt={`Image ${index}`}
                                     onClick={() => handleImageDelete(index)}
                                     style={{
-                                      maxWidth: '100px',
-                                      width: '100%',
-                                      height: '100px',
-                                      objectFit: 'cover',
+                                      maxWidth: "100px",
+                                      width: "100%",
+                                      height: "100px",
+                                      objectFit: "cover",
                                     }}
                                   />
                                 ))}
@@ -886,8 +882,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           value={values.C2EContentType}
                         />
                       </div> */}
-                         <h5>C2E License Details</h5>
-                         <div className="input-box">
+                      <h5>C2E License Details</h5>
+                      <div className="input-box">
                         <label>Set Usage Type</label>
                       </div>
 
@@ -980,12 +976,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                             errors.copyrightYear}
                         </p>
                       </div>
-                      <div className="input-box">
-                         Show Royalities
-                      </div>
-
+                      <div className="input-box">Show Royalities</div>
                     </div>
-
 
                     {/* <div className="stor-flex-box">
                       <h5>C2E License Details</h5>
@@ -1003,10 +995,10 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                             <div
                               className="lic-bg-image"
                               style={{
-                                backgroundImage: `url(${''})`,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
+                                backgroundImage: `url(${""})`,
+                                backgroundRepeat: "no-repeat",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
                               }}
                             />
                             <h4>Terms $10/year Unlimited </h4>
@@ -1018,10 +1010,10 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                             <div
                               className="lic-bg-image"
                               style={{
-                                backgroundImage: `url(${''})`,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
+                                backgroundImage: `url(${""})`,
+                                backgroundRepeat: "no-repeat",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
                               }}
                             />
                             <h4>Terms $10/year Unlimited </h4>
@@ -1031,7 +1023,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                     </div> */}
 
                     <div className="stor-flex-box">
-                      <h5>Owner Information</h5>
+                      <h5>Copyright Owner Details</h5>
 
                       {/* <br />
                       <div className="input-box">
@@ -1059,7 +1051,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           name="name"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.name}
+                          value={user?.name}
+                          readOnly
                         />
                         <p className="error">
                           {errors.name && touched.name && errors.name}
@@ -1075,7 +1068,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           name="email"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.email}
+                          value={user?.email}
+                          readOnly
                         />
                         <p className="error">
                           {errors.email && touched.email && errors.email}
@@ -1084,7 +1078,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
 
                       <div className="input-box">
                         <label>
-                          <img src={UrlIcon} alt="pub" />  URL
+                          <img src={UrlIcon} alt="pub" /> URL
                         </label>
                         <input
                           type="text"
@@ -1098,8 +1092,7 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                         </p>
                       </div>
 
-                      <div className="stor-flex-box">
-                      <h5>Publisher Information</h5>
+                      <h5>Publisher Details</h5>
 
                       {/* <br />
                       <div className="input-box">
@@ -1128,8 +1121,8 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={'Curriki'}
+                          readOnly
                         />
-
                       </div>
 
                       <div className="input-box">
@@ -1142,13 +1135,13 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={'publisher@curriki.org'}
+                          readOnly
                         />
-
                       </div>
 
                       <div className="input-box">
                         <label>
-                          <img src={UrlIcon} alt="pub" />  URL
+                          <img src={UrlIcon} alt="pub" /> URL
                         </label>
                         <input
                           type="text"
@@ -1156,10 +1149,9 @@ const ListingModule = ({ showListing, setShowListing, activEpub, allData }) => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={'https://curriki.org'}
+                          readOnly
                         />
-
                       </div>
-                    </div>
                     </div>
 
                     {/*

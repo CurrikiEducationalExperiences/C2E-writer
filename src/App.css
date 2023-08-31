@@ -523,7 +523,7 @@
 
 .formik-box .stor-flex-box {
   text-align: left;
-  width: 50%;
+  width: 100%;
 }
 
 .formik-box .stor-flex-box h5 {
@@ -791,4 +791,39 @@ textarea {
   font-weight: 400;
   line-height: 20px;
   margin: 0;
+}
+
+.modal-title-heading {
+  width: 100%;
+  text-align: left;
+  margin: 32px 0 42px 0;
+}
+
+.modal-title-heading h2 {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: normal;
+  color: #515151;
+  margin-bottom: 8px;
+}
+.modal-title-heading h2 span,
+.modal-title-heading h3 span,
+.modal-title-heading p span {
+  color: #084892;
+  margin-left: 6px;
+}
+
+.modal-title-heading h3 {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: normal;
+  color: #515151;
+  margin-bottom: 8px;
+}
+
+.modal-title-heading p {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: normal;
+  color: #515151;
 }
