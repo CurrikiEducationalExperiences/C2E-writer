@@ -813,6 +813,8 @@ textarea {
   line-height: 24px;
   color: #084892;
   margin-bottom: 2px;
+  display: flex;
+  align-items: flex-start;
 }
 .modal-title-heading h2 {
   font-style: normal;
@@ -829,6 +831,15 @@ textarea {
   line-height: 24px;
   color: #515151;
   margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.modal-title-heading h3 img,
+.modal-title-heading h1 img {
+  width: 21px;
+  height: auto;
+  margin-right: 4px;
 }
 
 .modal-title-heading p {
