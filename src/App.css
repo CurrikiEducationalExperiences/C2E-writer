@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Rubik:wght@300;400;500;600;700;800;900&display=swap");
+
+body {
+  font-family: "Rubik", sans-serif;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
@@ -793,6 +799,7 @@ textarea {
   margin: 0;
 }
 
+/*  */
 .modal-title-heading {
   width: 100%;
   text-align: left;
@@ -801,21 +808,27 @@ textarea {
 
 .modal-title-heading h2 {
   font-weight: 500;
-  font-size: 24px;
+  font-size: 22px;
   line-height: normal;
   color: #515151;
   margin-bottom: 8px;
 }
-.modal-title-heading h2 span,
-.modal-title-heading h3 span,
-.modal-title-heading p span {
-  color: #084892;
-  margin-left: 6px;
+
+.modal-title-heading .h-name {
+  min-width: 40px;
+}
+
+.modal-title-heading h2 .span,
+.modal-title-heading h3 .span,
+.modal-title-heading p .span {
+  /* color: #084892; */
+  font-weight: 400;
+  font-size: 18px;
 }
 
 .modal-title-heading h3 {
   font-weight: 500;
-  font-size: 24px;
+  font-size: 22px;
   line-height: normal;
   color: #515151;
   margin-bottom: 8px;
