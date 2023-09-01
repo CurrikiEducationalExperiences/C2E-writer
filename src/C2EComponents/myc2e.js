@@ -810,7 +810,7 @@ const ListingModule = ({
                   className="product-heading text-center mt-5"
                   style={{ color: "green" }}
                 >
-                  Thank You For Submition!
+                  Thank You For Submission!
                 </h3>
                 <p>
                   You have successfully listed {activEpub.title} on{" "}
