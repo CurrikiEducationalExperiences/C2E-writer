@@ -954,6 +954,7 @@ textarea {
   object-fit: cover;
   border: 1px solid #ddd;
   border-radius: 6px;
+  flex-shrink: 0;
 }
 
 .royalty-accordion .accordion .ass-header-info .info-detail {
