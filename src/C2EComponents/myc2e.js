@@ -478,9 +478,10 @@ const ListingModule = ({
                       },
                       price: String(values.price),
                     });
-                  } catch (e) {
-                    setSteps(3);
-                  }
+                    if (response) {
+                      setSteps(3);
+                    }
+                  } catch (e) {}
                 }}
               >
                 {({
