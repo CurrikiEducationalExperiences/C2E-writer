@@ -1,56 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import Accordion from 'react-bootstrap/Accordion';
-import { Web3Auth } from '@web3auth/modal';
-import { ADAPTER_EVENTS } from '@web3auth/base';
-import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
-import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import Modal from 'react-bootstrap/Modal';
-import upload from '../assets/images/upload (1).svg';
-import Header from './header';
-import UploadFile from './upload';
-import Tab from 'react-bootstrap/Tab';
-import axios from 'axios';
-import Tabs from 'react-bootstrap/Tabs';
-import Spinner from 'react-bootstrap/Spinner';
-import { Formik } from 'formik';
-import RoyaltyInformationModal from './royaltyInformation';
+import React, { useState, useEffect } from "react";
+import Accordion from "react-bootstrap/Accordion";
+import { Web3Auth } from "@web3auth/modal";
+import { ADAPTER_EVENTS } from "@web3auth/base";
+import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
+import { CircularProgressbarWithChildren } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import Modal from "react-bootstrap/Modal";
+import upload from "../assets/images/upload (1).svg";
+import Header from "./header";
+import UploadFile from "./upload";
+import Tab from "react-bootstrap/Tab";
+import axios from "axios";
+import Tabs from "react-bootstrap/Tabs";
+import Spinner from "react-bootstrap/Spinner";
+import { Formik } from "formik";
+import RoyaltyInformationModal from "./royaltyInformation";
 
-import FileIcon from '../assets/images/file.svg';
-import FileIconBlack from '../assets/images/file-black.svg';
-import ListingIcon from '../assets/images/listing.svg';
-import AddIcon from '../assets/images/add.svg';
-import ListingWhite from '../assets/images/listing-white.svg';
-import AddWhite from '../assets/images/add-white.svg';
-import BookIcon from '../assets/images/icons/book.svg';
-import StoreIcon from '../assets/images/icons/store.svg';
-import CloseIcon from '../assets/images/icons/close-black.svg';
+import FileIcon from "../assets/images/file.svg";
+import FileIconBlack from "../assets/images/file-black.svg";
+import ListingIcon from "../assets/images/listing.svg";
+import AddIcon from "../assets/images/add.svg";
+import ListingWhite from "../assets/images/listing-white.svg";
+import AddWhite from "../assets/images/add-white.svg";
+import BookIcon from "../assets/images/icons/book.svg";
+import StoreIcon from "../assets/images/icons/store.svg";
+import CloseIcon from "../assets/images/icons/close-black.svg";
+import AdditionalIcon from "../assets/images/icons/Additional-info.svg";
+import RoyaltyInfoIcon from "../assets/images/icons/royalty-info.svg";
+import AdditionalIconWhite from "../assets/images/icons/additional-white.svg";
+import RoyaltyInfoIconWhite from "../assets/images/icons/royalty-white.svg";
 
-import Amazon from '../assets/images/icons/amazon.png';
-import Wiley from '../assets/images/wiley.png';
-import WooCommerce from '../assets/images/icons/woo-commerce.png';
-import SKUIcon from '../assets/images/icons/form/sKU.svg';
-import NameIcon from '../assets/images/icons/form/Name.svg';
-import DescriptionIcon from '../assets/images/icons/form/Description.svg';
-import PrceIcon from '../assets/images/icons/form/Price.svg';
-import EmailIcon from '../assets/images/icons/form/Email.svg';
-import UrlIcon from '../assets/images/icons/form/Url.svg';
-import TitleIcon from '../assets/images/icons/form/title.svg';
+import Amazon from "../assets/images/icons/amazon.png";
+import Wiley from "../assets/images/wiley.png";
+import WooCommerce from "../assets/images/icons/woo-commerce.png";
+import SKUIcon from "../assets/images/icons/form/sKU.svg";
+import NameIcon from "../assets/images/icons/form/Name.svg";
+import DescriptionIcon from "../assets/images/icons/form/Description.svg";
+import PrceIcon from "../assets/images/icons/form/Price.svg";
+import EmailIcon from "../assets/images/icons/form/Email.svg";
+import UrlIcon from "../assets/images/icons/form/Url.svg";
+import TitleIcon from "../assets/images/icons/form/title.svg";
 
 const allStores = [
   {
     id: 1,
-    name: 'Wiley',
+    name: "Wiley",
     img: Wiley,
   },
   {
     id: 2,
-    name: 'Amazon',
+    name: "Amazon",
     img: Amazon,
   },
   {
     id: 3,
-    name: 'Woo commerce',
+    name: "Woo commerce",
     img: WooCommerce,
   },
 ];
@@ -64,18 +68,18 @@ const Myc2e = () => {
   const [royaltyModal, setRoyaltyModal] = useState();
   const login = async () => {
     if (!web3auth) {
-      console.log('web3auth not initialized yet');
+      console.log("web3auth not initialized yet");
       return;
     }
     await web3auth.connect();
   };
   const [allData, setAllData] = useState();
-  const url = 'https://c2e-provider-api.curriki.org';
+  const url = "https://c2e-provider-api.curriki.org";
   const getData = () => {
-    fetch(url + '/c2e-media').then((data) =>
+    fetch(url + "/c2e-media").then((data) =>
       data.json().then((value) => {
         setAllData(value);
-      })
+      }),
     );
   };
 
@@ -87,14 +91,14 @@ const Myc2e = () => {
     (async () => {
       const web3auth = new Web3Auth({
         clientId:
-          'BNW0_55WnZZSF6hjmoLGsx2d7NQ_KHuFQnsGOPUPjwWDJAAiT-9iBfu_TeLRkLH3NiKfao04OgEgeCS86JfSFeo',
+          "BNW0_55WnZZSF6hjmoLGsx2d7NQ_KHuFQnsGOPUPjwWDJAAiT-9iBfu_TeLRkLH3NiKfao04OgEgeCS86JfSFeo",
         chainConfig: {
-          chainNamespace: 'eip155',
-          chainId: '0x1',
+          chainNamespace: "eip155",
+          chainId: "0x1",
         },
       });
       web3auth.on(ADAPTER_EVENTS.CONNECTED, async (data) => {
-        console.log('connected to wallet', web3auth);
+        console.log("connected to wallet", web3auth);
 
         const user = await web3auth.getUserInfo();
         setWalletConneciton(user);
@@ -102,17 +106,17 @@ const Myc2e = () => {
         // web3auth.provider will be available here after user is connected
       });
       web3auth.on(ADAPTER_EVENTS.CONNECTING, () => {
-        console.log('connecting');
+        console.log("connecting");
       });
       web3auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
-        console.log('disconnected');
+        console.log("disconnected");
         setWalletConneciton(null);
       });
 
       setWeb3auth(web3auth);
       const openloginAdapter = new OpenloginAdapter({
         adapterSettings: {
-          network: 'testnet',
+          network: "testnet",
         },
       });
       web3auth.configureAdapter(openloginAdapter);
@@ -133,7 +137,7 @@ const Myc2e = () => {
               After you have licensed a C2E from a digital marketplace, you will
               receive an email with instructions on how to download it.
               <br />
-              Once a copy is downloaded , please navigate to{' '}
+              Once a copy is downloaded , please navigate to{" "}
               <a
                 href="https://c2e-reader.curriki.org"
                 target="_blank"
@@ -165,7 +169,7 @@ const Myc2e = () => {
                 <div className="iconbox">
                   <CircularProgressbarWithChildren value={uploadProgress}>
                     {!!uploadProgress ? (
-                      uploadProgress + '%'
+                      uploadProgress + "%"
                     ) : (
                       <img src={upload} alt="" />
                     )}
@@ -214,7 +218,7 @@ const Myc2e = () => {
             <Accordion defaultActiveKey="0">
               {allData
                 ?.filter(
-                  (data) => data.type === 'epub' && data.parentId === null
+                  (data) => data.type === "epub" && data.parentId === null,
                 )
                 ?.map((value, counter) => {
                   return (
@@ -224,26 +228,26 @@ const Myc2e = () => {
                         {allData
                           ?.filter(
                             (data1) =>
-                              data1.type === 'epub' &&
-                              data1.parentId === value.id
+                              data1.type === "epub" &&
+                              data1.parentId === value.id,
                           )
                           ?.map((value1, counter1) => {
                             return (
                               <div
                                 style={{
-                                  display: 'flex',
-                                  justifyContent: 'space-between',
-                                  padding: '10px 0px',
-                                  alignItems: 'center',
-                                  borderBottom: '1px solid #ccc',
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  padding: "10px 0px",
+                                  alignItems: "center",
+                                  borderBottom: "1px solid #ccc",
                                 }}
                               >
                                 <div>{value1.title}</div>
                                 <div
                                   className=""
                                   style={{
-                                    display: 'flex',
-                                    gap: '12px',
+                                    display: "flex",
+                                    gap: "12px",
                                   }}
                                 >
                                   <button
@@ -317,7 +321,7 @@ const Myc2e = () => {
             }
           >
             {allData
-              ?.filter((data) => data.type !== 'epub')
+              ?.filter((data) => data.type !== "epub")
               ?.map((value) => {
                 return <div>{value.title}</div>;
               })}
@@ -351,7 +355,7 @@ const ListingModule = ({
 }) => {
   const [steps, setSteps] = useState(1);
   const [selectedStore, setSelectedStore] = useState();
-  const url = 'https://c2e-provider-api.curriki.org';
+  const url = "https://c2e-provider-api.curriki.org";
   return (
     <Modal
       show={showListing}
@@ -382,7 +386,7 @@ const ListingModule = ({
               <div className="step">
                 <h5 className="">Select</h5>
               </div>
-              <div className={`step ${steps === 1 && 'disable'}`}>
+              <div className={`step ${steps === 1 && "disable"}`}>
                 <h5 className="">Describe</h5>
               </div>
             </div>
@@ -400,7 +404,7 @@ const ListingModule = ({
                 <img src={BookIcon} alt="book" />
                 {
                   allData?.filter(
-                    (data) => data.id === activEpub?.parentId
+                    (data) => data.id === activEpub?.parentId,
                   )?.[0]?.title
                 }
               </h3>
@@ -431,24 +435,24 @@ const ListingModule = ({
                 initialValues={{
                   c2eTitle: activEpub?.title,
                   sku: activEpub?.identifier,
-                  price: '',
-                  c2eDiscription: '',
+                  price: "",
+                  c2eDiscription: "",
                   ownerName: user?.name,
                   ownerEmail: user?.email,
-                  ownerLicense: '',
-                  url: '',
-                  publisherName: 'Curriki',
-                  publisherEmail: 'publisher@curriki.org',
-                  publisherUrl: 'https://curriki.org',
+                  ownerLicense: "",
+                  url: "",
+                  publisherName: "Curriki",
+                  publisherEmail: "publisher@curriki.org",
+                  publisherUrl: "https://curriki.org",
 
-                  copyrightYear: '',
-                  usageType: ['Purchased'],
+                  copyrightYear: "",
+                  usageType: ["Purchased"],
                 }}
                 enableReinitialize
                 validate={(values) => {
                   const errors = {};
                   if (!values.price) {
-                    errors.price = 'Required';
+                    errors.price = "Required";
                   }
                   // if (!values.url) {
                   //   errors.url = 'Required';
@@ -459,7 +463,7 @@ const ListingModule = ({
                 onSubmit={async (values) => {
                   console.log(values, activEpub);
                   try {
-                    const response = await axios.post(url + '/c2e/list/media', {
+                    const response = await axios.post(url + "/c2e/list/media", {
                       ceeMediaId: activEpub.id,
                       title: values.c2eTitle,
                       description: values.c2eDiscription,
@@ -603,7 +607,7 @@ const ListingModule = ({
                               value="Purchased"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              checked={values.usageType.includes('Purchased')}
+                              checked={values.usageType.includes("Purchased")}
                             />
                             <label className="ml-2">Purchased</label>
                           </div>
@@ -615,7 +619,7 @@ const ListingModule = ({
                               onChange={handleChange}
                               onBlur={handleBlur}
                               checked={values.usageType.includes(
-                                'Subscription'
+                                "Subscription",
                               )}
                             />
                             <label className="ml-2">Subscription</label>
@@ -627,7 +631,7 @@ const ListingModule = ({
                               value="Open"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              checked={values.usageType.includes('Open')}
+                              checked={values.usageType.includes("Open")}
                             />
                             <label className="ml-2">Open</label>
                           </div>
@@ -661,9 +665,9 @@ const ListingModule = ({
                         </div>
                         <div
                           style={{
-                            display: 'flex',
-                            gap: '10px',
-                            marginTop: '32px',
+                            display: "flex",
+                            gap: "10px",
+                            marginTop: "32px",
                           }}
                         >
                           <button
@@ -671,12 +675,40 @@ const ListingModule = ({
                             onClick={() => setRoyaltyModal(true)}
                             className="btn btn-primary sec-btn"
                           >
+                            <img
+                              src={RoyaltyInfoIcon}
+                              alt="file"
+                              width={20}
+                              height={20}
+                              className="blue-add-icon"
+                            />
+                            <img
+                              src={RoyaltyInfoIconWhite}
+                              alt="file"
+                              width={20}
+                              height={20}
+                              className="white-add-icon"
+                            />
                             Royalty Information
                           </button>
                           <button
                             type="button"
                             className="btn btn-primary sec-btn"
                           >
+                            <img
+                              src={AdditionalIcon}
+                              alt="file"
+                              width={20}
+                              height={20}
+                              className="blue-add-icon"
+                            />
+                            <img
+                              src={AdditionalIconWhite}
+                              alt="file"
+                              width={20}
+                              height={20}
+                              className="white-add-icon"
+                            />
                             Additional Information
                           </button>
                         </div>
@@ -775,12 +807,12 @@ const ListingModule = ({
               <div className="style-thankyou">
                 <h3
                   className="product-heading text-center mt-5"
-                  style={{ color: 'green' }}
+                  style={{ color: "green" }}
                 >
                   Thank You For Submition!
                 </h3>
                 <p>
-                  You have successfully listed {activEpub.title} on{' '}
+                  You have successfully listed {activEpub.title} on{" "}
                   {selectedStore.name}
                 </p>
               </div>

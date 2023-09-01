@@ -819,8 +819,7 @@ textarea {
   display: flex;
   align-items: flex-start;
 }
-.modal-title-heading h2,
-.royalty-heading {
+.modal-title-heading h2 {
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
@@ -828,9 +827,26 @@ textarea {
   color: #084892;
   margin-bottom: 4px;
 }
+
 .royalty-heading {
-  margin-bottom: 32px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  color: #084892;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #f8af2c;
 }
+
+.royalty-sub-heading {
+  color: #000;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-bottom: 28px;
+}
+
 .modal-title-heading h3 {
   font-style: normal;
   font-weight: 400;
@@ -975,4 +991,42 @@ textarea {
 
 .style-thankyou p {
   font-size: 20px;
+}
+
+.c2e-royalty-modal-detail table {
+  width: 100%;
+}
+.c2e-royalty-modal-detail table tr .left-td-border {
+  border-right: 1px solid #ddd;
+}
+.c2e-royalty-modal-detail table tr th {
+  width: 50%;
+  height: 56px;
+  padding: 18px 16px;
+  background: #f1f1f1;
+  color: #767676;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+}
+.c2e-royalty-modal-detail table tr td {
+  height: 56px;
+  padding: 18px 16px;
+  flex-shrink: 0;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  color: #515151;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+.c2e-royalty-modal-detail table tr td span {
+  color: #2e68bf !important;
+}
+.c2e-royalty-modal-detail table tr .expiring-soon {
+  outline: 1px solid #ff403b;
+  color: #ff403b;
 }

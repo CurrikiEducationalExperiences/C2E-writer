@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Accordion } from "react-bootstrap";
 
 import BannerImg from "../assets/images/course-main-img.png";
+import Projectimg from "../assets/images/projectimg.png";
 
 const RoyaltyInformation = ({ show, setShow }) => {
   return (
@@ -19,9 +20,12 @@ const RoyaltyInformation = ({ show, setShow }) => {
         aria-label="royalty-modal"
         contentClassName="royalty-modal-content"
       >
-        <Modal.Header closeButton></Modal.Header>
+        <Modal.Header closeButton>
+          <h1 className="royalty-heading">Royalty Information</h1>
+        </Modal.Header>
         <Modal.Body>
-          <h1 className="royalty-heading">Royalty-Based Content</h1>
+          <h2 className="royalty-sub-heading">Royalty-Based Content</h2>
+
           <div className="royalty-accordion">
             <Accordion>
               <Accordion.Item eventKey="0">
@@ -35,27 +39,143 @@ const RoyaltyInformation = ({ show, setShow }) => {
                   </div>
                 </Accordion.Header>
                 <Accordion.Body>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum.
+                  <div className="c2e-royalty-modal-detail">
+                    <table>
+                      <tr>
+                        <th className="left-td-border">Name</th>
+                        <th>Details</th>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Royalty Agreement Number</span>
+                        </td>
+                        <td>Financial Year 2023 chart</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0"> Content</span>
+                        </td>
+                        <td>05/05/2023</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Agreement Date</span>
+                        </td>
+                        <td>Reusable with royalties</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">License Expiration Date</span>
+                        </td>
+                        <td>10/05/2030</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Publisher Rights</span>
+                        </td>
+                        <td>ABC Publishers</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Publisher Name</span>
+                        </td>
+                        <td>www.abc.com</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Publisher Url</span>
+                        </td>
+                        <td>$10 per year unlimited use </td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Publisher Terms </span>
+                        </td>
+                        <td>LSC-Pub-123456789</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Status</span>
+                        </td>
+                        <td className="expiring-soon">Expiring Soon</td>
+                      </tr>
+                    </table>
+                  </div>
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="1">
-                <Accordion.Header>Accordion Item #2</Accordion.Header>
+                <Accordion.Header>
+                  <div className="ass-header-info">
+                    <img src={Projectimg} alt="banner" />
+                    <div className="info-detail">
+                      <h3>Financial Year 2023 Chart</h3>
+                      <p>Terms $10/year Unlimited </p>
+                    </div>
+                  </div>
+                </Accordion.Header>
                 <Accordion.Body>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum.
+                  <div className="c2e-royalty-modal-detail">
+                    <table>
+                      <tr>
+                        <th className="left-td-border">Name</th>
+                        <th>Details</th>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Royalty Agreement Number</span>
+                        </td>
+                        <td>Financial Year 2023 chart</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0"> Content</span>
+                        </td>
+                        <td>05/05/2023</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Agreement Date</span>
+                        </td>
+                        <td>Reusable with royalties</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">License Expiration Date</span>
+                        </td>
+                        <td>10/05/2030</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Publisher Rights</span>
+                        </td>
+                        <td>ABC Publishers</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Publisher Name</span>
+                        </td>
+                        <td>www.abc.com</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Publisher Url</span>
+                        </td>
+                        <td>$10 per year unlimited use </td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Publisher Terms </span>
+                        </td>
+                        <td>LSC-Pub-123456789</td>
+                      </tr>
+                      <tr>
+                        <td className="left-td-border">
+                          <span className="m-0">Status</span>
+                        </td>
+                        <td className="expiring-soon">Expiring Soon</td>
+                      </tr>
+                    </table>
+                  </div>
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>
