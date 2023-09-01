@@ -961,3 +961,18 @@ textarea {
   line-height: 20px;
   margin: 0;
 }
+.style-thankyou {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+}
+
+.style-thankyou h1 {
+  margin-bottom: 10px;
+}
+
+.style-thankyou p {
+  font-size: 20px;
+}
