@@ -885,6 +885,82 @@ textarea {
   padding: 24px 24px 36px 24px;
 }
 
+/* royalty-accordion  */
+
+.royalty-accordion
+  .accordion
+  .accordion-item
+  .accordion-header
+  .accordion-button {
+  padding: 0 16px 0 0;
+}
+
+.royalty-accordion .accordion .accordion-item {
+  border: none !important;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.15);
+  margin-bottom: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.royalty-accordion .accordion .accordion-item .accordion-body {
+  border-top: 1px solid #dddddd;
+  margin-top: 12px;
+}
+
+.royalty-accordion
+  .accordion
+  .accordion-item
+  .accordion-header
+  .accordion-button:not(.collapsed) {
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.royalty-accordion
+  .accordion
+  .accordion-item
+  .accordion-header
+  .accordion-button::after {
+  background-image: url("assets/images/icons/down-icon-blue.svg") !important;
+}
+
+.royalty-accordion .accordion .ass-header-info {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  gap: 24px;
+}
+
+.royalty-accordion .accordion .ass-header-info img {
+  width: 165px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.royalty-accordion .accordion .ass-header-info .info-detail {
+  width: 100%;
+  padding: 8px 0;
+}
+.royalty-accordion .accordion .ass-header-info .info-detail h3 {
+  color: #767676;
+  text-align: left;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  margin-bottom: 8px;
+}
+.royalty-accordion .accordion .ass-header-info .info-detail p {
+  color: #767676;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0;
+}
 .style-thankyou {
   display: flex;
   flex-direction: column;
@@ -894,9 +970,9 @@ textarea {
 }
 
 .style-thankyou h1 {
- margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .style-thankyou p {
- font-size: 20px;
- }
+  font-size: 20px;
+}
