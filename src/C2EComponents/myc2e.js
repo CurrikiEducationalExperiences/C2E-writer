@@ -62,6 +62,7 @@ const Myc2e = () => {
   const [showListing, setShowListing] = useState();
   const [activEpub, setActivEpub] = useState();
   const [royaltyModal, setRoyaltyModal] = useState();
+  const [activeEpubUrl, setActiveEpubUrl] =  useState()
   const login = async () => {
     if (!web3auth) {
       console.log('web3auth not initialized yet');
@@ -324,7 +325,156 @@ const Myc2e = () => {
           </Tab>
         </Tabs>
       )}
+   <Modal
+        show={show}
+        onHide={() => {
+          setShow(false);
+        }}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Body>
+          <Formik
+            initialValues={{
+              title: allData?.filter(
+                (data) => data.id === activEpub?.parentId
+              )?.[0]?.title,
+              // description: '',
+              name: '',
+              email: '',
 
+              url: 'https://twitter.com',
+            }}
+            validate={(values) => {
+              const errors = {};
+              if (!values.title) {
+                errors.title = 'Required';
+              }
+              // if (!values.description) {
+              //   errors.description = 'Required';
+              // }
+              if (!values.name) {
+                errors.name = 'Required';
+              }
+
+              if (!values.email) {
+                errors.email = 'Required';
+              } else if (
+                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+              ) {
+                errors.email = 'Invalid email address';
+              }
+              return errors;
+            }}
+            onSubmit={async (values, { setSubmitting }) => {
+              setActiveEpubUrl()
+              const response = await axios.post(
+                url + '/c2e/cee-media',
+                { ...values, ceeMediaId: activEpub?.id },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+
+                  //  responseType: 'blob',
+                }
+              );
+              if (response) {
+
+                setActiveEpubUrl(response.data?.id);
+              }
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              /* and other goodies */
+            }) => (
+              <form onSubmit={handleSubmit} className="c2e-lisence">
+                <h2>{activEpub?.title}</h2>
+                <h3>C2E Licensee Information</h3>
+                <div class="form-group">
+                  <label for="title">Title:</label>
+                  <input
+                    name="title"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.title}
+                    display
+                    readOnly
+                  />
+                  <div className="error">
+                    {errors.title && touched.title && errors.title}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="licensee_name">Name:</label>
+                  <input
+                    name="name"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.name}
+                    type="text"
+                  />
+                  <div className="error">
+                    {errors.name && touched.name && errors.name}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="licensee_email">Email:</label>
+                  <input
+                    name="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    type="email"
+                  />
+                  <div className="error">
+                    {errors.email && touched.email && errors.email}
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="licensee_url">URL:</label>
+                  <input
+                    name="url"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.url}
+                    type="url"
+                  />
+                </div>
+                <a
+                  href={url + '/c2e-storage/c2eid-' + activeEpubUrl + '.c2e'}
+                  download
+                  title=""
+                >
+                  {activeEpubUrl}
+                </a>
+                <button
+                  onClick={() => setShow(false)}
+                  type="button"
+                  class="btn btn-secondary"
+                >
+                  Close
+                </button>{' '}
+                &nbsp;
+                <button type="submit" class="btn btn-primary">
+                  {isSubmitting ? 'Generating ....' : 'Create C2E'}
+                </button>
+              </form>
+            )}
+          </Formik>
+        </Modal.Body>
+      </Modal>
       <ListingModule
         showListing={showListing}
         setShowListing={setShowListing}
