@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Accordion from "react-bootstrap/Accordion";
-import { Web3Auth } from "@web3auth/modal";
-import { ADAPTER_EVENTS } from "@web3auth/base";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
+import { GoogleLogin } from '@react-oauth/google';
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
 import Modal from "react-bootstrap/Modal";
-import upload from "../assets/images/upload (1).svg";
 import Header from "./header";
 import UploadFile from "./upload";
 import Tab from "react-bootstrap/Tab";
@@ -15,7 +11,10 @@ import Tabs from "react-bootstrap/Tabs";
 import Spinner from "react-bootstrap/Spinner";
 import { Formik } from "formik";
 import RoyaltyInformationModal from "./royaltyInformation";
+import { UserContext } from '../App';
 
+import "react-circular-progressbar/dist/styles.css";
+import upload from "../assets/images/upload (1).svg";
 import FileIcon from "../assets/images/file.svg";
 import FileIconBlack from "../assets/images/file-black.svg";
 import ListingIcon from "../assets/images/listing.svg";
@@ -29,7 +28,6 @@ import AdditionalIcon from "../assets/images/icons/Additional-info.svg";
 import RoyaltyInfoIcon from "../assets/images/icons/royalty-info.svg";
 import AdditionalIconWhite from "../assets/images/icons/additional-white.svg";
 import RoyaltyInfoIconWhite from "../assets/images/icons/royalty-white.svg";
-
 import Amazon from "../assets/images/icons/amazon.png";
 import Wiley from "../assets/images/wiley.png";
 import WooCommerce from "../assets/images/icons/woo-commerce.png";
@@ -59,23 +57,16 @@ const allStores = [
   },
 ];
 const Myc2e = () => {
+  const user = useContext(UserContext);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [web3auth, setWeb3auth] = useState(null);
-  const [walletConnection, setWalletConneciton] = useState(null);
   const [show, setShow] = useState();
   const [showListing, setShowListing] = useState();
   const [activEpub, setActivEpub] = useState();
   const [royaltyModal, setRoyaltyModal] = useState();
   const [activeEpubUrl, setActiveEpubUrl] =  useState()
-  const login = async () => {
-    if (!web3auth) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    await web3auth.connect();
-  };
   const [allData, setAllData] = useState();
   const url = "https://c2e-provider-api.curriki.org";
+
   const getData = () => {
     fetch(url + "/c2e-media").then((data) =>
       data.json().then((value) => {
@@ -88,50 +79,12 @@ const Myc2e = () => {
     getData();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      const web3auth = new Web3Auth({
-        clientId:
-          "BNW0_55WnZZSF6hjmoLGsx2d7NQ_KHuFQnsGOPUPjwWDJAAiT-9iBfu_TeLRkLH3NiKfao04OgEgeCS86JfSFeo",
-        chainConfig: {
-          chainNamespace: "eip155",
-          chainId: "0x1",
-        },
-      });
-      web3auth.on(ADAPTER_EVENTS.CONNECTED, async (data) => {
-        console.log("connected to wallet", web3auth);
-
-        const user = await web3auth.getUserInfo();
-        setWalletConneciton(user);
-
-        // web3auth.provider will be available here after user is connected
-      });
-      web3auth.on(ADAPTER_EVENTS.CONNECTING, () => {
-        console.log("connecting");
-      });
-      web3auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
-        console.log("disconnected");
-        setWalletConneciton(null);
-      });
-
-      setWeb3auth(web3auth);
-      const openloginAdapter = new OpenloginAdapter({
-        adapterSettings: {
-          network: "testnet",
-        },
-      });
-      web3auth.configureAdapter(openloginAdapter);
-
-      await web3auth.initModal();
-    })();
-  }, []);
-
   return (
     <div className="reader-c2e">
-      <Header web3auth={web3auth} walletConnection={walletConnection} />
+      <Header />
 
       <div className="reader-main">
-        {walletConnection ? (
+        {user ? (
           <div className="login-text text-detail">
             <h3>How does it work?</h3>
             <p>
@@ -165,7 +118,7 @@ const Myc2e = () => {
         <div className="uploadBox">
           <div className="box">
             <h1>Curriki Educational Experiences Writer</h1>
-            {walletConnection && (
+            {user && (
               <>
                 <div className="iconbox">
                   <CircularProgressbarWithChildren value={uploadProgress}>
@@ -179,24 +132,33 @@ const Myc2e = () => {
               </>
             )}
 
-            {walletConnection ? (
+            {user ? (
               <p className="text">Upload a file from your local device</p>
             ) : (
               <p className="text text-space">Log In and Experience C2Es Now</p>
             )}
-            {walletConnection ? (
+            {user ? (
               <UploadFile
                 setUploadProgress={setUploadProgress}
                 getData={getData}
               />
             ) : (
-              <button onClick={() => login()}>LET’s GET STARTED!</button>
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  localStorage.setItem('oAuthToken', credentialResponse.credential);
+                  window.location.reload();
+                }}
+                onError={() => {
+                  console.log('Login Failed');
+                  window.location.reload();
+                }}
+              />
             )}
           </div>
         </div>
       </div>
 
-      {walletConnection && (
+      {user && (
         <Tabs
           defaultActiveKey="profile"
           id="uncontrolled-tab-example"
@@ -484,7 +446,6 @@ const Myc2e = () => {
         setShowListing={setShowListing}
         activEpub={activEpub}
         allData={allData}
-        user={walletConnection}
         setRoyaltyModal={setRoyaltyModal}
       />
 
@@ -501,8 +462,8 @@ const ListingModule = ({
   setRoyaltyModal,
   activEpub,
   allData,
-  user,
 }) => {
+  const user = useContext(UserContext);
   const [steps, setSteps] = useState(1);
   const [selectedStore, setSelectedStore] = useState();
   const url = "https://c2e-provider-api.curriki.org";

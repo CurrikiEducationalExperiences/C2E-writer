@@ -1,25 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { googleLogout } from '@react-oauth/google'; 
+import { UserContext } from '../App';
 import logo from '../assets/images/logo.png';
-const Header = ({ web3auth, walletConnection }) => {
-  const logout = async () => {
-    if (!web3auth) {
-      console.log('provider not initialized yet');
-      return;
-    }
 
-    await web3auth.logout();
-  };
+const Header = () => {
+  const user = useContext(UserContext);
 
   return (
     <div className="header">
       <img src={logo} alt="logo" className="header-logo" />
-      {walletConnection ? (
+      {user ? (
         <div className="login-user">
           <div className="user-info">
-            <img src={walletConnection?.profileImage} alt="" />
-            <h2>{walletConnection?.name}</h2>
+            <img src={user.picture} alt="" />
+            <h2>{user.name}</h2>
           </div>
-          <button className="login" onClick={() => logout()}>
+          <button className="login" onClick={() => {
+            googleLogout();
+            localStorage.removeItem('oAuthToken');
+            window.location.reload();
+          }}>
             Logout
           </button>
         </div>
