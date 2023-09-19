@@ -24,6 +24,7 @@ env:
   AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
   EKS_CLUSTER_NAME: ${{secrets.EKS_CLUSTER_NAME}}
   COMMON_NAME: ${{secrets.COMMON_NAME}}
+  REACT_APP_GOOGLE_CLIENT_ID: ${{secrets.REACT_APP_GOOGLE_CLIENT_ID}}
   # MULTIPLE_TG: ${{secrets.MULTIPLE_TG}}
   # CERTIFICATE_ARN: ${{secrets.CERTIFICATE_ARN}}
 
@@ -47,7 +48,7 @@ jobs:
         docker build \
           -t $CONTAINER_IMAGE \
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE \
-          --build-arg DB_HOST=$DB_HOST ./
+          --build-arg REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID ./
 
     - name: Push Image
       run: |
