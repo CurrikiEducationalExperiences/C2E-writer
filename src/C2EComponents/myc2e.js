@@ -39,6 +39,7 @@ import EmailIcon from "../assets/images/icons/form/Email.svg";
 import UrlIcon from "../assets/images/icons/form/Url.svg";
 import TitleIcon from "../assets/images/icons/form/title.svg";
 
+/*
 const allStores = [
   {
     id: 1,
@@ -56,6 +57,8 @@ const allStores = [
     img: WooCommerce,
   },
 ];
+*/
+
 const Myc2e = () => {
   const user = useContext(UserContext);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -66,11 +69,25 @@ const Myc2e = () => {
   const [activeEpubUrl, setActiveEpubUrl] =  useState()
   const [allData, setAllData] = useState();
   const url = "https://c2e-provider-api.curriki.org";
+  const [allStores, setAllStores] = useState([]);
+  const [writer, setWriter] = useState(null);
 
   const getData = () => {
     fetch(url + "/c2e-media").then((data) =>
       data.json().then((value) => {
         setAllData(value);
+      }),
+    );
+
+    fetch(url + "/c2e-stores").then((data) =>
+      data.json().then((value) => {
+        setAllStores( value.map(store => { return {...store, img: Wiley} }) );
+      }),
+    );
+
+    fetch(url + "/c2e-writers").then((data) =>
+      data.json().then((value) => {
+        setWriter( (value.length > 0 ? value[0] : null) );
       }),
     );
   };
@@ -338,8 +355,8 @@ const Myc2e = () => {
             onSubmit={async (values, { setSubmitting }) => {
               setActiveEpubUrl()
               const response = await axios.post(
-                url + '/c2e/cee-media',
-                { ...values, ceeMediaId: activEpub?.id },
+                url + '/c2e/media',
+                { ceeMediaId: activEpub?.id, licensee: {...values} },
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -447,6 +464,8 @@ const Myc2e = () => {
         activEpub={activEpub}
         allData={allData}
         setRoyaltyModal={setRoyaltyModal}
+        allStores={allStores}
+        writer={writer}
       />
 
       <RoyaltyInformationModal show={royaltyModal} setShow={setRoyaltyModal} />
@@ -462,6 +481,8 @@ const ListingModule = ({
   setRoyaltyModal,
   activEpub,
   allData,
+  allStores,
+  writer
 }) => {
   const user = useContext(UserContext);
   const [steps, setSteps] = useState(1);
@@ -552,9 +573,9 @@ const ListingModule = ({
                   ownerEmail: user?.email,
                   ownerLicense: "",
                   url: "",
-                  publisherName: "Curriki",
-                  publisherEmail: "publisher@curriki.org",
-                  publisherUrl: "https://curriki.org",
+                  publisherName: writer.name,
+                  publisherEmail: writer.email,
+                  publisherUrl: writer.url,
 
                   copyrightYear: "",
                   usageType: ["Purchased"],
@@ -574,8 +595,10 @@ const ListingModule = ({
                 onSubmit={async (values) => {
                   console.log(values, activEpub);
                   try {
-                    const response = await axios.post(url + "/c2e/list/media", {
+                    const response = await axios.post(url + "/c2e-listings/media", {
                       ceeMediaId: activEpub.id,
+                      ceeWriterId: writer.id,
+                      ceeStoreId: selectedStore.id,
                       title: values.c2eTitle,
                       description: values.c2eDiscription,
                       identifier: {
@@ -609,7 +632,6 @@ const ListingModule = ({
                     <div className="formik-box">
                       <div className="stor-flex-box">
                         <h5>C2E Details</h5>
-
                         <div className="input-box">
                           <label>
                             <img src={SKUIcon} alt="aku" /> ISBN
