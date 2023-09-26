@@ -62,7 +62,7 @@ const Myc2e = () => {
   const [showListing, setShowListing] = useState();
   const [activEpub, setActivEpub] = useState();
   const [royaltyModal, setRoyaltyModal] = useState();
-  const [activeEpubUrl, setActiveEpubUrl] =  useState()
+  const [activeEpubUrl, setActiveEpubUrl] = useState();
   const login = async () => {
     if (!web3auth) {
       console.log('web3auth not initialized yet');
@@ -325,7 +325,7 @@ const Myc2e = () => {
           </Tab>
         </Tabs>
       )}
-   <Modal
+      <Modal
         show={show}
         onHide={() => {
           setShow(false);
@@ -370,7 +370,7 @@ const Myc2e = () => {
               return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              setActiveEpubUrl()
+              setActiveEpubUrl();
               const response = await axios.post(
                 url + '/c2e/cee-media',
                 { ...values, ceeMediaId: activEpub?.id },
@@ -383,7 +383,6 @@ const Myc2e = () => {
                 }
               );
               if (response) {
-
                 setActiveEpubUrl(response.data?.id);
               }
             }}
@@ -441,7 +440,6 @@ const Myc2e = () => {
                     {errors.email && touched.email && errors.email}
                   </div>
                 </div>
-
                 <div class="form-group">
                   <label for="licensee_url">URL:</label>
                   <input
@@ -592,13 +590,29 @@ const ListingModule = ({
                   publisherUrl: 'https://curriki.org',
 
                   copyrightYear: '',
-                  usageType: ['Purchased'],
+                  usageType: ['usage'],
                 }}
                 enableReinitialize
                 validate={(values) => {
                   const errors = {};
-                  if (!values.price) {
+                  console.log(values);
+                  if (!values.price &&
+                    !values.usageType?.includes('creative common')) {
                     errors.price = 'Required';
+                  }
+
+                  if (
+                    !values.subscription_term &&
+                    values.usageType?.includes('usage')
+                  ) {
+                    errors.subscription_term = 'Required';
+                  }
+
+                  if (
+                    !values.subscription_term &&
+                    values.usageType?.includes('Subscription')
+                  ) {
+                    errors.subscription_term = 'Required';
                   }
                   // if (!values.url) {
                   //   errors.url = 'Required';
@@ -609,7 +623,7 @@ const ListingModule = ({
                 onSubmit={async (values) => {
                   console.log(values, activEpub);
                   try {
-                    const response = await axios.post(url + '/c2e/list/media', {
+                    const response = await axios.post(url + '/c2e-listings/media', {
                       ceeMediaId: activEpub.id,
                       title: values.c2eTitle,
                       description: values.c2eDiscription,
@@ -622,7 +636,9 @@ const ListingModule = ({
                         email: values.ownerEmail,
                         url: values.url,
                       },
-                      price: String(values.price),
+                      price: values.usageType?.includes('creative common') ? 0 : String(values.price),
+                      licenseType: String(values.usageType?.[0]),
+                      licenseTerms: values.subscription_term
                     });
                   } catch (e) {
                     setSteps(3);
@@ -740,22 +756,22 @@ const ListingModule = ({
 
                     <div className="formik-box">
                       <div className="stor-flex-box">
-                        <h5>C2E License Details</h5>
-                        <div className="input-box">
+                        <h5>C2E License Types </h5>
+                        {/* <div className="input-box">
                           <label>Set Usage Type</label>
-                        </div>
+                        </div> */}
 
                         <div className="d-flex check-box">
                           <div className="check">
                             <input
                               type="radio"
                               name="usageType"
-                              value="Purchased"
+                              value="usage"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              checked={values.usageType.includes('Purchased')}
+                              checked={values.usageType.includes('usage')}
                             />
-                            <label className="ml-2">Purchased</label>
+                            <label className="ml-2">Usage</label>
                           </div>
                           <div className="check">
                             <input
@@ -774,30 +790,29 @@ const ListingModule = ({
                             <input
                               type="radio"
                               name="usageType"
-                              value="Open"
+                              value="Purchased"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              checked={values.usageType.includes('Open')}
+                              checked={values.usageType.includes('Purchased')}
                             />
-                            <label className="ml-2">Open</label>
+                            <label className="ml-2">Purchased</label>
+                          </div>
+                          <div className="check">
+                            <input
+                              type="radio"
+                              name="usageType"
+                              value="creative common"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              checked={values.usageType.includes('creative')}
+                            />
+                            <label className="ml-2">Creative Commons</label>
                           </div>
                         </div>
-                        <div className="input-box">
-                          <label>
-                            <img src={PrceIcon} alt="" /> Price ($USD) *
-                          </label>
-                          <input
-                            type="number"
-                            name="price"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.price}
-                          />
-                          <p className="error">
-                            {errors.price && touched.price && errors.price}
-                          </p>
-                        </div>
-                        <div className="input-box">
+
+                        <h5>License Terms </h5>
+
+                        {/* <div className="input-box">
                           <label>
                             <img src={TitleIcon} alt="title" /> License Terms
                           </label>
@@ -808,6 +823,97 @@ const ListingModule = ({
                             onBlur={handleBlur}
                             value={values.ownerLicense}
                           />
+                        </div> */}
+                        {values.usageType.includes('Subscription') && (
+                          <div className="input-box">
+                            <label>
+                              <img src={TitleIcon} alt="title" /> License Period
+                            </label>
+                            <select
+                              type="text"
+                              name="subscription_term"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.subscription_term}
+                            >
+                               <option value="">Select </option>
+                              <option value="1 month">1 month</option>
+                              <option value="2 month">2 month</option>
+                              <option value="3 month">3 month</option>
+                              <option value="4 month">4 month</option>
+                              <option value="5 month">5 month</option>
+                              <option value="6 month">6 month</option>
+                              <option value="7 month">7 month</option>
+                              <option value="8 month">8 month</option>
+
+                              <option value="9 month">9 month</option>
+
+                              <option value="10 month">10 month</option>
+                              <option value="11 month">11 month</option>
+
+                              <option value="12 month">1 year</option>
+
+                              <option value="13 month">13 month</option>
+                              <option value="14 month"> 14 month</option>
+                              <option value="15 month">15 month</option>
+                              <option value="16 month">16 month</option>
+                              <option value="17 month">17 month</option>
+                              <option value="18 month">18 month</option>
+
+                              <option value="19 month">19 month</option>
+
+                              <option value="20 month">20 month</option>
+                              <option value="21 month">21 month</option>
+                              <option value="22 month">22 month</option>
+                              <option value="23 month">23 month</option>
+                              <option value="2 year">2 year</option>
+                            </select>
+                          </div>
+                        )}
+                        {values.usageType.includes('usage') && (
+                          <div className="input-box">
+                            <label>
+                              <img src={PrceIcon} alt="" /> Number of Users
+                            </label>
+                            <input
+                              type="number"
+                              name="subscription_term"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.userscount}
+                            />
+                          </div>
+                        )}
+                        <div className="input-box">
+                          <p className="error">
+                            {errors.subscription_term &&
+                              touched.price &&
+                              errors.price}
+                          </p>
+                        </div>
+                        <div className="input-box">
+                          <label>
+                            <img src={PrceIcon} alt="" /> Price ($USD) *
+                          </label>
+                          <input
+                            type="number"
+                            name="price"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            disabled={
+                              values.usageType.includes('creative common')
+                                ? true
+                                : false
+                            }
+                            value={
+                              values.usageType.includes('creative common')
+                                ? 0
+                                : values.price
+                            }
+                          />
+                          <p className="error">
+                            {errors.price && touched.price && errors.price}
+                          </p>
                         </div>
                         <div
                           style={{
