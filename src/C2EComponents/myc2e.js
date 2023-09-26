@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
-import { Web3Auth } from '@web3auth/modal';
-import { ADAPTER_EVENTS } from '@web3auth/base';
-import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
+import { GoogleLogin } from '@react-oauth/google';
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 import Modal from 'react-bootstrap/Modal';
-import upload from '../assets/images/upload (1).svg';
 import Header from './header';
 import UploadFile from './upload';
 import Tab from 'react-bootstrap/Tab';
@@ -15,7 +11,10 @@ import Tabs from 'react-bootstrap/Tabs';
 import Spinner from 'react-bootstrap/Spinner';
 import { Formik } from 'formik';
 import RoyaltyInformationModal from './royaltyInformation';
+import { UserContext } from '../App';
 
+import 'react-circular-progressbar/dist/styles.css';
+import upload from '../assets/images/upload (1).svg';
 import FileIcon from '../assets/images/file.svg';
 import FileIconBlack from '../assets/images/file-black.svg';
 import ListingIcon from '../assets/images/listing.svg';
@@ -25,7 +24,10 @@ import AddWhite from '../assets/images/add-white.svg';
 import BookIcon from '../assets/images/icons/book.svg';
 import StoreIcon from '../assets/images/icons/store.svg';
 import CloseIcon from '../assets/images/icons/close-black.svg';
-
+import AdditionalIcon from '../assets/images/icons/Additional-info.svg';
+import RoyaltyInfoIcon from '../assets/images/icons/royalty-info.svg';
+import AdditionalIconWhite from '../assets/images/icons/additional-white.svg';
+import RoyaltyInfoIconWhite from '../assets/images/icons/royalty-white.svg';
 import Amazon from '../assets/images/icons/amazon.png';
 import Wiley from '../assets/images/wiley.png';
 import WooCommerce from '../assets/images/icons/woo-commerce.png';
@@ -37,45 +39,67 @@ import EmailIcon from '../assets/images/icons/form/Email.svg';
 import UrlIcon from '../assets/images/icons/form/Url.svg';
 import TitleIcon from '../assets/images/icons/form/title.svg';
 
+/*
 const allStores = [
   {
     id: 1,
-    name: 'Wiley',
+    name: "Wiley",
     img: Wiley,
   },
   {
     id: 2,
-    name: 'Amazon',
+    name: "Amazon",
     img: Amazon,
   },
   {
     id: 3,
-    name: 'Woo commerce',
+    name: "Woo commerce",
     img: WooCommerce,
   },
 ];
+*/
+
 const Myc2e = () => {
+  const user = useContext(UserContext);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [web3auth, setWeb3auth] = useState(null);
-  const [walletConnection, setWalletConneciton] = useState(null);
   const [show, setShow] = useState();
   const [showListing, setShowListing] = useState();
   const [activEpub, setActivEpub] = useState();
   const [royaltyModal, setRoyaltyModal] = useState();
   const [activeEpubUrl, setActiveEpubUrl] = useState();
-  const login = async () => {
-    if (!web3auth) {
-      console.log('web3auth not initialized yet');
-      return;
-    }
-    await web3auth.connect();
-  };
+  // const login = async () => {
+  //   if (!web3auth) {
+  //     console.log('web3auth not initialized yet');
+  //     return;
+  //   }
+  //   await web3auth.connect();
+  // };
+
   const [allData, setAllData] = useState();
   const url = 'https://c2e-provider-api.curriki.org';
+  const [allStores, setAllStores] = useState([]);
+  const [writer, setWriter] = useState(null);
+
   const getData = () => {
     fetch(url + '/c2e-media').then((data) =>
       data.json().then((value) => {
         setAllData(value);
+      })
+    );
+
+    fetch(url + '/c2e-stores').then((data) =>
+      data.json().then((value) => {
+        setAllStores(
+          value.map((store) => {
+            return { ...store, img: Wiley };
+          })
+        );
+      })
+    );
+
+    fetch(url + '/c2e-writers').then((data) =>
+      data.json().then((value) => {
+        setWriter(value.length > 0 ? value[0] : null);
       })
     );
   };
@@ -84,50 +108,12 @@ const Myc2e = () => {
     getData();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      const web3auth = new Web3Auth({
-        clientId:
-          'BNW0_55WnZZSF6hjmoLGsx2d7NQ_KHuFQnsGOPUPjwWDJAAiT-9iBfu_TeLRkLH3NiKfao04OgEgeCS86JfSFeo',
-        chainConfig: {
-          chainNamespace: 'eip155',
-          chainId: '0x1',
-        },
-      });
-      web3auth.on(ADAPTER_EVENTS.CONNECTED, async (data) => {
-        console.log('connected to wallet', web3auth);
-
-        const user = await web3auth.getUserInfo();
-        setWalletConneciton(user);
-
-        // web3auth.provider will be available here after user is connected
-      });
-      web3auth.on(ADAPTER_EVENTS.CONNECTING, () => {
-        console.log('connecting');
-      });
-      web3auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
-        console.log('disconnected');
-        setWalletConneciton(null);
-      });
-
-      setWeb3auth(web3auth);
-      const openloginAdapter = new OpenloginAdapter({
-        adapterSettings: {
-          network: 'testnet',
-        },
-      });
-      web3auth.configureAdapter(openloginAdapter);
-
-      await web3auth.initModal();
-    })();
-  }, []);
-
   return (
     <div className="reader-c2e">
-      <Header web3auth={web3auth} walletConnection={walletConnection} />
+      <Header />
 
       <div className="reader-main">
-        {walletConnection ? (
+        {user ? (
           <div className="login-text text-detail">
             <h3>How does it work?</h3>
             <p>
@@ -161,7 +147,7 @@ const Myc2e = () => {
         <div className="uploadBox">
           <div className="box">
             <h1>Curriki Educational Experiences Writer</h1>
-            {walletConnection && (
+            {user && (
               <>
                 <div className="iconbox">
                   <CircularProgressbarWithChildren value={uploadProgress}>
@@ -175,24 +161,36 @@ const Myc2e = () => {
               </>
             )}
 
-            {walletConnection ? (
+            {user ? (
               <p className="text">Upload a file from your local device</p>
             ) : (
               <p className="text text-space">Log In and Experience C2Es Now</p>
             )}
-            {walletConnection ? (
+            {user ? (
               <UploadFile
                 setUploadProgress={setUploadProgress}
                 getData={getData}
               />
             ) : (
-              <button onClick={() => login()}>LET’s GET STARTED!</button>
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  localStorage.setItem(
+                    'oAuthToken',
+                    credentialResponse.credential
+                  );
+                  window.location.reload();
+                }}
+                onError={() => {
+                  console.log('Login Failed');
+                  window.location.reload();
+                }}
+              />
             )}
           </div>
         </div>
       </div>
 
-      {walletConnection && (
+      {user && (
         <Tabs
           defaultActiveKey="profile"
           id="uncontrolled-tab-example"
@@ -372,8 +370,8 @@ const Myc2e = () => {
             onSubmit={async (values, { setSubmitting }) => {
               setActiveEpubUrl();
               const response = await axios.post(
-                url + '/c2e/cee-media',
-                { ...values, ceeMediaId: activEpub?.id },
+                url + '/c2e/media',
+                { ceeMediaId: activEpub?.id, licensee: { ...values } },
                 {
                   headers: {
                     'Content-Type': 'application/json',
@@ -478,8 +476,9 @@ const Myc2e = () => {
         setShowListing={setShowListing}
         activEpub={activEpub}
         allData={allData}
-        user={walletConnection}
         setRoyaltyModal={setRoyaltyModal}
+        allStores={allStores}
+        writer={writer}
       />
 
       <RoyaltyInformationModal show={royaltyModal} setShow={setRoyaltyModal} />
@@ -495,11 +494,22 @@ const ListingModule = ({
   setRoyaltyModal,
   activEpub,
   allData,
-  user,
+  allStores,
+  writer,
 }) => {
+  const user = useContext(UserContext);
   const [steps, setSteps] = useState(1);
   const [selectedStore, setSelectedStore] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const url = 'https://c2e-provider-api.curriki.org';
+  function addMonthsToDate(numberOfMonths) {
+    const currentDate = new Date();
+    const newDate = new Date(currentDate);
+    newDate.setMonth(currentDate.getMonth() + numberOfMonths);
+    console.log(newDate)
+    return newDate;
+  }
   return (
     <Modal
       show={showListing}
@@ -585,9 +595,9 @@ const ListingModule = ({
                   ownerEmail: user?.email,
                   ownerLicense: '',
                   url: '',
-                  publisherName: 'Curriki',
-                  publisherEmail: 'publisher@curriki.org',
-                  publisherUrl: 'https://curriki.org',
+                  publisherName: writer.name,
+                  publisherEmail: writer.email,
+                  publisherUrl: writer.url,
 
                   copyrightYear: '',
                   usageType: ['usage'],
@@ -595,9 +605,11 @@ const ListingModule = ({
                 enableReinitialize
                 validate={(values) => {
                   const errors = {};
-                  console.log(values);
-                  if (!values.price &&
-                    !values.usageType?.includes('creative common')) {
+
+                  if (
+                    !values.price &&
+                    !values.usageType?.includes('creative common')
+                  ) {
                     errors.price = 'Required';
                   }
 
@@ -623,26 +635,35 @@ const ListingModule = ({
                 onSubmit={async (values) => {
                   console.log(values, activEpub);
                   try {
-                    const response = await axios.post(url + '/c2e-listings/media', {
-                      ceeMediaId: activEpub.id,
-                      title: values.c2eTitle,
-                      description: values.c2eDiscription,
-                      identifier: {
-                        identifierType: activEpub.identifierType,
-                        identifierValue: values.sku,
-                      },
-                      copyrightHolder: {
-                        name: values.ownerName,
-                        email: values.ownerEmail,
-                        url: values.url,
-                      },
-                      price: values.usageType?.includes('creative common') ? 0 : String(values.price),
-                      licenseType: String(values.usageType?.[0]),
-                      licenseTerms: values.subscription_term
-                    });
-                  } catch (e) {
-                    setSteps(3);
-                  }
+                    const response = await axios.post(
+                      url + '/c2e-listings/media',
+                      {
+                        ceeMediaId: activEpub.id,
+                        ceeWriterId: writer.id,
+                        ceeStoreId: selectedStore.id,
+                        title: values.c2eTitle,
+                        description: values.c2eDiscription,
+                        identifier: {
+                          identifierType: activEpub.identifierType,
+                          identifierValue: values.sku,
+                        },
+                        copyrightHolder: {
+                          name: values.ownerName,
+                          email: values.ownerEmail,
+                          url: values.url,
+                        },
+                        price: values.usageType?.includes('creative common')
+                          ? '0'
+                          : String(values.price),
+                        licenseType: String(values.usageType?.[0]),
+                        licenseTerms:values.usageType.includes('Subscription') &&
+                        values.subscription_term === 'monthly' ? endDate + " - " +  startDate :  values.usageType.includes('usage') || values.usageType.includes('Subscription')  ? String(values.subscription_term) : "",
+                      }
+                    );
+                    if (response) {
+                      setSteps(3);
+                    }
+                  } catch (e) {}
                 }}
               >
                 {({
@@ -659,7 +680,6 @@ const ListingModule = ({
                     <div className="formik-box">
                       <div className="stor-flex-box">
                         <h5>C2E Details</h5>
-
                         <div className="input-box">
                           <label>
                             <img src={SKUIcon} alt="aku" /> ISBN
@@ -825,51 +845,50 @@ const ListingModule = ({
                           />
                         </div> */}
                         {values.usageType.includes('Subscription') && (
-                          <div className="input-box">
-                            <label>
-                              <img src={TitleIcon} alt="title" /> License Period
-                            </label>
-                            <select
-                              type="text"
-                              name="subscription_term"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.subscription_term}
-                            >
-                               <option value="">Select </option>
-                              <option value="1 month">1 month</option>
-                              <option value="2 month">2 month</option>
-                              <option value="3 month">3 month</option>
-                              <option value="4 month">4 month</option>
-                              <option value="5 month">5 month</option>
-                              <option value="6 month">6 month</option>
-                              <option value="7 month">7 month</option>
-                              <option value="8 month">8 month</option>
+                          <div>
+                            <div className="input-box">
+                              <label>
+                                <img src={TitleIcon} alt="title" /> License
+                                Period
+                              </label>
+                              <select
+                                type="text"
+                                name="subscription_term"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.subscription_term}
+                              >
+                                <option value="">Select </option>
+                                <option value="monthly">Monthly</option>
 
-                              <option value="9 month">9 month</option>
+                                <option value="yearly">Yearly</option>
+                              </select>
+                            </div>
 
-                              <option value="10 month">10 month</option>
-                              <option value="11 month">11 month</option>
+                            <div className="input-box">
+                              <label>
+                                <img src={PrceIcon} alt="" />Qty
+                              </label>
+                              <input
+                                type="number"
+                                name="subscription_term"
+                                onChange={(e)=>{
+                                  setStartDate(e.target.value)
+                                  addMonthsToDate(e.target.value)
+                                }}
+                                onBlur={(e)=>{
+                                  setStartDate(e.target.value)
+                                }}
+                                value={startDate}
+                              />
+                            </div>
 
-                              <option value="12 month">1 year</option>
-
-                              <option value="13 month">13 month</option>
-                              <option value="14 month"> 14 month</option>
-                              <option value="15 month">15 month</option>
-                              <option value="16 month">16 month</option>
-                              <option value="17 month">17 month</option>
-                              <option value="18 month">18 month</option>
-
-                              <option value="19 month">19 month</option>
-
-                              <option value="20 month">20 month</option>
-                              <option value="21 month">21 month</option>
-                              <option value="22 month">22 month</option>
-                              <option value="23 month">23 month</option>
-                              <option value="2 year">2 year</option>
-                            </select>
                           </div>
                         )}
+                        {/* {values.usageType.includes('Subscription') &&
+                          values.subscription_term === 'monthly' && (
+                            <p>Expiration Date: {addMonthsToDate(startDate)} </p>
+                          )} */}
                         {values.usageType.includes('usage') && (
                           <div className="input-box">
                             <label>
@@ -927,12 +946,40 @@ const ListingModule = ({
                             onClick={() => setRoyaltyModal(true)}
                             className="btn btn-primary sec-btn"
                           >
+                            <img
+                              src={RoyaltyInfoIcon}
+                              alt="file"
+                              width={20}
+                              height={20}
+                              className="blue-add-icon"
+                            />
+                            <img
+                              src={RoyaltyInfoIconWhite}
+                              alt="file"
+                              width={20}
+                              height={20}
+                              className="white-add-icon"
+                            />
                             Royalty Information
                           </button>
                           <button
                             type="button"
                             className="btn btn-primary sec-btn"
                           >
+                            <img
+                              src={AdditionalIcon}
+                              alt="file"
+                              width={20}
+                              height={20}
+                              className="blue-add-icon"
+                            />
+                            <img
+                              src={AdditionalIconWhite}
+                              alt="file"
+                              width={20}
+                              height={20}
+                              className="white-add-icon"
+                            />
                             Additional Information
                           </button>
                         </div>
@@ -1033,7 +1080,7 @@ const ListingModule = ({
                   className="product-heading text-center mt-5"
                   style={{ color: 'green' }}
                 >
-                  Thank You For Submition!
+                  Thank You For Submission!
                 </h3>
                 <p>
                   You have successfully listed {activEpub.title} on{' '}
