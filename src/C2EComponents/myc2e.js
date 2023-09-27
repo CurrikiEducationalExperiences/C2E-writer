@@ -500,15 +500,21 @@ const ListingModule = ({
   const user = useContext(UserContext);
   const [steps, setSteps] = useState(1);
   const [selectedStore, setSelectedStore] = useState();
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState(1);
+  const [endDate, setEndDate] = useState(1);
   const url = 'https://c2e-provider-api.curriki.org';
-  function addMonthsToDate(numberOfMonths) {
+  function addMonthsOrYears(type, number) {
+    // Get the current date
     const currentDate = new Date();
-    const newDate = new Date(currentDate);
-    newDate.setMonth(currentDate.getMonth() + numberOfMonths);
-    console.log(newDate)
-    return newDate;
+
+    if (type === 'monthly') {
+      // Add the specified number of months
+      currentDate.setMonth(currentDate.getMonth() + number);
+    } else if (type === 'yearly') {
+      // Add the specified number of years
+      currentDate.setFullYear(currentDate.getFullYear() + number);
+    }
+    return currentDate.toDateString();
   }
   return (
     <Modal
@@ -598,7 +604,7 @@ const ListingModule = ({
                   publisherName: writer.name,
                   publisherEmail: writer.email,
                   publisherUrl: writer.url,
-
+                  subscription_term:"",
                   copyrightYear: '',
                   usageType: ['usage'],
                 }}
@@ -656,8 +662,15 @@ const ListingModule = ({
                           ? '0'
                           : String(values.price),
                         licenseType: String(values.usageType?.[0]),
-                        licenseTerms:values.usageType.includes('Subscription') &&
-                        values.subscription_term === 'monthly' ? endDate + " - " +  startDate :  values.usageType.includes('usage') || values.usageType.includes('Subscription')  ? String(values.subscription_term) : "",
+                        licenseTerms: values.usageType.includes('Subscription')
+                          ? addMonthsOrYears(
+                              values.subscription_term,
+                              parseInt(startDate)
+                            )
+                          : values.usageType.includes('usage') ||
+                            values.usageType.includes('Subscription')
+                          ? String(values.subscription_term)
+                          : '',
                       }
                     );
                     if (response) {
@@ -674,6 +687,7 @@ const ListingModule = ({
                   handleBlur,
                   handleSubmit,
                   isSubmitting,
+                  setFieldValue,
                   /* and other goodies */
                 }) => (
                   <form onSubmit={handleSubmit}>
@@ -787,7 +801,10 @@ const ListingModule = ({
                               type="radio"
                               name="usageType"
                               value="usage"
-                              onChange={handleChange}
+                              onChange={(e) => {
+                                setFieldValue('subscription_term', '');
+                                handleChange(e);
+                              }}
                               onBlur={handleBlur}
                               checked={values.usageType.includes('usage')}
                             />
@@ -798,7 +815,11 @@ const ListingModule = ({
                               type="radio"
                               name="usageType"
                               value="Subscription"
-                              onChange={handleChange}
+                              onChange={(e) => {
+                                setFieldValue('subscription_term', '');
+
+                                handleChange(e);
+                              }}
                               onBlur={handleBlur}
                               checked={values.usageType.includes(
                                 'Subscription'
@@ -811,7 +832,10 @@ const ListingModule = ({
                               type="radio"
                               name="usageType"
                               value="Purchased"
-                              onChange={handleChange}
+                              onChange={(e) => {
+                                setFieldValue('subscription_term', '');
+                                handleChange(e);
+                              }}
                               onBlur={handleBlur}
                               checked={values.usageType.includes('Purchased')}
                             />
@@ -822,7 +846,10 @@ const ListingModule = ({
                               type="radio"
                               name="usageType"
                               value="creative common"
-                              onChange={handleChange}
+                              onChange={(e) => {
+                                setFieldValue('subscription_term', '');
+                                handleChange(e);
+                              }}
                               onBlur={handleBlur}
                               checked={values.usageType.includes('creative')}
                             />
@@ -845,11 +872,10 @@ const ListingModule = ({
                           />
                         </div> */}
                         {values.usageType.includes('Subscription') && (
-                          <div>
+                          <div style={{ display: 'flex', gap: '15px' }}>
                             <div className="input-box">
                               <label>
-                                <img src={TitleIcon} alt="title" /> License
-                                Period
+                                <img src={TitleIcon} alt="title" /> Term
                               </label>
                               <select
                                 type="text"
@@ -867,32 +893,38 @@ const ListingModule = ({
 
                             <div className="input-box">
                               <label>
-                                <img src={PrceIcon} alt="" />Qty
+                                <img src={PrceIcon} alt="" />
+                                Quantity
                               </label>
                               <input
                                 type="number"
                                 name="subscription_term"
-                                onChange={(e)=>{
-                                  setStartDate(e.target.value)
-                                  addMonthsToDate(e.target.value)
+                                onChange={(e) => {
+                                  setStartDate(e.target.value);
                                 }}
-                                onBlur={(e)=>{
-                                  setStartDate(e.target.value)
+                                onBlur={(e) => {
+                                  setStartDate(e.target.value);
                                 }}
                                 value={startDate}
                               />
                             </div>
-
                           </div>
                         )}
-                        {/* {values.usageType.includes('Subscription') &&
-                          values.subscription_term === 'monthly' && (
-                            <p>Expiration Date: {addMonthsToDate(startDate)} </p>
-                          )} */}
+                        {values.usageType.includes('Subscription') &&
+                          values.subscription_term &&
+                          startDate && (
+                            <p>
+                              <strong>Expiration Date:</strong>{' '}
+                              {addMonthsOrYears(
+                                values.subscription_term,
+                                parseInt(startDate)
+                              )}{' '}
+                            </p>
+                          )}
                         {values.usageType.includes('usage') && (
                           <div className="input-box">
                             <label>
-                              <img src={PrceIcon} alt="" /> Number of Users
+                              <img src={PrceIcon} alt="" /> Number of Users *
                             </label>
                             <input
                               type="number"
@@ -906,8 +938,8 @@ const ListingModule = ({
                         <div className="input-box">
                           <p className="error">
                             {errors.subscription_term &&
-                              touched.price &&
-                              errors.price}
+                              touched.subscription_term &&
+                              errors.subscription_term}
                           </p>
                         </div>
                         <div className="input-box">
