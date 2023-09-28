@@ -604,7 +604,7 @@ const ListingModule = ({
                   publisherName: writer.name,
                   publisherEmail: writer.email,
                   publisherUrl: writer.url,
-                  subscription_term:"",
+                  subscription_term: '',
                   copyrightYear: '',
                   usageType: ['usage'],
                 }}
@@ -632,9 +632,9 @@ const ListingModule = ({
                   ) {
                     errors.subscription_term = 'Required';
                   }
-                  // if (!values.url) {
-                  //   errors.url = 'Required';
-                  // }
+                  if (!values.c2eDiscription) {
+                    errors.c2eDiscription = 'Required';
+                  }
 
                   return errors;
                 }}
@@ -661,9 +661,10 @@ const ListingModule = ({
                         price: values.usageType?.includes('creative common')
                           ? '0'
                           : String(values.price),
-                        licenseType: typeof values.usageType === 'object'
-                        ? String(values.usageType?.[0])
-                        : String(values.usageType),
+                        licenseType:
+                          typeof values.usageType === 'object'
+                            ? String(values.usageType?.[0])
+                            : String(values.usageType),
                         licenseTerms: values.usageType.includes('Subscription')
                           ? `${values.subscription_term}, ${startDate}`
                           : values.usageType.includes('usage') ||
@@ -727,7 +728,7 @@ const ListingModule = ({
                         <div className="input-box">
                           <label>
                             <img src={DescriptionIcon} alt="DescriptionIcon" />
-                            C2E Description
+                            C2E Description*
                           </label>
                           <textarea
                             type="text"
@@ -736,6 +737,13 @@ const ListingModule = ({
                             onBlur={handleBlur}
                             value={values.c2eDiscription}
                           />
+                        </div>
+                        <div className="input-box">
+                        <p className="error">
+                          {errors.c2eDiscription &&
+                            touched.c2eDiscription &&
+                            errors.c2eDiscription}
+                        </p>
                         </div>
                       </div>
                       <div className="stor-flex-box">
