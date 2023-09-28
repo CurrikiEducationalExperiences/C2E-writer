@@ -661,12 +661,11 @@ const ListingModule = ({
                         price: values.usageType?.includes('creative common')
                           ? '0'
                           : String(values.price),
-                        licenseType: String(values.usageType?.[0]),
+                        licenseType: typeof values.usageType === 'object'
+                        ? String(values.usageType?.[0])
+                        : String(values.usageType),
                         licenseTerms: values.usageType.includes('Subscription')
-                          ? addMonthsOrYears(
-                              values.subscription_term,
-                              parseInt(startDate)
-                            )
+                          ? `${values.subscription_term}, ${startDate}`
                           : values.usageType.includes('usage') ||
                             values.usageType.includes('Subscription')
                           ? String(values.subscription_term)
