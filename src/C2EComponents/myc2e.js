@@ -619,12 +619,12 @@ const ListingModule = ({
                     errors.price = 'Required';
                   }
 
-                  if (
-                    !values.subscription_term &&
-                    values.usageType?.includes('usage')
-                  ) {
-                    errors.subscription_term = 'Required';
-                  }
+                  // if (
+                  //   !values.subscription_term &&
+                  //   values.usageType?.includes('usage')
+                  // ) {
+                  //   errors.subscription_term = 'Required';
+                  // }
 
                   if (
                     !values.subscription_term &&
@@ -928,7 +928,7 @@ const ListingModule = ({
                               )}{' '}
                             </p>
                           )}
-                        {values.usageType.includes('usage') && (
+                        {/* {values.usageType.includes('usage') && (
                           <div className="input-box">
                             <label>
                               <img src={PrceIcon} alt="" /> Number of Users *
@@ -941,7 +941,7 @@ const ListingModule = ({
                               value={values.userscount}
                             />
                           </div>
-                        )}
+                        )} */}
                         <div className="input-box">
                           <p className="error">
                             {errors.subscription_term &&
@@ -1025,7 +1025,7 @@ const ListingModule = ({
                       </div>
 
                       <div className="stor-flex-box">
-                        <h5>Publisher Details</h5>
+                        <h5> C2E Provider Details</h5>
 
                         <div className="input-box">
                           <label>
