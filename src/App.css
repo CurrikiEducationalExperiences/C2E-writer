@@ -382,10 +382,10 @@ body {
 .stor-flex-box select {
   border-radius: 5px;
   height: 40px;
-  border-color: #ccc;
+  border-color: #2e68bf;
   outline: none;
   padding-left: 10px;
-  width:100%
+  width: 100%;
 }
 
 .c2e-lisence label {
@@ -560,6 +560,22 @@ body {
   width: 100%;
   margin-bottom: 16px;
 }
+.formik-box .quil_box {
+  width: 100%;
+}
+.formik-box .quil_box .ql-container {
+  border: 1px solid #2e68bf;
+  min-height: 170px;
+  border-radius: 0 0 4px 4px;
+}
+.formik-box .quil_box .ql-container .ql-editor {
+  min-height: inherit;
+}
+.formik-box .quil_box .ql-toolbar {
+  border: 1px solid #2e68bf;
+  border-bottom: 0.5px solid #2e8df5;
+  border-radius: 4px 4px 0 0;
+}
 
 .input-box label {
   color: #515151;
@@ -585,7 +601,7 @@ textarea {
   width: 100%;
   height: 40px;
   outline: none;
-  border: 1px solid #515151;
+  border: 1px solid #2e68bf;
   border-radius: 4px;
   text-indent: 10px;
   padding: 8px;
@@ -913,11 +929,7 @@ textarea {
 
 /* royalty-accordion  */
 
-.royalty-accordion
-  .accordion
-  .accordion-item
-  .accordion-header
-  .accordion-button {
+.royalty-accordion .accordion .accordion-item .accordion-header .accordion-button {
   padding: 0 16px 0 0;
 }
 
@@ -934,20 +946,12 @@ textarea {
   margin-top: 12px;
 }
 
-.royalty-accordion
-  .accordion
-  .accordion-item
-  .accordion-header
-  .accordion-button:not(.collapsed) {
+.royalty-accordion .accordion .accordion-item .accordion-header .accordion-button:not(.collapsed) {
   background-color: #ffffff !important;
   box-shadow: none !important;
 }
 
-.royalty-accordion
-  .accordion
-  .accordion-item
-  .accordion-header
-  .accordion-button::after {
+.royalty-accordion .accordion .accordion-item .accordion-header .accordion-button::after {
   background-image: url("assets/images/icons/down-icon-blue.svg") !important;
 }
 
