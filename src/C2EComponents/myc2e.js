@@ -392,6 +392,8 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
   const [startDate, setStartDate] = useState(1);
   const [endDate, setEndDate] = useState(1);
   const url = "https://c2e-provider-api.curriki.org";
+  //
+
   function addMonthsOrYears(type, number) {
     // Get the current date
     const currentDate = new Date();
@@ -588,18 +590,19 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
                           </label>
                           <ReactQuill
                             className="quil_box"
-                            // type="text"
                             theme="snow"
-                            // name="quillField"
-                            // onChange={handleChange}
-                            // onBlur={handleBlur}
-                            // value={values.c2eDiscription}
+                            type="text"
+                            onChange={(e) => {
+                              setFieldValue("c2eDiscription", e);
+                              console.log("handleChange", e);
+                            }}
+                            value={values.c2eDiscription}
                           />
                           {/* <textarea type="text" name="c2eDiscription" onChange={handleChange} onBlur={handleBlur} value={values.c2eDiscription} /> */}
                         </div>
-                        {/* <div className="input-box">
+                        <div className="input-box">
                           <p className="error">{errors.c2eDiscription && touched.c2eDiscription && errors.c2eDiscription}</p>
-                        </div> */}
+                        </div>
                       </div>
                       <div className="stor-flex-box">
                         <h5>Author Details</h5>
