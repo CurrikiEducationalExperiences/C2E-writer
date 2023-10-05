@@ -21,6 +21,7 @@
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
     "react-particles": "^2.9.3",
+    "react-quill": "^2.0.0",
     "react-router-dom": "^5.3.0",
     "react-scripts": "5.0.1",
     "tsparticles": "^2.9.3",
