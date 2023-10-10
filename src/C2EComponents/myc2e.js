@@ -501,9 +501,11 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
 
                   if (!values.price && !values.usageType?.includes("creative common")) {
                     errors.price = "Required";
-                  } else if (values.price && (!/^\d+$/.test(values.price) || parseInt(values.price, 10) <= 0)) {
-                    errors.price = "Price must be a positive integer";
                   }
+
+                  // else if (values.price && (!/^\d+$/.test(values.price) || parseInt(values.price, 10) <= 0)) {
+                  //   errors.price = "Price must be a positive integer";
+                  // }
 
                   // if (
                   //   !values.subscription_term &&
@@ -772,7 +774,7 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
                             <img src={PrceIcon} alt="" /> Price ($USD) <span className="error">*</span>
                           </label>
                           <input
-                            type="number"
+                            type="string"
                             name="price"
                             onChange={handleChange}
                             onBlur={handleBlur}
