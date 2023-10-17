@@ -62,6 +62,16 @@ const allStores = [
 ];
 */
 
+//
+function escapeSpecialCharacters(inputString) {
+  return inputString
+    .replace(/&apos;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&#x2014;/g, "—")
+    .replace(/&#x2019;/g, "’")
+    .replace(/&amp;/g, "&");
+}
+
 const Myc2e = () => {
   const user = useContext(UserContext);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -195,6 +205,7 @@ const Myc2e = () => {
                         {allData
                           ?.filter((data1) => data1.type === "epub" && data1.parentId === value.id)
                           ?.map((value1, counter1) => {
+                            console.log("description", value1.description);
                             return (
                               <div
                                 style={{
@@ -205,7 +216,7 @@ const Myc2e = () => {
                                   borderBottom: "1px solid #ccc",
                                 }}
                               >
-                                <div>{value1.title}</div>
+                                <div>{escapeSpecialCharacters(value1.title)}</div>
                                 <div
                                   className=""
                                   style={{
