@@ -13,7 +13,7 @@ function UploadFile({ setUploadProgress, getData }) {
   const [show, setShow] = useState(false);
   const [isbn, setIsbn] = useState();
   const [epubmeta, setEpubData] = useState();
-  const url = 'https://c2e-provider-api.curriki.org';
+  const url = process.env.REACT_APP_API_URL // 'https://c2e-provider-api.curriki.org';
   const handleUpload = async (event) => {
     const formData = new FormData();
 

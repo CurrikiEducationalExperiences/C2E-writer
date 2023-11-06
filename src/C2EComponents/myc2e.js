@@ -89,7 +89,7 @@ const Myc2e = () => {
   // };
 
   const [allData, setAllData] = useState();
-  const url = "https://c2e-provider-api.curriki.org";
+  const url = process.env.REACT_APP_API_URL // "https://c2e-provider-api.curriki.org";
   const [allStores, setAllStores] = useState([]);
   const [writer, setWriter] = useState(null);
 
@@ -402,7 +402,7 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
   const [selectedStore, setSelectedStore] = useState();
   const [startDate, setStartDate] = useState(1);
   const [endDate, setEndDate] = useState(1);
-  const url = "https://c2e-provider-api.curriki.org";
+  const url = process.env.REACT_APP_API_URL //"https://c2e-provider-api.curriki.org";
   //
 
   function addMonthsOrYears(type, number) {
