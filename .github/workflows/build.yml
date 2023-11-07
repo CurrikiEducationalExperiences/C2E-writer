@@ -25,6 +25,8 @@ env:
   EKS_CLUSTER_NAME: ${{secrets.EKS_CLUSTER_NAME}}
   COMMON_NAME: ${{secrets.COMMON_NAME}}
   REACT_APP_GOOGLE_CLIENT_ID: ${{secrets.REACT_APP_GOOGLE_CLIENT_ID}}
+  ENV_JS: ${{secrets.ENV_JS}}
+  ENV_JS_DEV: ${{secrets.ENV_JS_DEV}}
   # MULTIPLE_TG: ${{secrets.MULTIPLE_TG}}
   # CERTIFICATE_ARN: ${{secrets.CERTIFICATE_ARN}}
 
@@ -45,6 +47,15 @@ jobs:
     - name: Build and tag the image
       run: |
         # Build and tag the image
+
+        if [ ${{ github.ref }} = 'refs/heads/develop' ]; then
+          echo "$ENV_JS_DEV" > .env
+        elif [ ${{ github.ref }} = 'refs/heads/master' ]; then
+          echo "$ENV_JS" > .env
+        else
+          echo "No specific config."
+        fi
+
         docker build \
           -t $CONTAINER_IMAGE \
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE \
@@ -61,5 +72,15 @@ jobs:
         export DOCKER_IMAGE_NAME=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE
         aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-        helm upgrade --namespace c2e-prod --install --debug ${PROJECT_NAME} charts/c2e-writer-client \
-        --set image.repository=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE
+
+        if [ ${{ github.ref }} = 'refs/heads/develop' ]; then
+          helm upgrade --namespace c2e-dev --install --debug ${PROJECT_NAME} charts/c2e-writer-client \
+          --set image.repository=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE
+        elif [ ${{ github.ref }} = 'refs/heads/master' ]; then
+          helm upgrade --namespace c2e-prod --install --debug ${PROJECT_NAME} charts/c2e-writer-client \
+          --set image.repository=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE
+        else
+          echo "No specific config."
+        fi
+
+        
