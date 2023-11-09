@@ -545,7 +545,7 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
                       title: values.c2eTitle,
                       description: values.c2eDiscription,
                       identifier: {
-                        identifierType: activEpub.identifierType,
+                        identifierType: activEpub.identifiertype,
                         identifierValue: values.sku,
                       },
                       copyrightHolder: {
