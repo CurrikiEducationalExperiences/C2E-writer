@@ -494,7 +494,7 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
                   c2eTitle: activEpub?.title,
                   sku: activEpub?.identifier,
                   price: "",
-                  c2eDiscription: "",
+                  c2eDiscription: activEpub?.description,
                   ownerName: user?.name,
                   ownerEmail: user?.email,
                   ownerLicense: "",
