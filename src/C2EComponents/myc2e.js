@@ -196,14 +196,14 @@ const Myc2e = () => {
           >
             <Accordion defaultActiveKey="0">
               {allData
-                ?.filter((data) => data.type === "epub" && data.parentId === null)
+                ?.filter((data) => data.type === "epub" && data.parentid === null)
                 ?.map((value, counter) => {
                   return (
                     <Accordion.Item eventKey={String(counter)}>
                       <Accordion.Header>{value.title}</Accordion.Header>
                       <Accordion.Body>
                         {allData
-                          ?.filter((data1) => data1.type === "epub" && data1.parentId === value.id)
+                          ?.filter((data1) => data1.type === "epub" && data1.rootparentid === value.id && data1.parentid !== null)
                           ?.map((value1, counter1) => {
                             console.log("description", value1.description);
                             return (
@@ -288,7 +288,7 @@ const Myc2e = () => {
         <Modal.Body>
           <Formik
             initialValues={{
-              title: allData?.filter((data) => data.id === activEpub?.parentId)?.[0]?.title,
+              title: allData?.filter((data) => data.id === activEpub?.parentid)?.[0]?.title,
               // description: '',
               name: "",
               email: "",
@@ -464,7 +464,7 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
               <h2>{activEpub?.title}</h2>
               <h3>
                 <img src={BookIcon} alt="book" />
-                {allData?.filter((data) => data.id === activEpub?.parentId)?.[0]?.title}
+                {allData?.filter((data) => data.id === activEpub?.parentid)?.[0]?.title}
               </h3>
             </div>
           )}
@@ -535,6 +535,7 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
                   return errors;
                 }}
                 onSubmit={async (values) => {
+                  console.log("=======>>");
                   console.log(values, activEpub);
                   try {
                     const response = await axios.post(url + "/c2e-listings/media", {
