@@ -125,7 +125,7 @@ function UploadFile({ setUploadProgress, getData }) {
 
     fetchData()
   }, [])
-  console.log('datatt', collectionData)
+
   const getSelectedVal = (value) => {
     console.log(value)
   }
@@ -248,7 +248,7 @@ function UploadFile({ setUploadProgress, getData }) {
                     onChange={getChanges}
                     setSelectedCollction={setSelectedCollction}
                     name='Collection'
-                    setFieldValue={setFieldValue}
+                    setFieldValue={(value) => setFieldValue("collectionName", value)}
                   />
                   {errors.collectionName && touched.collectionName && errors.collectionName}
                 </div>
