@@ -354,7 +354,19 @@ body {
 .selection-box img {
   width: 100px;
 }
-
+.form-control-auto input {
+  width: 100%;
+}
+.suggestions {
+    z-index: 999;
+    position: absolute;
+    /* background: white; */
+    cursor: pointer;
+    width: -webkit-fill-available;;
+    padding: 15px;
+    overflow: auto;
+    max-height: 200px;
+}
 .c2e-lisence h2 {
   font-size: 22px;
   border-bottom: 1px solid #ccc;
