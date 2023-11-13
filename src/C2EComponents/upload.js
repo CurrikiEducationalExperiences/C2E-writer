@@ -115,7 +115,7 @@ function UploadFile({ setUploadProgress, getData }) {
     const fetchData = async () => {
       try {
         const suggestionResponse = await axios.get(
-          'https://c2e-services-dev.curriki.org/c2e-media/collections'
+          url +'/c2e-media/collections'
         )
         setCollectionData(suggestionResponse.data)
       } catch (error) {
@@ -242,12 +242,11 @@ function UploadFile({ setUploadProgress, getData }) {
                 </div>
                 <div class="form-group">
                   <InputSuggestion
-                    placeholder="search collection..."
                     data={collectionData}
                     onSelected={getSelectedVal}
                     onChange={getChanges}
                     setSelectedCollction={setSelectedCollction}
-                    name='Collection'
+                    value={values.collectionName}
                     setFieldValue={(value) => setFieldValue("collectionName", value)}
                   />
                   {errors.collectionName && touched.collectionName && errors.collectionName}

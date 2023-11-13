@@ -1,20 +1,24 @@
 import React, { useState } from "react"
+import ArrowDown from "../../src/assets/images/icons/arrow-down.svg"
 
 export default function InputSuggestion({
-  placeholder,
   data,
   onSelected,
   onChange,
   setSelectedCollction,
-  name,
   setFieldValue,
+  value,
 }) {
   const [suggestions, setSugesstions] = useState([])
   const [isHideSuggs, setIsHideSuggs] = useState(false)
   const [selectedVal, setSelectedVal] = useState("")
 
   const handler = (e) => {
-    setSugesstions(data.filter((i) => i.startsWith(e.target.value)))
+    if (selectedVal) {
+      setSugesstions(data.filter((i) => i.startsWith(e.target.value)))
+    } else {
+      setSugesstions(data)
+    }
   }
 
   const handleChange = (e) => {
@@ -22,7 +26,7 @@ export default function InputSuggestion({
     setIsHideSuggs(false)
     setSelectedCollction(input)
     onChange(input)
-    setFieldValue(name, input)
+    setFieldValue(input)
     setSelectedVal(input)
   }
 
@@ -31,18 +35,29 @@ export default function InputSuggestion({
     setSelectedVal(value)
     setIsHideSuggs(true)
   }
+  const toggleSuggestions = () => {
+    setIsHideSuggs(!isHideSuggs)
+  }
 
   return (
     <div className="sugesstion-auto">
       <div className="form-control-auto">
-      <label htmlFor="tag-input">{name}</label>
-        <input
-          placeholder={placeholder}
-          type="search"
-          value={selectedVal}
-          onChange={handleChange}
-          onKeyUp={handler}
-        />
+        <label htmlFor="tag-input">Collection Name</label>
+        <div className="collection-input">
+          <input
+            placeholder="search collection..."
+            type="search"
+            value={value}
+            onChange={handleChange}
+            onKeyUp={handler}
+          />
+          <img
+            src={ArrowDown}
+            onClick={toggleSuggestions}
+            alt="arrowIcon"
+            className="collection-arrow-icon"
+          />
+        </div>
       </div>
 
       <div

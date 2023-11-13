@@ -360,12 +360,22 @@ body {
 .suggestions {
     z-index: 999;
     position: absolute;
-    /* background: white; */
+    background: white;
     cursor: pointer;
     width: -webkit-fill-available;;
     padding: 15px;
     overflow: auto;
     max-height: 200px;
+}
+
+.collection-input {
+  display: flex;
+  align-items: center;
+}
+.collection-arrow-icon {
+  position: absolute;
+  right: 4%;
+  cursor: pointer;
 }
 .c2e-lisence h2 {
   font-size: 22px;
