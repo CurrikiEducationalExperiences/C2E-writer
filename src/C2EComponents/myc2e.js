@@ -203,7 +203,7 @@ const Myc2e = () => {
                       <Accordion.Header>{value.title}</Accordion.Header>
                       <Accordion.Body>
                         {allData
-                          ?.filter((data1) => data1.type === "epub" && data1.parentid === value.id)
+                          ?.filter((data1) => data1.type === "epub" && data1.rootparentid === value.id && data1.parentid !== null)
                           ?.map((value1, counter1) => {
                             console.log("description", value1.description);
                             return (
@@ -288,7 +288,7 @@ const Myc2e = () => {
         <Modal.Body>
           <Formik
             initialValues={{
-              title: allData?.filter((data) => data.id === activEpub?.parentId)?.[0]?.title,
+              title: allData?.filter((data) => data.id === activEpub?.parentid)?.[0]?.title,
               // description: '',
               name: "",
               email: "",
@@ -464,7 +464,7 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
               <h2>{activEpub?.title}</h2>
               <h3>
                 <img src={BookIcon} alt="book" />
-                {allData?.filter((data) => data.id === activEpub?.parentId)?.[0]?.title}
+                {allData?.filter((data) => data.id === activEpub?.parentid)?.[0]?.title}
               </h3>
             </div>
           )}
@@ -544,7 +544,7 @@ const ListingModule = ({ showListing, setShowListing, setRoyaltyModal, activEpub
                       title: values.c2eTitle,
                       description: values.c2eDiscription,
                       identifier: {
-                        identifierType: activEpub.identifierType,
+                        identifierType: activEpub.identifiertype,
                         identifierValue: values.sku,
                       },
                       copyrightHolder: {
