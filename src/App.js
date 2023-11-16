@@ -3,6 +3,7 @@ import { createContext } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import jwt_decode from "jwt-decode";
 import Myc2e from './C2EComponents/myc2e';
+import Epubfile from './C2EComponents/epubFile';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -21,6 +22,9 @@ function App() {
           <Switch>
             <Route exact path="/">
               <Myc2e />
+            </Route>
+            <Route path="/epubfile">
+            <Epubfile />
             </Route>
           </Switch>
         </Router>

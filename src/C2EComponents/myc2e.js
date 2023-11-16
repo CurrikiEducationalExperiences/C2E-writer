@@ -196,14 +196,14 @@ const Myc2e = () => {
           >
             <Accordion defaultActiveKey="0">
               {allData
-                ?.filter((data) => data.type === "epub" && data.parentId === null)
+                ?.filter((data) => data.type === "epub" && data.parentid === null)
                 ?.map((value, counter) => {
                   return (
                     <Accordion.Item eventKey={String(counter)}>
                       <Accordion.Header>{value.title}</Accordion.Header>
                       <Accordion.Body>
                         {allData
-                          ?.filter((data1) => data1.type === "epub" && data1.parentId === value.id)
+                          ?.filter((data1) => data1.type === "epub" && data1.parentid === value.id)
                           ?.map((value1, counter1) => {
                             console.log("description", value1.description);
                             return (

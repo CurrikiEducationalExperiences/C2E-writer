@@ -9,7 +9,6 @@ import { Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
 import InputSuggestion from './inputSuggestion'
 
-const suggestionData = ['java', 'javascript', 'php', 'c#', 'go', 'dart']
 
 function UploadFile({ setUploadProgress, getData }) {
   const fileinput = useRef()

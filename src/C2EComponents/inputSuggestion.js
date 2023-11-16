@@ -9,16 +9,13 @@ export default function InputSuggestion({
   setFieldValue,
   value,
 }) {
-  const [suggestions, setSugesstions] = useState([])
+  const [suggestions, setSuggestions] = useState([])
   const [isHideSuggs, setIsHideSuggs] = useState(false)
   const [selectedVal, setSelectedVal] = useState("")
 
   const handler = (e) => {
-    if (selectedVal) {
-      setSugesstions(data.filter((i) => i.startsWith(e.target.value)))
-    } else {
-      setSugesstions(data)
-    }
+    const inputValue = e.target.value.toLowerCase();
+    setSuggestions(data.filter((item) => item.toLowerCase().includes(inputValue)));
   }
 
   const handleChange = (e) => {
@@ -36,6 +33,7 @@ export default function InputSuggestion({
     setIsHideSuggs(true)
   }
   const toggleSuggestions = () => {
+    setSuggestions(data);
     setIsHideSuggs(!isHideSuggs)
   }
 
