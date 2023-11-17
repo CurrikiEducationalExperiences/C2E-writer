@@ -194,6 +194,22 @@ body {
   margin: 0;
   float: none;
 }
+.tooltip-inner {
+  height: auto !important;
+  max-width: 100% !important;
+  background-color: #fff !important;
+  color: #000 !important;
+}
+.tooltip-arrow::before {
+  border-top-color: white !important;
+}
+.arrow-icon {
+  transition: transform 0.5s ease;
+}
+
+.rotate-360 {
+  transform: rotate(180deg);
+}
 
 .accordion-button::after {
   background-image: url("assets/images/icons/down-icon.svg") !important;

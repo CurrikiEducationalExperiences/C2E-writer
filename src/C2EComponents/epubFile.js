@@ -36,7 +36,11 @@ import PrceIcon from "../assets/images/icons/form/Price.svg"
 import EmailIcon from "../assets/images/icons/form/Email.svg"
 import UrlIcon from "../assets/images/icons/form/Url.svg"
 import TitleIcon from "../assets/images/icons/form/title.svg"
-
+import TooltipButton from "../assets/images/icons/tooltip-btn.svg"
+import ArrowDown from "../../src/assets/images/icons/arrow-down.svg"
+import "bootstrap/dist/css/bootstrap.css"
+import Tooltip from "react-bootstrap/Tooltip"
+import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 
 function escapeSpecialCharacters(inputString) {
   return inputString
@@ -62,7 +66,7 @@ const Epubfile = () => {
   const [allStores, setAllStores] = useState([])
   const [writer, setWriter] = useState(null)
   const [selectedItems, setSelectedItems] = useState([])
-  const [showFullDescription, setShowFullDescription] = useState("See less")
+  const [showFullDescription, setShowFullDescription] = useState([])
 
   useEffect(() => {
     console.log(selectedItems)
@@ -263,24 +267,46 @@ const Epubfile = () => {
                         <input
                           style={{ height: "16px", width: "16px" }}
                           type="checkbox"
-                          // checked={
-
-                          // }
                           onChange={(event) => toggleSelectAll(event, value.id)}
                         />
                       </div>
                       <Accordion.Item eventKey={String(counter)}>
                         <Accordion.Header>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              gap: "35px",
-                              paddingLeft: "25px",
-                            }}
-                          >
-                            {value.title}
-                            <div>ISBN {value.identifier}</div>
+                          <div style={{ width: "92%" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: "10px",
+                                paddingLeft: "25px",
+                              }}
+                            >
+                              {value.title}
+                              <div
+                                style={{
+                                  display: "block",
+                                }}
+                              >
+                                <OverlayTrigger
+                                  delay={{ hide: 450, show: 300 }}
+                                  overlay={(props) => (
+                                    <Tooltip {...props} height={40}>
+                                      {value.description}
+                                    </Tooltip>
+                                  )}
+                                  placement="top"
+                                >
+                                  <img
+                                    src={TooltipButton}
+                                    alt="tooltip"
+                                    width={14}
+                                    height={14}
+                                  />
+                                </OverlayTrigger>
+                              </div>
+
+                              <div>{`(${value.identifier})`}</div>
+                            </div>
                           </div>
                         </Accordion.Header>
                         <Accordion.Body>
@@ -291,6 +317,9 @@ const Epubfile = () => {
                                 data1.parentid === value.id
                             )
                             ?.map((value1, counter1) => {
+                              const isExpanded = showFullDescription.includes(
+                                value1.id
+                              )
                               return (
                                 <div
                                   key={value1.id}
@@ -302,7 +331,7 @@ const Epubfile = () => {
                                     borderBottom: "1px solid #ccc",
                                   }}
                                 >
-                                  <div>
+                                  <div style={{ width: "80%" }}>
                                     <div
                                       style={{
                                         alignItems: "center",
@@ -337,36 +366,59 @@ const Epubfile = () => {
                                       </div>
                                       {escapeSpecialCharacters(value1.title)}
                                     </div>
-
                                     <div
                                       style={{
-                                        marginLeft: "27px",
-                                        fontSize: "14px",
+                                        display: "flex",
+                                        flexDirection: "row",
                                       }}
                                     >
-                                      {showFullDescription === "See less"
-                                        ? value1.description.slice(0, 140)
-                                        : value1.description}
-                                      {
-                                        <span
-                                          style={{
-                                            marginLeft: "2px",
-                                            color: "blue",
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() =>
-                                            setShowFullDescription(
-                                              showFullDescription === "See more"
-                                                ? "See less"
-                                                : "See more"
-                                            )
-                                          }
-                                        >
-                                          {showFullDescription === "See less"
-                                            ? "See more"
-                                            : "See less"}
-                                        </span>
-                                      }
+                                      <div
+                                        style={{
+                                          marginLeft: "27px",
+                                          fontSize: "14px",
+                                          whiteSpace: isExpanded
+                                            ? "normal"
+                                            : "nowrap",
+                                          overflow: isExpanded
+                                            ? "unset"
+                                            : "hidden",
+                                          textOverflow: isExpanded
+                                            ? "unset"
+                                            : "ellipsis",
+                                        }}
+                                      >
+                                        {value1.description}
+                                      </div>
+                                      <span
+                                        style={{
+                                          marginLeft: "2px",
+                                          color: "blue",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          const newExpandedItems = isExpanded
+                                            ? showFullDescription.filter(
+                                                (item) => item !== value1.id
+                                              )
+                                            : [
+                                                ...showFullDescription,
+                                                value1.id,
+                                              ]
+                                          setShowFullDescription(
+                                            newExpandedItems
+                                          )
+                                        }}
+                                      >
+                                        <img
+                                          src={ArrowDown}
+                                          alt="arrowIcon"
+                                          className={`arrow-icon ${
+                                            isExpanded
+                                              ? ""
+                                              : "rotate-360"
+                                          }`}
+                                        />
+                                      </span>
                                     </div>
                                   </div>
                                   <div
@@ -639,7 +691,6 @@ const ListingModule = ({
   const [selectedStore, setSelectedStore] = useState()
   const [startDate, setStartDate] = useState(1)
   const url = process.env.REACT_APP_API_URL //"https://c2e-provider-api.curriki.org";
-
 
   function addMonthsOrYears(type, number) {
     // Get the current date

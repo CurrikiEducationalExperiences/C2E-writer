@@ -45,7 +45,7 @@ export default function InputSuggestion({
           <input
             placeholder="search collection..."
             type="search"
-            value={value}
+            value={selectedVal}
             onChange={handleChange}
             onKeyUp={handler}
           />
