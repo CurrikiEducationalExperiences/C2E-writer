@@ -67,6 +67,8 @@ const Epubfile = () => {
   const [writer, setWriter] = useState(null)
   const [selectedItems, setSelectedItems] = useState([])
   const [showFullDescription, setShowFullDescription] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
     console.log(selectedItems)
@@ -119,6 +121,25 @@ const Epubfile = () => {
         setWriter(value.length > 0 ? value[0] : null)
       })
     )
+  }
+  const handleConfirm = async () => {
+    const key = batch ? "ceeMediaIds" : "ceeMediaId"
+    const url1 = "/c2e-listings/media/batch"
+    const payload = {
+      [key]: batch ? selectedItems : activEpub.id,
+      ceeWriterId: writer.id,
+    }
+    try {
+      setLoading(true)
+      const response = await axios.post(url + url1, payload)
+      setLoading(false)
+      if (response) {
+        setSubmitted(true)
+        console.log(response)
+      }
+    } catch (e) {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -217,7 +238,7 @@ const Epubfile = () => {
       >
         <button
           onClick={() => {
-            setshowconfirm(true)
+            setShowListing(true)
             setBatch(true)
             setActivEpub()
           }}
@@ -314,7 +335,8 @@ const Epubfile = () => {
                             ?.filter(
                               (data1) =>
                                 data1.type === "epub" &&
-                                data1.parentid === value.id
+                                data1.rootparentid === value.id &&
+                                data1.parentid !== null
                             )
                             ?.map((value1, counter1) => {
                               const isExpanded = showFullDescription.includes(
@@ -413,9 +435,7 @@ const Epubfile = () => {
                                           src={ArrowDown}
                                           alt="arrowIcon"
                                           className={`arrow-icon ${
-                                            isExpanded
-                                              ? ""
-                                              : "rotate-360"
+                                            isExpanded ? "" : "rotate-360"
                                           }`}
                                         />
                                       </span>
@@ -485,30 +505,58 @@ const Epubfile = () => {
           </Tab>
         </Tabs>
       )}
-      <Modal show={showconfirm}>
-        <Modal.Body className="body-modal">
-          Are you sure you want to continue?
-        </Modal.Body>
-        <Modal.Footer className="footer-modal">
-          <Button
-            variant="primary"
-            onClick={() => {
-              setshowconfirm(false)
-              setShowListing(true)
-            }}
-          >
-            Continue
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setshowconfirm(false)
-            }}
-          >
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {batch && (
+        <Modal show={showconfirm} className="confirm-modal">
+          {submitted ? (
+            <>
+              <Modal.Body className="body-modal">
+                <div className="style-thankyou">
+                  <h3
+                    className="product-heading text-center mt-5"
+                    style={{ color: "green" }}
+                  >
+                    Thank You For Submission!
+                  </h3>
+                  <p>You have successfully listed {activEpub?.title}</p>
+                </div>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setshowconfirm(false)
+                    setShowListing(false)
+                  }}
+                >
+                  Close
+                </Button>
+              </Modal.Body>
+            </>
+          ) : (
+            <>
+              <Modal.Body className="body-modal">
+                Are you sure you want to continue?
+              </Modal.Body>
+              <Modal.Footer className="footer-modal">
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    handleConfirm()
+                  }}
+                >
+                  {loading ? "Loading..." : "Confirm"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setshowconfirm(false)
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Modal.Footer>
+            </>
+          )}
+        </Modal>
+      )}
       <Modal
         show={show}
         onHide={() => {
@@ -666,6 +714,7 @@ const Epubfile = () => {
         writer={writer}
         batch={batch}
         selectedItems={selectedItems}
+        setshowconfirm={setshowconfirm}
       />
 
       <RoyaltyInformationModal show={royaltyModal} setShow={setRoyaltyModal} />
@@ -685,6 +734,7 @@ const ListingModule = ({
   writer,
   batch,
   selectedItems,
+  setshowconfirm,
 }) => {
   const user = useContext(UserContext)
   const [steps, setSteps] = useState(1)
@@ -735,9 +785,11 @@ const ListingModule = ({
               <div className="step">
                 <h5 className="">Select</h5>
               </div>
-              <div className={`step ${steps === 1 && "disable"}`}>
-                <h5 className="">Describe</h5>
-              </div>
+              {!batch && (
+                <div className={`step ${steps === 1 && "disable"}`}>
+                  <h5 className="">Describe</h5>
+                </div>
+              )}
             </div>
           )}
           <br />
@@ -770,6 +822,7 @@ const ListingModule = ({
                       onClick={() => {
                         setSteps(2)
                         setSelectedStore(data)
+                        setshowconfirm(true)
                       }}
                     >
                       <img src={data.img} alt="" />
@@ -779,295 +832,299 @@ const ListingModule = ({
               </div>
             </div>
           ) : steps === 2 ? (
-            <div>
-              <Formik
-                initialValues={{
-                  c2eTitle: activEpub?.title,
-                  sku: activEpub?.identifier,
-                  price: "",
-                  c2eDiscription: activEpub?.description,
-                  ownerName: user?.name,
-                  ownerEmail: user?.email,
-                  ownerLicense: "",
-                  url: "",
-                  publisherName: writer.name,
-                  publisherEmail: writer.email,
-                  publisherUrl: writer.url,
-                  subscription_term: "",
-                  copyrightYear: "",
-                  usageType: ["usage"],
-                }}
-                enableReinitialize
-                validate={(values) => {
-                  const errors = {}
+            !batch && (
+              <div>
+                <Formik
+                  initialValues={{
+                    c2eTitle: activEpub?.title,
+                    sku: activEpub?.identifier,
+                    price: "",
+                    c2eDiscription: activEpub?.description,
+                    ownerName: user?.name,
+                    ownerEmail: user?.email,
+                    ownerLicense: "",
+                    url: "",
+                    publisherName: writer.name,
+                    publisherEmail: writer.email,
+                    publisherUrl: writer.url,
+                    subscription_term: "",
+                    copyrightYear: "",
+                    usageType: ["usage"],
+                  }}
+                  enableReinitialize
+                  validate={(values) => {
+                    const errors = {}
 
-                  if (
-                    !values.price &&
-                    !values.usageType?.includes("creative common")
-                  ) {
-                    errors.price = "Required"
-                  }
-
-                  // else if (values.price && (!/^\d+$/.test(values.price) || parseInt(values.price, 10) <= 0)) {
-                  //   errors.price = "Price must be a positive integer";
-                  // }
-
-                  // if (
-                  //   !values.subscription_term &&
-                  //   values.usageType?.includes('usage')
-                  // ) {
-                  //   errors.subscription_term = 'Required';
-                  // }
-
-                  if (
-                    !values.subscription_term &&
-                    values.usageType?.includes("Subscription")
-                  ) {
-                    errors.subscription_term = "Required"
-                  }
-                  if (!values.c2eDiscription) {
-                    errors.c2eDiscription = "Required"
-                  }
-
-                  return errors
-                }}
-                onSubmit={async (values) => {
-                  const url1 = batch
-                    ? "/c2e-listings/media/batch"
-                    : "/c2e-listings/media"
-                  const key = batch ? "ceeMediaIds" : "ceeMediaId"
-                  const payload = {
-                    [key]: batch ? selectedItems : activEpub.id,
-                    ceeWriterId: writer.id,
-                    ceeStoreId: selectedStore.id,
-                    title: values.c2eTitle,
-                    description: values.c2eDiscription,
-                    identifier: {
-                      identifierType: activEpub?.identifierType,
-                      identifierValue: values.sku,
-                    },
-                    copyrightHolder: {
-                      name: values.ownerName,
-                      email: values.ownerEmail,
-                      url: values.url,
-                    },
-                    price:
-                      values.usageType?.includes("creative common") ||
-                      /^\d+$/.test(!values.usageType) ||
-                      !values.usageType === ""
-                        ? "0"
-                        : String(values.price),
-                    licenseType:
-                      typeof values.usageType === "object"
-                        ? String(values.usageType?.[0])
-                        : String(values.usageType),
-                    licenseTerms: values.usageType.includes("Subscription")
-                      ? `${values.subscription_term}, ${startDate}`
-                      : values.usageType.includes("usage") ||
-                        values.usageType.includes("Subscription")
-                      ? String(values.subscription_term)
-                      : "",
-                  }
-                  try {
-                    const response = await axios.post(url + url1, payload)
-                    if (response) {
-                      setSteps(3)
+                    if (
+                      !values.price &&
+                      !values.usageType?.includes("creative common")
+                    ) {
+                      errors.price = "Required"
                     }
-                  } catch (e) {}
-                }}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                  setFieldValue,
-                  /* and other goodies */
-                }) => (
-                  <form onSubmit={handleSubmit}>
-                    <div className="formik-box">
-                      <div className="stor-flex-box">
-                        <h5>C2E Details</h5>
-                        <div className="input-box">
-                          <label>
-                            <img src={SKUIcon} alt="aku" /> ISBN
-                          </label>
-                          <input
-                            type="text"
-                            name="sku"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.sku}
-                          />
-                        </div>
 
-                        <div className="input-box">
-                          <label>
-                            <img src={NameIcon} alt="name" /> C2E Title *
-                          </label>
-                          <input
-                            type="text"
-                            name="c2eTitle"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.c2eTitle}
-                          />
-                          <p className="error">
-                            {errors.c2eTitle &&
-                              touched.c2eTitle &&
-                              errors.c2eTitle}
-                          </p>
-                        </div>
+                    // else if (values.price && (!/^\d+$/.test(values.price) || parseInt(values.price, 10) <= 0)) {
+                    //   errors.price = "Price must be a positive integer";
+                    // }
 
-                        <div className="input-box">
-                          <label>
-                            <img src={DescriptionIcon} alt="DescriptionIcon" />
-                            C2E Description<span className="error">*</span>
-                          </label>
-                          <ReactQuill
-                            className="quil_box"
-                            theme="snow"
-                            type="text"
-                            onChange={(e) => {
-                              setFieldValue("c2eDiscription", e)
-                              console.log("handleChange", e)
-                            }}
-                            value={values.c2eDiscription}
-                          />
-                          {/* <textarea type="text" name="c2eDiscription" onChange={handleChange} onBlur={handleBlur} value={values.c2eDiscription} /> */}
+                    // if (
+                    //   !values.subscription_term &&
+                    //   values.usageType?.includes('usage')
+                    // ) {
+                    //   errors.subscription_term = 'Required';
+                    // }
+
+                    if (
+                      !values.subscription_term &&
+                      values.usageType?.includes("Subscription")
+                    ) {
+                      errors.subscription_term = "Required"
+                    }
+                    if (!values.c2eDiscription) {
+                      errors.c2eDiscription = "Required"
+                    }
+
+                    return errors
+                  }}
+                  onSubmit={async (values) => {
+                    const url1 = batch
+                      ? "/c2e-listings/media/batch"
+                      : "/c2e-listings/media"
+                    const key = batch ? "ceeMediaIds" : "ceeMediaId"
+                    const payload = {
+                      [key]: batch ? selectedItems : activEpub.id,
+                      ceeWriterId: writer.id,
+                      ceeStoreId: selectedStore.id,
+                      title: values.c2eTitle,
+                      description: values.c2eDiscription,
+                      identifier: {
+                        identifierType: activEpub?.identifierType,
+                        identifierValue: values.sku,
+                      },
+                      copyrightHolder: {
+                        name: values.ownerName,
+                        email: values.ownerEmail,
+                        url: values.url,
+                      },
+                      price:
+                        values.usageType?.includes("creative common") ||
+                        /^\d+$/.test(!values.usageType) ||
+                        !values.usageType === ""
+                          ? "0"
+                          : String(values.price),
+                      licenseType:
+                        typeof values.usageType === "object"
+                          ? String(values.usageType?.[0])
+                          : String(values.usageType),
+                      licenseTerms: values.usageType.includes("Subscription")
+                        ? `${values.subscription_term}, ${startDate}`
+                        : values.usageType.includes("usage") ||
+                          values.usageType.includes("Subscription")
+                        ? String(values.subscription_term)
+                        : "",
+                    }
+                    try {
+                      const response = await axios.post(url + url1, payload)
+                      if (response) {
+                        setSteps(3)
+                      }
+                    } catch (e) {}
+                  }}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    isSubmitting,
+                    setFieldValue,
+                    /* and other goodies */
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      <div className="formik-box">
+                        <div className="stor-flex-box">
+                          <h5>C2E Details</h5>
+                          <div className="input-box">
+                            <label>
+                              <img src={SKUIcon} alt="aku" /> ISBN
+                            </label>
+                            <input
+                              type="text"
+                              name="sku"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.sku}
+                            />
+                          </div>
+
+                          <div className="input-box">
+                            <label>
+                              <img src={NameIcon} alt="name" /> C2E Title *
+                            </label>
+                            <input
+                              type="text"
+                              name="c2eTitle"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.c2eTitle}
+                            />
+                            <p className="error">
+                              {errors.c2eTitle &&
+                                touched.c2eTitle &&
+                                errors.c2eTitle}
+                            </p>
+                          </div>
+
+                          <div className="input-box">
+                            <label>
+                              <img
+                                src={DescriptionIcon}
+                                alt="DescriptionIcon"
+                              />
+                              C2E Description<span className="error">*</span>
+                            </label>
+                            <ReactQuill
+                              className="quil_box"
+                              theme="snow"
+                              type="text"
+                              onChange={(e) => {
+                                setFieldValue("c2eDiscription", e)
+                                console.log("handleChange", e)
+                              }}
+                              value={values.c2eDiscription}
+                            />
+                            {/* <textarea type="text" name="c2eDiscription" onChange={handleChange} onBlur={handleBlur} value={values.c2eDiscription} /> */}
+                          </div>
+                          <div className="input-box">
+                            <p className="error">
+                              {errors.c2eDiscription &&
+                                touched.c2eDiscription &&
+                                errors.c2eDiscription}
+                            </p>
+                          </div>
                         </div>
-                        <div className="input-box">
-                          <p className="error">
-                            {errors.c2eDiscription &&
-                              touched.c2eDiscription &&
-                              errors.c2eDiscription}
-                          </p>
+                        <div className="stor-flex-box">
+                          <h5>Author Details</h5>
+
+                          <div className="input-box">
+                            <label>
+                              <img src={NameIcon} alt="neme" /> Name
+                            </label>
+                            <input
+                              type="text"
+                              name="ownerName"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.ownerName}
+                              readOnly
+                            />
+                          </div>
+
+                          <div className="input-box">
+                            <label>
+                              <img src={EmailIcon} alt="email" /> Email
+                            </label>
+                            <input
+                              type="email"
+                              name="ownerEmail"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.ownerEmail}
+                              readOnly
+                            />
+                          </div>
+
+                          <div className="input-box">
+                            <label>
+                              <img src={UrlIcon} alt="pub" /> URL
+                            </label>
+                            <input
+                              type="text"
+                              name="url"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.url}
+                            />
+                            <p className="error">
+                              {errors.url && touched.url && errors.url}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                      <div className="stor-flex-box">
-                        <h5>Author Details</h5>
 
-                        <div className="input-box">
-                          <label>
-                            <img src={NameIcon} alt="neme" /> Name
-                          </label>
-                          <input
-                            type="text"
-                            name="ownerName"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.ownerName}
-                            readOnly
-                          />
-                        </div>
-
-                        <div className="input-box">
-                          <label>
-                            <img src={EmailIcon} alt="email" /> Email
-                          </label>
-                          <input
-                            type="email"
-                            name="ownerEmail"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.ownerEmail}
-                            readOnly
-                          />
-                        </div>
-
-                        <div className="input-box">
-                          <label>
-                            <img src={UrlIcon} alt="pub" /> URL
-                          </label>
-                          <input
-                            type="text"
-                            name="url"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.url}
-                          />
-                          <p className="error">
-                            {errors.url && touched.url && errors.url}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="formik-box">
-                      <div className="stor-flex-box">
-                        <h5>C2E License Types </h5>
-                        {/* <div className="input-box">
+                      <div className="formik-box">
+                        <div className="stor-flex-box">
+                          <h5>C2E License Types </h5>
+                          {/* <div className="input-box">
                           <label>Set Usage Type</label>
                         </div> */}
 
-                        <div className="d-flex check-box">
-                          <div className="check">
-                            <input
-                              type="radio"
-                              name="usageType"
-                              value="usage"
-                              onChange={(e) => {
-                                setFieldValue("subscription_term", "")
-                                handleChange(e)
-                              }}
-                              onBlur={handleBlur}
-                              checked={values.usageType.includes("usage")}
-                            />
-                            <label className="ml-2">Usage</label>
-                          </div>
-                          <div className="check">
-                            <input
-                              type="radio"
-                              name="usageType"
-                              value="Subscription"
-                              onChange={(e) => {
-                                setFieldValue("subscription_term", "")
+                          <div className="d-flex check-box">
+                            <div className="check">
+                              <input
+                                type="radio"
+                                name="usageType"
+                                value="usage"
+                                onChange={(e) => {
+                                  setFieldValue("subscription_term", "")
+                                  handleChange(e)
+                                }}
+                                onBlur={handleBlur}
+                                checked={values.usageType.includes("usage")}
+                              />
+                              <label className="ml-2">Usage</label>
+                            </div>
+                            <div className="check">
+                              <input
+                                type="radio"
+                                name="usageType"
+                                value="Subscription"
+                                onChange={(e) => {
+                                  setFieldValue("subscription_term", "")
 
-                                handleChange(e)
-                              }}
-                              onBlur={handleBlur}
-                              checked={values.usageType.includes(
-                                "Subscription"
-                              )}
-                            />
-                            <label className="ml-2">Subscription</label>
+                                  handleChange(e)
+                                }}
+                                onBlur={handleBlur}
+                                checked={values.usageType.includes(
+                                  "Subscription"
+                                )}
+                              />
+                              <label className="ml-2">Subscription</label>
+                            </div>
+                            <div className="check">
+                              <input
+                                type="radio"
+                                name="usageType"
+                                value="Purchased"
+                                onChange={(e) => {
+                                  setFieldValue("subscription_term", "")
+                                  handleChange(e)
+                                }}
+                                onBlur={handleBlur}
+                                checked={values.usageType.includes("Purchased")}
+                              />
+                              <label className="ml-2">Purchased</label>
+                            </div>
+                            <div className="check">
+                              <input
+                                type="radio"
+                                name="usageType"
+                                value="creative common"
+                                onChange={(e) => {
+                                  setFieldValue("subscription_term", "")
+                                  handleChange(e)
+                                }}
+                                onBlur={handleBlur}
+                                checked={values.usageType.includes("creative")}
+                              />
+                              <label className="ml-2">Creative Commons</label>
+                            </div>
                           </div>
-                          <div className="check">
-                            <input
-                              type="radio"
-                              name="usageType"
-                              value="Purchased"
-                              onChange={(e) => {
-                                setFieldValue("subscription_term", "")
-                                handleChange(e)
-                              }}
-                              onBlur={handleBlur}
-                              checked={values.usageType.includes("Purchased")}
-                            />
-                            <label className="ml-2">Purchased</label>
-                          </div>
-                          <div className="check">
-                            <input
-                              type="radio"
-                              name="usageType"
-                              value="creative common"
-                              onChange={(e) => {
-                                setFieldValue("subscription_term", "")
-                                handleChange(e)
-                              }}
-                              onBlur={handleBlur}
-                              checked={values.usageType.includes("creative")}
-                            />
-                            <label className="ml-2">Creative Commons</label>
-                          </div>
-                        </div>
 
-                        <h5>License Terms </h5>
+                          <h5>License Terms </h5>
 
-                        {/* <div className="input-box">
+                          {/* <div className="input-box">
                           <label>
                             <img src={TitleIcon} alt="title" /> License Terms
                           </label>
@@ -1079,57 +1136,57 @@ const ListingModule = ({
                             value={values.ownerLicense}
                           />
                         </div> */}
-                        {values.usageType.includes("Subscription") && (
-                          <div style={{ display: "flex", gap: "15px" }}>
-                            <div className="input-box">
-                              <label>
-                                <img src={TitleIcon} alt="title" /> Term
-                              </label>
-                              <select
-                                type="text"
-                                name="subscription_term"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                value={values.subscription_term}
-                              >
-                                <option value="">Select </option>
-                                <option value="monthly">Monthly</option>
+                          {values.usageType.includes("Subscription") && (
+                            <div style={{ display: "flex", gap: "15px" }}>
+                              <div className="input-box">
+                                <label>
+                                  <img src={TitleIcon} alt="title" /> Term
+                                </label>
+                                <select
+                                  type="text"
+                                  name="subscription_term"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  value={values.subscription_term}
+                                >
+                                  <option value="">Select </option>
+                                  <option value="monthly">Monthly</option>
 
-                                <option value="yearly">Yearly</option>
-                              </select>
-                            </div>
+                                  <option value="yearly">Yearly</option>
+                                </select>
+                              </div>
 
-                            <div className="input-box">
-                              <label>
-                                <img src={PrceIcon} alt="" />
-                                Quantity
-                              </label>
-                              <input
-                                type="number"
-                                name="subscription_term"
-                                onChange={(e) => {
-                                  setStartDate(e.target.value)
-                                }}
-                                onBlur={(e) => {
-                                  setStartDate(e.target.value)
-                                }}
-                                value={startDate}
-                              />
+                              <div className="input-box">
+                                <label>
+                                  <img src={PrceIcon} alt="" />
+                                  Quantity
+                                </label>
+                                <input
+                                  type="number"
+                                  name="subscription_term"
+                                  onChange={(e) => {
+                                    setStartDate(e.target.value)
+                                  }}
+                                  onBlur={(e) => {
+                                    setStartDate(e.target.value)
+                                  }}
+                                  value={startDate}
+                                />
+                              </div>
                             </div>
-                          </div>
-                        )}
-                        {values.usageType.includes("Subscription") &&
-                          values.subscription_term &&
-                          startDate && (
-                            <p>
-                              <strong>Expiration Date:</strong>{" "}
-                              {addMonthsOrYears(
-                                values.subscription_term,
-                                parseInt(startDate)
-                              )}{" "}
-                            </p>
                           )}
-                        {/* {values.usageType.includes('usage') && (
+                          {values.usageType.includes("Subscription") &&
+                            values.subscription_term &&
+                            startDate && (
+                              <p>
+                                <strong>Expiration Date:</strong>{" "}
+                                {addMonthsOrYears(
+                                  values.subscription_term,
+                                  parseInt(startDate)
+                                )}{" "}
+                              </p>
+                            )}
+                          {/* {values.usageType.includes('usage') && (
                           <div className="input-box">
                             <label>
                               <img src={PrceIcon} alt="" /> Number of Users *
@@ -1143,177 +1200,178 @@ const ListingModule = ({
                             />
                           </div>
                         )} */}
-                        <div className="input-box">
-                          <p className="error">
-                            {errors.subscription_term &&
-                              touched.subscription_term &&
-                              errors.subscription_term}
-                          </p>
-                        </div>
-                        <div className="input-box">
-                          <label>
-                            <img src={PrceIcon} alt="" /> Price ($USD){" "}
-                            <span className="error">*</span>
-                          </label>
-                          <input
-                            type="string"
-                            name="price"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            disabled={
-                              values.usageType.includes("creative common")
-                                ? true
-                                : false
-                            }
-                            value={
-                              values.usageType.includes("creative common")
-                                ? 0
-                                : values.price
-                            }
-                          />
-                          <p className="error">
-                            {errors.price && touched.price && errors.price}
-                          </p>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "10px",
-                            marginTop: "32px",
-                          }}
-                        >
-                          <button
-                            type="button"
-                            onClick={() => setRoyaltyModal(true)}
-                            className="btn btn-primary sec-btn"
+                          <div className="input-box">
+                            <p className="error">
+                              {errors.subscription_term &&
+                                touched.subscription_term &&
+                                errors.subscription_term}
+                            </p>
+                          </div>
+                          <div className="input-box">
+                            <label>
+                              <img src={PrceIcon} alt="" /> Price ($USD){" "}
+                              <span className="error">*</span>
+                            </label>
+                            <input
+                              type="string"
+                              name="price"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              disabled={
+                                values.usageType.includes("creative common")
+                                  ? true
+                                  : false
+                              }
+                              value={
+                                values.usageType.includes("creative common")
+                                  ? 0
+                                  : values.price
+                              }
+                            />
+                            <p className="error">
+                              {errors.price && touched.price && errors.price}
+                            </p>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "10px",
+                              marginTop: "32px",
+                            }}
                           >
-                            <img
-                              src={RoyaltyInfoIcon}
-                              alt="file"
-                              width={20}
-                              height={20}
-                              className="blue-add-icon"
+                            <button
+                              type="button"
+                              onClick={() => setRoyaltyModal(true)}
+                              className="btn btn-primary sec-btn"
+                            >
+                              <img
+                                src={RoyaltyInfoIcon}
+                                alt="file"
+                                width={20}
+                                height={20}
+                                className="blue-add-icon"
+                              />
+                              <img
+                                src={RoyaltyInfoIconWhite}
+                                alt="file"
+                                width={20}
+                                height={20}
+                                className="white-add-icon"
+                              />
+                              Royalty Information
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-primary sec-btn"
+                            >
+                              <img
+                                src={AdditionalIcon}
+                                alt="file"
+                                width={20}
+                                height={20}
+                                className="blue-add-icon"
+                              />
+                              <img
+                                src={AdditionalIconWhite}
+                                alt="file"
+                                width={20}
+                                height={20}
+                                className="white-add-icon"
+                              />
+                              Additional Information
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="stor-flex-box">
+                          <h5> C2E Provider Details</h5>
+
+                          <div className="input-box">
+                            <label>
+                              <img src={NameIcon} alt="neme" /> Name
+                            </label>
+                            <input
+                              type="text"
+                              name="publisherName"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.publisherName}
+                              readOnly
                             />
-                            <img
-                              src={RoyaltyInfoIconWhite}
-                              alt="file"
-                              width={20}
-                              height={20}
-                              className="white-add-icon"
+                          </div>
+
+                          <div className="input-box">
+                            <label>
+                              <img src={EmailIcon} alt="email" /> Email
+                            </label>
+                            <input
+                              type="email"
+                              name="publisherEmail"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.publisherEmail}
+                              readOnly
                             />
-                            Royalty Information
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-primary sec-btn"
-                          >
-                            <img
-                              src={AdditionalIcon}
-                              alt="file"
-                              width={20}
-                              height={20}
-                              className="blue-add-icon"
+                          </div>
+
+                          <div className="input-box">
+                            <label>
+                              <img src={UrlIcon} alt="pub" /> URL
+                            </label>
+                            <input
+                              type="text"
+                              name="publisherUrl"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={""}
+                              readOnly
                             />
-                            <img
-                              src={AdditionalIconWhite}
-                              alt="file"
-                              width={20}
-                              height={20}
-                              className="white-add-icon"
-                            />
-                            Additional Information
-                          </button>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="stor-flex-box">
-                        <h5> C2E Provider Details</h5>
-
-                        <div className="input-box">
-                          <label>
-                            <img src={NameIcon} alt="neme" /> Name
-                          </label>
-                          <input
-                            type="text"
-                            name="publisherName"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.publisherName}
-                            readOnly
-                          />
+                      {steps === 2 && (
+                        <div className="form-btn">
+                          {isSubmitting ? (
+                            <button
+                              type="button"
+                              disabled={isSubmitting}
+                              className="btn btn-primary "
+                            >
+                              <Spinner
+                                animation="grow"
+                                variant="light"
+                                size="sm"
+                              />
+                              &nbsp;
+                              <Spinner
+                                animation="grow"
+                                variant="light"
+                                size="sm"
+                              />
+                              &nbsp;
+                              <Spinner
+                                animation="grow"
+                                variant="light"
+                                size="sm"
+                              />
+                            </button>
+                          ) : (
+                            <button
+                              type="submit"
+                              disabled={isSubmitting}
+                              className="btn btn-primary "
+                            >
+                              Submit
+                            </button>
+                          )}
                         </div>
-
-                        <div className="input-box">
-                          <label>
-                            <img src={EmailIcon} alt="email" /> Email
-                          </label>
-                          <input
-                            type="email"
-                            name="publisherEmail"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.publisherEmail}
-                            readOnly
-                          />
-                        </div>
-
-                        <div className="input-box">
-                          <label>
-                            <img src={UrlIcon} alt="pub" /> URL
-                          </label>
-                          <input
-                            type="text"
-                            name="publisherUrl"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={""}
-                            readOnly
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {steps === 2 && (
-                      <div className="form-btn">
-                        {isSubmitting ? (
-                          <button
-                            type="button"
-                            disabled={isSubmitting}
-                            className="btn btn-primary "
-                          >
-                            <Spinner
-                              animation="grow"
-                              variant="light"
-                              size="sm"
-                            />
-                            &nbsp;
-                            <Spinner
-                              animation="grow"
-                              variant="light"
-                              size="sm"
-                            />
-                            &nbsp;
-                            <Spinner
-                              animation="grow"
-                              variant="light"
-                              size="sm"
-                            />
-                          </button>
-                        ) : (
-                          <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="btn btn-primary "
-                          >
-                            Submit
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </form>
-                )}
-              </Formik>
-            </div>
+                      )}
+                    </form>
+                  )}
+                </Formik>
+              </div>
+            )
           ) : (
             steps === 3 && (
               <div className="style-thankyou">
@@ -1333,7 +1391,7 @@ const ListingModule = ({
         </div>
       </Modal.Body>
       <Modal.Footer>
-        {steps !== 1 && (
+        {steps !== 1 && !batch && (
           <button
             onClick={() => {
               if (steps === 1) {
