@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios'
 
 import fileDownload from 'js-file-download';
@@ -7,18 +7,24 @@ import epub from '../assets/images/assig1.png';
 import Modal from 'react-bootstrap/Modal';
 import { Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
+import InputSuggestion from './inputSuggestion'
+
+
 function UploadFile({ setUploadProgress, getData }) {
-  const fileinput = useRef();
-  const [startConversion, setStartConversion] = useState(false);
-  const [show, setShow] = useState(false);
-  const [isbn, setIsbn] = useState();
-  const [epubmeta, setEpubData] = useState();
+  const fileinput = useRef()
+  const [collectionData, setCollectionData] = useState([])
+  const [selectedCollection, setSelectedCollction] = useState()
+  const [startConversion, setStartConversion] = useState(false)
+  const [show, setShow] = useState(false)
+  const [isbn, setIsbn] = useState()
+  const [epubmeta, setEpubData] = useState()
   const url = process.env.REACT_APP_API_URL // 'https://c2e-provider-api.curriki.org';
   const handleUpload = async (event) => {
     const formData = new FormData();
 
     formData.append('ebook', event.target.files[0]);
     formData.append('isbn', isbn);
+    formData.append('collection', selectedCollection)
     if (epubmeta) {
       setShow(false);
       const response = await axios.post(
@@ -103,6 +109,29 @@ function UploadFile({ setUploadProgress, getData }) {
       fileinput.current.click();
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const suggestionResponse = await axios.get(
+          url +'/c2e-media/collections'
+        )
+        setCollectionData(suggestionResponse.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  const getSelectedVal = (value) => {
+    console.log(value)
+  }
+
+  const getChanges = (value) => {
+    console.log(value)
+  }
   return (
     <>
       <div>
@@ -167,6 +196,7 @@ function UploadFile({ setUploadProgress, getData }) {
           <Formik
             initialValues={{
               isbn: '',
+              collectionName:""
             }}
             validate={(values) => {
               const errors = {};
@@ -174,12 +204,16 @@ function UploadFile({ setUploadProgress, getData }) {
                 errors.isbn = 'Required';
               }
 
+              if (!values.collectionName) {
+                errors.collectionName = 'Required';
+              }
+
               return errors;
             }}
             onSubmit={(values, { setSubmitting }) => {
-               selectSelection('epub');
-               setShow(false)
-               setIsbn(values.isbn)
+              selectSelection('epub');
+              setShow(false)
+              setIsbn(values.isbn)
             }}
           >
             {({
@@ -190,9 +224,10 @@ function UploadFile({ setUploadProgress, getData }) {
               handleBlur,
               handleSubmit,
               isSubmitting,
+              setFieldValue
               /* and other goodies */
             }) => (
-              <form onSubmit={handleSubmit}  className="c2e-lisence">
+              <form onSubmit={handleSubmit} className="c2e-lisence">
                 <div class="form-group">
                   <label for="title">ISBN:</label>
                   <input
@@ -203,6 +238,17 @@ function UploadFile({ setUploadProgress, getData }) {
                     type="text"
                   />
                   {errors.isbn && touched.isbn && errors.isbn}
+                </div>
+                <div class="form-group">
+                  <InputSuggestion
+                    data={collectionData}
+                    onSelected={getSelectedVal}
+                    onChange={getChanges}
+                    setSelectedCollction={setSelectedCollction}
+                    value={values.collectionName}
+                    setFieldValue={(value) => setFieldValue("collectionName", value)}
+                  />
+                  {errors.collectionName && touched.collectionName && errors.collectionName}
                 </div>
                 <button
                   onClick={() => setShow(false)}
