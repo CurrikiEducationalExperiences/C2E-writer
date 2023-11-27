@@ -75,20 +75,34 @@ const Epubfile = () => {
   }, [selectedItems])
 
   const toggleSelectAll = (event, parentId) => {
+  
     const itemsToSelect = allData.filter(
       (data1) => data1.type === "epub" && data1.rootparentid === parentId
-    )
+    ).map(data=>data.id)
 
-    let temp = []
-    let includetemp = selectedItems
-    itemsToSelect.filter((data) => {
-      if (!selectedItems?.includes(data.id)) {
-        temp.push(data.id)
-      } else {
-        includetemp = includetemp.filter((data1) => data1 !== data.id)
-      }
-    })
-    setSelectedItems([...includetemp, ...temp])
+    // let temp = []
+    // let includetemp = selectedItems
+    // itemsToSelect.filter((data) => {
+    //   if (!selectedItems?.includes(data.id)) {
+    //     temp.push(data.id)
+    //   } else {
+    //     includetemp = includetemp.filter((data1) => data1 !== data.id)
+    //   }
+    // })
+    if(event.target.checked) {
+      setSelectedItems([...selectedItems, ...itemsToSelect])
+    } else {
+    setSelectedItems(selectedItems.filter(data => {
+       if(itemsToSelect.includes(data)) {
+        
+         return false
+       } else {
+          return true
+        }
+       
+    }))
+    }
+    
   }
 
   const toggleItemSelection = (item, parentId) => {
